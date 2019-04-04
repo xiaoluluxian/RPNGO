@@ -1,0 +1,44 @@
+{
+  "type": "project",
+  "template": "react",
+  "sub": "normal",
+  "version": "4.1.6",
+  "title": "RPN GO",
+  "description": "",
+  "author": "Tim",
+  "config": {
+    "router": {
+      "router": "react-router-dom",
+      "config": {
+        "router": "browser-router"
+      }
+    },
+    "pack": "webpack",
+    "test": {
+      "test": "mocha",
+      "expect": "code",
+      "render": "enzyme"
+    },
+    "style": "sass",
+    "sub": "typescript"
+  },
+  "underline": {
+    "active": false
+  },
+  "components": [
+    "leftBar",
+    "topBar",
+    "ListGroupCollapse",
+    "itemModal"
+  ],
+  "pages": [
+    "login",
+    "main",
+    "edittask",
+    "userProfile",
+    "register"
+  ],
+  "funcs": [],
+  "lambdas": [],
+  "features": []
+}
