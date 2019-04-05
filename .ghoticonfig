@@ -36,7 +36,8 @@
     "main",
     "edittask",
     "userProfile",
-    "register"
+    "register",
+    "addtask"
   ],
   "funcs": [],
   "lambdas": [],

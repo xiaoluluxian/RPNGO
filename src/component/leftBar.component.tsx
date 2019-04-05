@@ -74,7 +74,7 @@ class ComponentGhotiLeftBar extends React.Component<IProps, IState> {
                                         backgroundColor: "Transparent",
                                         border: "none",
                                         outline: "none"
-                                    }}>
+                                    }}onClick={this.props.pushPage.bind(this,"/addtask")}>
                                         <div className="body-icon"><i style={{ color: "#FF882C" }} className="fas fa-plus"></i></div>
                                         <div className="body-text">Add Task</div>
                                     </button>

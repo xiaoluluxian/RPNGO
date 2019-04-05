@@ -9,10 +9,12 @@ import PageGhotiMain from './main.page';
 import PageGhotiEdittask from './edittask.page';
 import PageGhotiUserProfile from './userProfile.page';
 import PageGhotiRegister from './register.page';
+import PageGhotiAddtask from './addtask.page';
 export {
     PageGhotiLogin as login,
     PageGhotiMain as main,
     PageGhotiEdittask as edittask,
     PageGhotiUserProfile as userProfile,
     PageGhotiRegister as register,
+    PageGhotiAddtask as addtask,
 };
