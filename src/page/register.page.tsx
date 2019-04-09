@@ -28,7 +28,9 @@ class PageGhotiRegister extends React.Component<IProps, IState> {
         Password: '',
         Authority: '',
         currStage: '0',
+        currAuth: '0',
         checklist: [],
+        currCompany: [{Company:"RPN"}],
         clientIcon: "",
         vendorIcon: "",
 
@@ -38,27 +40,33 @@ class PageGhotiRegister extends React.Component<IProps, IState> {
         $.ajax({
             url: "https://rpnserver.appspot.com/findAllVendors",
             method: 'GET',
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem('Token'),
+            },
             success: (function (result) {
                 console.log(result)
             }.bind(this))
         })
-        // $.ajax({
-        //     url: "https://api.census.gov/data/2017/acs/acs1?get=B00001_001E,NAME&for=county:*&in=state:56",
-        //     method: 'GET',
-        //     success: (function (result) {
-        //         console.log(result);
-        //     })
-        // })
+        $.ajax({
+            url: "https://rpnserver.appspot.com/findAllClient",
+            method: 'GET',
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem('Token'),
+            },
+            success: (function (result) {
+                console.log(result)
+            }.bind(this))
+        })
     }
     public constructor(props) {
         super(props);
         this.pushPage = this.pushPage.bind(this);
         this.submitTask = this.submitTask.bind(this);
-
         this.showTable = this.showTable.bind(this);
         this.initCategory = this.initCategory.bind(this);
         this.addCategory = this.addCategory.bind(this);
         this.mapCategory = this.mapCategory.bind(this);
+        this.changeAuth = this.changeAuth.bind(this);
     }
 
     public render() {
@@ -85,7 +93,7 @@ class PageGhotiRegister extends React.Component<IProps, IState> {
                                 // height:"10%",
                             }}>
 
-                                <select className="form-control " id='client' onChange={e => { this.setState({ currStage: e.target.value }) }}>
+                                <select className="form-control " id='user_type' onChange={e => { this.setState({ currStage: e.target.value }) }}>
                                     <option value="0">User</option>
                                     <option value="1">Client</option>
                                     <option value="2">Vendor</option>
@@ -107,16 +115,6 @@ class PageGhotiRegister extends React.Component<IProps, IState> {
     protected showTable() {
         if (this.state.currStage === '0') {
             return (
-                // <table id="user">
-                //     <tr>Username <input className="text" id='username' ></input></tr>
-                //     <tr>Password <input className="text" id='password'></input></tr>
-                //     <tr>Authority <input className="text" id='authority'></input></tr>
-                //     <tr>Firstname <input className="text" id='firstname' ></input></tr>
-                //     <tr>LastName <input className="text" id='lastname' ></input></tr>
-                //     <tr>Email <input className="text" id='email' ></input></tr>
-                //     <tr>Phone <input className="text" id='phone' ></input></tr>
-                //     <tr>Background <input className="text" id='background' ></input></tr>
-                // </table>
                 <React.Fragment>
                     <div id="signupbox" style={{ marginTop: "5px", float: "left", width: "47%", borderRight: "1px solid #E5E5E5" }} className="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
                         <div className="panel panel-info">
@@ -136,12 +134,13 @@ class PageGhotiRegister extends React.Component<IProps, IState> {
                                 <div id="div_id_client" className="form-group required">
                                     <label className="control-label col-md-4  requiredField">Authority<span className="asteriskField"></span> </label>
                                     <div className="controls col-md-10 ">
-                                        <select className="form-control mb-2 mr-sm-2 mb-sm-0" id='authority'>
-                                            <option value="0">Contractor</option>
-                                            <option value="1">Analyst</option>
-                                            <option value="2">Admin</option>
-                                            <option value="3">Client</option>
-
+                                        <select className="form-control mb-2 mr-sm-2 mb-sm-0" id='authority' onChange={e => { this.changeAuth(e.target.value) }}>
+                                            <option value="0">Client</option>
+                                            <option value="1">SubContractor</option>
+                                            <option value="2">SubAdmin</option>
+                                            <option value="3" selected>Analyst</option>
+                                            <option value="4">Manager</option>
+                                            <option value="5">Admin</option>
                                         </select>
                                     </div>
                                 </div>
@@ -182,6 +181,19 @@ class PageGhotiRegister extends React.Component<IProps, IState> {
                                     <input className="input-md textinput textInput form-control" id="background" name="background" placeholder="Background..." style={{ marginBottom: "5px" }} type="text" ></input>
                                 </div>
                             </div>
+                            <div id="div_id_client" className="form-group required">
+                                <label className="control-label col-md-4  requiredField">Company<span className="asteriskField"></span> </label>
+                                <div className="controls col-md-10 ">
+                                    <select className="form-control mb-2 mr-sm-2 mb-sm-0" id='user_company'>
+                                        <option>Choose Company</option>
+                                        {this.state.currCompany.map(function (company, index) {
+                                            return(
+                                                <option key={index} value={company.Company}>{company.Company}</option>
+                                            )
+                                        }.bind(this))}
+                                    </select>
+                                </div>
+                            </div>
                         </form >
                     </div>
                 </React.Fragment>
@@ -198,7 +210,7 @@ class PageGhotiRegister extends React.Component<IProps, IState> {
                                 <div id="div_id_propertyaddress" className="form-group required">
                                     <label className="control-label col-md-4  requiredField"> Company<span className="asteriskField"></span> </label>
                                     <div className="controls col-md-10 ">
-                                        <input className="input-md  textinput textInput form-control" id="company" name="company" placeholder="Company..." style={{ marginBottom: "5px" }} type="text" ></input>
+                                        <input className="input-md  textinput textInput form-control" id="client" name="client" placeholder="Company..." style={{ marginBottom: "5px" }} type="text" ></input>
                                     </div>
                                 </div>
                                 <div id="div_id_assetnumber" className="form-group required">
@@ -247,61 +259,97 @@ class PageGhotiRegister extends React.Component<IProps, IState> {
                         <div className="panel panel-info" >
                             <form className="form-horizontal" method="post" >
                                 <div id="div_id_propertyaddress" className="form-group required">
-                                    <label className="control-label col-md-4  requiredField"> Company<span className="asteriskField"></span> </label>
+                                    <label className="control-label col-md-8  requiredField"> Company<span className="asteriskField"></span> </label>
                                     <div className="controls col-md-10 ">
                                         <input className="input-md  textinput textInput form-control" id="Vendor" name="Vendor" placeholder="Company..." style={{ marginBottom: "5px" }} type="text" ></input>
                                     </div>
                                 </div>
                                 <div id="div_id_assetnumber" className="form-group required">
-                                    <label className="control-label col-md-4  requiredField"> Address<span className="asteriskField"></span> </label>
+                                    <label className="control-label col-md-8  requiredField"> Address<span className="asteriskField"></span> </label>
                                     <div className="controls col-md-10 ">
                                         <input className="input-md  textinput textInput form-control" id="VendorAddress" name="VendorAddress" placeholder="Address..." style={{ marginBottom: "5px" }} type="text" ></input>
                                     </div>
                                 </div>
                                 <div id="div_id_assetnumber" className="form-group required">
-                                    <label className="control-label col-md-4  requiredField"> Primary Contact<span className="asteriskField"></span> </label>
+                                    <label className="control-label col-md-8  requiredField"> Primary Contact<span className="asteriskField"></span> </label>
                                     <div className="controls col-md-10 ">
                                         <input className="input-md  textinput textInput form-control" id="VendorUser" name="vendoraddress" placeholder="Contact..." style={{ marginBottom: "5px" }} type="text" ></input>
                                     </div>
                                 </div>
                                 <div id="div_id_assetnumber" className="form-group required">
-                                    <label className="control-label col-md-4  requiredField"> Phone<span className="asteriskField"></span> </label>
+                                    <label className="control-label col-md-8  requiredField"> Phone<span className="asteriskField"></span> </label>
                                     <div className="controls col-md-10 ">
                                         <input className="input-md  textinput textInput form-control" id="VendorPhone" name="VendorPhone" placeholder="Phone..." style={{ marginBottom: "5px" }} type="text" ></input>
                                     </div>
                                 </div>
                                 <div id="div_id_assetnumber" className="form-group required">
-                                    <label className="control-label col-md-4  requiredField"> Email<span className="asteriskField"></span> </label>
+                                    <label className="control-label col-md-8  requiredField"> Email<span className="asteriskField"></span> </label>
                                     <div className="controls col-md-10">
                                         <input className="input-md  textinput textInput form-control" id="VendorEmail" name="VendorEmail" placeholder="Eamil..." style={{ marginBottom: "5px" }} type="text" ></input>
                                     </div>
                                 </div>
                                 <div id="div_id_assetnumber" className="form-group required">
-                                    <label className="control-label col-md-4  requiredField"> EIN/SSN<span className="asteriskField"></span> </label>
+                                    <label className="control-label col-md-8  requiredField"> EIN/SSN<span className="asteriskField"></span> </label>
                                     <div className="controls col-md-10 ">
                                         <input className="input-md  textinput textInput form-control" id="EINorSSN" name="EINorSSN" placeholder="EIN/SSN..." style={{ marginBottom: "5px" }} type="text" ></input>
                                     </div>
                                 </div>
                                 <div id="div_id_assetnumber" className="form-group required">
-                                    <label className="control-label col-md-4  requiredField"> Insurance<span className="asteriskField"></span> </label>
+                                    <label className="control-label col-md-8  requiredField"> General Liability Insurance<span className="asteriskField"></span> </label>
                                     <div className="controls col-md-10 ">
-                                        <input className="input-md  textinput textInput form-control" id="Insurance" name="Insurance" placeholder="Insurance..." style={{ marginBottom: "5px" }} type="text" ></input>
+                                        <input className="input-md  textinput textInput form-control" id="GLInsurance" name="Insurance" placeholder="General Liability Insurance..." style={{ marginBottom: "5px" }} type="text" ></input>
                                     </div>
                                 </div>
                                 <div id="div_id_assetnumber" className="form-group required">
-                                    <label className="control-label col-md-6  requiredField"> Insurance Expire Date<span className="asteriskField"></span> </label>
+                                    <label className="control-label col-md-8  requiredField"> General Liability Insurance Expire Date<span className="asteriskField"></span> </label>
                                     <div className="controls col-md-10 ">
-                                        <input type="date" className="input-md  textinput textInput form-control" id="IEDate" name="IEDate" style={{ marginBottom: "5px" }}></input>
+                                        <input type="date" className="input-md  textinput textInput form-control" id="GLIEDate" name="IEDate" style={{ marginBottom: "5px" }}></input>
                                     </div>
                                 </div>
                                 <div id="div_id_assetnumber" className="form-group required">
-                                    <label className="control-label col-md-4  requiredField"> ABCNumber<span className="asteriskField"></span> </label>
+                                    <label className="control-label col-md-8  requiredField"> WC Insurance<span className="asteriskField"></span> </label>
+                                    <div className="controls col-md-10 ">
+                                        <input className="input-md  textinput textInput form-control" id="WCInsurance" name="Insurance" placeholder="General Liability Insurance..." style={{ marginBottom: "5px" }} type="text" ></input>
+                                    </div>
+                                </div>
+                                <div id="div_id_assetnumber" className="form-group required">
+                                    <label className="control-label col-md-8  requiredField"> WC Insurance Expire Date<span className="asteriskField"></span> </label>
+                                    <div className="controls col-md-10 ">
+                                        <input type="date" className="input-md  textinput textInput form-control" id="WCIEDate" name="IEDate" style={{ marginBottom: "5px" }}></input>
+                                    </div>
+                                </div>
+                                <div id="div_id_assetnumber" className="form-group required">
+                                    <label className="control-label col-md-8  requiredField"> Business License<span className="asteriskField"></span> </label>
+                                    <div className="controls col-md-10 ">
+                                        <input className="input-md  textinput textInput form-control" id="BLicense" name="Insurance" placeholder="Business License..." style={{ marginBottom: "5px" }} type="text" ></input>
+                                    </div>
+                                </div>
+                                <div id="div_id_assetnumber" className="form-group required">
+                                    <label className="control-label col-md-8  requiredField"> Business License Expire Date<span className="asteriskField"></span> </label>
+                                    <div className="controls col-md-10 ">
+                                        <input type="date" className="input-md  textinput textInput form-control" id="BLEDate" name="IEDate" style={{ marginBottom: "5px" }}></input>
+                                    </div>
+                                </div>
+                                <div id="div_id_assetnumber" className="form-group required">
+                                    <label className="control-label col-md-8 requiredField"> Contractor License<span className="asteriskField"></span> </label>
+                                    <div className="controls col-md-10 ">
+                                        <input className="input-md  textinput textInput form-control" id="CLicense" name="Insurance" placeholder="Contractor License..." style={{ marginBottom: "5px" }} type="text" ></input>
+                                    </div>
+                                </div>
+                                <div id="div_id_assetnumber" className="form-group required">
+                                    <label className="control-label col-md-8  requiredField"> Contractor License Expire Date<span className="asteriskField"></span> </label>
+                                    <div className="controls col-md-10 ">
+                                        <input type="date" className="input-md  textinput textInput form-control" id="CLEDate" name="IEDate" style={{ marginBottom: "5px" }}></input>
+                                    </div>
+                                </div>
+                                <div id="div_id_assetnumber" className="form-group required">
+                                    <label className="control-label col-md-8  requiredField"> ABCNumber<span className="asteriskField"></span> </label>
                                     <div className="controls col-md-10 ">
                                         <input className="input-md  textinput textInput form-control" id="ABCNumber" name="ABCNumber" placeholder="ABCNumber..." style={{ marginBottom: "5px" }} type="text" ></input>
                                     </div>
                                 </div>
                                 <div id="div_id_assetnumber" className="form-group required">
-                                    <label className="control-label col-md-4  requiredField"> ICOLevel<span className="asteriskField"></span> </label>
+                                    <label className="control-label col-md-8  requiredField"> ICOLevel<span className="asteriskField"></span> </label>
                                     <div className="controls col-md-10 ">
                                         <input className="input-md  textinput textInput form-control" id="ICOLevel" name="ICOLevel" placeholder="ICOLevel..." style={{ marginBottom: "5px" }} type="text" ></input>
                                     </div>
@@ -415,6 +463,45 @@ class PageGhotiRegister extends React.Component<IProps, IState> {
                     </div>
                 </React.Fragment>
             )
+        }
+    }
+
+
+
+    protected changeAuth(auth) {
+        if (auth == '0') {
+            $.ajax({
+                url: 'https://rpnserver.appspot.com/findAllClient',
+                method: 'GET',
+                datatype: "json",
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem('Token'),
+                },
+                success: function (data) {
+                    console.log(data)
+                    this.setState({ currCompany: data });
+                }.bind(this),
+            });
+        }
+        else if (auth == '1' || auth == '2') {
+            $.ajax({
+                url: 'https://rpnserver.appspot.com/findAllVendors',
+                method: 'GET',
+                datatype: "json",
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem('Token'),
+                },
+                success: function (data) {
+                    console.log(data);
+                    this.setState({ currCompany: data });
+                }.bind(this),
+            });
+        }
+        else {
+            let temp = [];
+            temp.push({Company: "RPN"});
+            console.log
+            this.setState({ currCompany: temp })
         }
     }
 
@@ -554,7 +641,7 @@ class PageGhotiRegister extends React.Component<IProps, IState> {
     protected submitTask() {
         if (this.state.currStage === '0') {
             $.ajax({
-                url: 'https://rpntechserver.appspot.com/register',
+                url: 'https://rpnserver.appspot.com/register',
                 //url: 'http://localhost:8080/login',
                 method: 'POST',
                 datatype: "json",
@@ -569,7 +656,9 @@ class PageGhotiRegister extends React.Component<IProps, IState> {
                     lastname: $('#lastname').val(),
                     email: $('#email').val(),
                     phone: $('#phone').val(),
-                    background: $('#background').val(),
+                    abc_num: $('#background').val(),
+                    score: "0",
+                    company: $('#user_company').val(),
                 }),
                 success: function (data) {
                     console.log(data);
@@ -582,8 +671,7 @@ class PageGhotiRegister extends React.Component<IProps, IState> {
             // $('#address').val(),
             // $('#checklist').val(),);
             $.ajax({
-                url: 'https://rpntechserver.appspot.com/createClient',
-                //url: 'http://localhost:8080/login',
+                url: 'https://rpnserver.appspot.com/createClient',
                 method: 'POST',
                 datatype: "json",
                 headers: {
@@ -604,20 +692,20 @@ class PageGhotiRegister extends React.Component<IProps, IState> {
         }
         else {
             let PerformedServices = [];
-            $('#PropertyInspection').prop("checked") ? PerformedServices.push("PropertyInspection") : void 0
-            $('#PropertyPreservation').prop("checked") ? PerformedServices.push("PropertyPreservation") : void 0
-            $('#REO').prop("checked") ? PerformedServices.push("REO") : void 0
-            $('#HazardClaim').prop("checked") ? PerformedServices.push("HazardClaim") : void 0
-            $('#QualityControl').prop("checked") ? PerformedServices.push("QualityControl") : void 0
+            $('#PropertyInspection').prop("checked") ? PerformedServices.push("PropertyInspection") : PerformedServices.push("False-PropertyInspection")
+            $('#PropertyPreservation').prop("checked") ? PerformedServices.push("PropertyPreservation") : PerformedServices.push("False-PropertyPreservation")
+            $('#REO').prop("checked") ? PerformedServices.push("REO") : PerformedServices.push("False-REO")
+            $('#HazardClaim').prop("checked") ? PerformedServices.push("HazardClaim") : PerformedServices.push("False-HazardClaim")
+            $('#QualityControl').prop("checked") ? PerformedServices.push("QualityControl") : PerformedServices.push("False-QualityControl")
 
             let LicensedServices = [];
-            $('#MoldRemediation').prop("checked") ? LicensedServices.push("MoldRemediation") : void 0
-            $('#Electrical').prop("checked") ? LicensedServices.push("Electrical") : void 0
-            $('#Demolition').prop("checked") ? LicensedServices.push("Demolition") : void 0
-            $('#Plumbing').prop("checked") ? LicensedServices.push("Plumbing") : void 0
-            $('#HealthHazard').prop("checked") ? LicensedServices.push("HealthHazard") : void 0
-            $('#Roofing').prop("checked") ? LicensedServices.push("Roofing") : void 0
-            $('#GeneralContracting').prop("checked") ? LicensedServices.push("GeneralContracting") : void 0
+            $('#MoldRemediation').prop("checked") ? LicensedServices.push("MoldRemediation") : LicensedServices.push("False-MoldRemediation")
+            $('#Electrical').prop("checked") ? LicensedServices.push("Electrical") : LicensedServices.push("False-Electrical")
+            $('#Demolition').prop("checked") ? LicensedServices.push("Demolition") : LicensedServices.push("False-Demolition")
+            $('#Plumbing').prop("checked") ? LicensedServices.push("Plumbing") : LicensedServices.push("False-Plumbing")
+            $('#HealthHazard').prop("checked") ? LicensedServices.push("HealthHazard") : LicensedServices.push("False-HealthHazard")
+            $('#Roofing').prop("checked") ? LicensedServices.push("Roofing") : LicensedServices.push("False-Roofing")
+            $('#GeneralContracting').prop("checked") ? LicensedServices.push("GeneralContracting") : LicensedServices.push("False-GeneralContracting")
             let CoverState = $('#CoverState').val();
             CoverState = CoverState.split("\n")
             // console.log(CoverState);
@@ -627,11 +715,46 @@ class PageGhotiRegister extends React.Component<IProps, IState> {
                     let State = CoverState[i].split("-")[0];
                     let County = CoverState[i].split("-")[1];
                     State = State.replace(" ", "")
-                    County = County.replace(" ","_")
+                    County = County.replace(" ", "_")
                     StateCounty.push({ state: State, county: County })
                 }
             }
             console.log(StateCounty);
+            $.ajax({
+                url: 'https://rpnserver.appspot.com/addVendor',
+                method: 'POST',
+                datatype: "json",
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem('Token'),
+                },
+                data: JSON.stringify({
+                    Company: $('#Vendor').val(),
+                    Address: $('#VendorAddress').val(),
+                    icon: this.state.vendorIcon,
+                    Region: StateCounty,
+                    PrimaryContact: $('#VendorUser').val(),
+                    Phone: $('#VendorPhone').val(),
+                    Email: $('#VendorEmail').val(),
+                    EINorSSN: $('#EINorSSN').val(),
+                    BusinessLic: $('#BLicense').val(),
+                    BusinessLicExpireDate: $('#BLEDate').val(),
+                    ContractorLic: $('#CLicense').val(),
+                    ContractorLicExpireDate: $('#CLEDate').val(),
+                    GenInsurance: $('#GLInsurance').val(),
+                    GenInsuraceExpireDate: $('#GLIEDate').val(),
+                    WCInsurance: $('#WCInsurance').val(),
+                    WCInsuraceExpireDate: $('#WCIEDate').val(),
+                    PerformedServices: PerformedServices,
+                    LicensedServices: LicensedServices,
+                    ABCNum: $('#ABCNumber').val(),
+                    ICOLevel: $('#ICOLevel').val(),
+                    Score: "0"
+                }),
+                success: function (data) {
+                    console.log(data);
+                    this.props.history.push('/main');
+                }.bind(this),
+            });
             // console.log($('#CoverState').val())
 
             // console.log($('#Vendor').val())

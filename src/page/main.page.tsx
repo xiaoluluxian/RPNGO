@@ -343,7 +343,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                                                     {/* {this.showLogo.bind(this, item)} */}
                                                     {item.Address}</td>
                                                 <td>{item.asset_num}</td>
-                                                <td>{item.DueDate}</td>
+                                                <td>{item.DueDate?item.DueDate[parseInt(item.Stage)]:void 0}</td>
                                                 <td>
                                                     <Component.ListGroupCollapse key={key} Username={item.Username} />
                                                 </td>

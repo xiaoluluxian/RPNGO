@@ -54,11 +54,14 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         Area: '',
         BillTo: '',
         City: '',
-        CompletionDate: '',
+        // State:'',
+        // County:'',
+        // ZipCode:'',
+        CompletionDate: [],
         Desc: '',
         DescCN: '',
         Invoice: '',
-        DueDate: '',
+        DueDate: [],
         InvoiceDate: '',
         Item: [],
         LBNum: '',
@@ -87,15 +90,15 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         Markers: [],
         currImgID: "",
 
-        
-        test:"123",
+
+
 
 
         //data: [],
     };
     public componentDidMount() {
         $.ajax({
-            url: 'https://rpntechserver.appspot.com/findTaskById?task_id=' + localStorage.getItem("currTask"),
+            url: 'https://rpnserver.appspot.com/findTaskById?task_id=' + localStorage.getItem("currTask"),
             //url: 'http://localhost:8080/login',
             headers: {
                 Authorization: "Bearer " + localStorage.getItem('Token'),
@@ -109,10 +112,19 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                 // console.log(test);
                 console.log(result);
                 // console.log(JSON.stringify(result));
+                // let citylist = [];
+                // citylist = result.City.split("/");
+                // this.setState({
+                //     State:citylist[0],
+                //     County:citylist[1],
+                //     City:citylist[2],
+                //     ZipCode:citylist[3],
+                // })
+                this.setState({ City: result.City })
                 this.setState({ Address: result.Address });
                 this.setState({ Area: result.Area });
                 this.setState({ BillTo: result.BillTo });
-                this.setState({ City: result.City });
+
                 this.setState({ CompletionDate: result.CompletionDate });
                 this.setState({ Desc: result.Desc });
                 this.setState({ DescCN: result.DescCN });
@@ -152,7 +164,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             }).bind(this),
         });
         $.ajax({
-            url: 'https://rpntechserver.appspot.com/findAllImg?task_id=' + localStorage.getItem("currTask") + '&status=before',
+            url: 'https://rpnserver.appspot.com/findAllImg?task_id=' + localStorage.getItem("currTask") + '&status=before',
             headers: {
                 Authorization: "Bearer " + localStorage.getItem('Token'),
             },
@@ -173,7 +185,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             }).bind(this),
         });
         $.ajax({
-            url: 'https://rpntechserver.appspot.com/findAllImg?task_id=' + localStorage.getItem("currTask") + '&status=during',
+            url: 'https://rpnserver.appspot.com/findAllImg?task_id=' + localStorage.getItem("currTask") + '&status=during',
             headers: {
                 Authorization: "Bearer " + localStorage.getItem('Token'),
             },
@@ -195,7 +207,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             }).bind(this),
         });
         $.ajax({
-            url: 'https://rpntechserver.appspot.com/findAllImg?task_id=' + localStorage.getItem("currTask") + '&status=after',
+            url: 'https://rpnserver.appspot.com/findAllImg?task_id=' + localStorage.getItem("currTask") + '&status=after',
             headers: {
                 Authorization: "Bearer " + localStorage.getItem('Token'),
             },
@@ -217,7 +229,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             }).bind(this),
         });
         $.ajax({
-            url: 'https://rpntechserver.appspot.com/findAllUsers',
+            url: 'https://rpnserver.appspot.com/findAllUsers',
             headers: {
                 Authorization: "Bearer " + localStorage.getItem('Token'),
             },
@@ -248,9 +260,10 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         this.showStatus = this.showStatus.bind(this);
         this.showProcess = this.showProcess.bind(this);
         this.mapPicture = this.mapPicture.bind(this);
-        
+        this.showCurrStage = this.showCurrStage.bind(this);
+
         this.updateItemList = this.updateItemList.bind(this);
-        
+
         this.submit = this.submit.bind(this);
     }
 
@@ -264,10 +277,10 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         }
 
         if (this.reload == 5) {
-            if (localStorage.getItem("Authority") === "3") {
-                return <div>3</div>
+            if (localStorage.getItem("Authority") === "0") {
+                return <div>client</div>
             }
-            else if (localStorage.getItem("Authority") === "2") {
+            else if (localStorage.getItem("Authority") === "3" || "4" || "5") {
                 return (<React.Fragment>
                     <div className="page">
                         {this.showLeftBar()}
@@ -275,21 +288,55 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                             <div className="editContainer">
                                 <div className="card shadow mb-4">
                                     <div className="card-header py-3">
+                                        <div 
+                                            className="left">
+                                            <h4 style={{}}>{this.showCurrStage()} - {this.state.Username[parseInt(this.state.Stage)] ? this.state.Username[parseInt(this.state.Stage)] : void 0}</h4>
 
+                                        </div>
                                     </div>
                                     <div className="card-body">
                                         <div className="editContainerTopLeft">
                                             <table className="editTableTop">
-                                                <tr>
-                                                    <th>Property Address</th><td>{this.state.Address}</td>
-                                                </tr>
+                                                <tbody>
+                                                    <tr>
+                                                        <th>Property Address</th><td>{this.state.Address}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Asset Number</th><td>{this.state.AssetNum}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Start Date</th><td>{this.state.StartDate[parseInt(this.state.Stage)] ? this.state.StartDate[parseInt(this.state.Stage)] : void 0}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Due Date</th><td>{this.state.DueDate[parseInt(this.state.Stage)] ? this.state.DueDate[parseInt(this.state.Stage)] : void 0}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Completion Date</th><td>{this.state.CompletionDate[parseInt(this.state.Stage)] ? this.state.CompletionDate[parseInt(this.state.Stage)] : void 0}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>State/County/City/ZipCode</th><td>{this.state.City}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Lock Box Number</th><td>{this.state.LBNum}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Client</th><td>{this.state.Client}</td>
+                                                    </tr>
+
+                                                </tbody>
                                             </table>
                                         </div>
                                         <div className="editContainerTopRight">
                                             <table style={{ marginRight: "30px", float: "right" }} className="editTableTop">
-                                                <tr>
-                                                    <th>Property Address</th><td>{this.state.Address}</td>
-                                                </tr>
+                                                <tbody>
+                                                    <tr>
+                                                        <th>Description</th><td>{this.state.Desc}{this.state.DescCN ? "/" + this.state.DescCN : void 0}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Note</th><td>{this.state.Note}</td>
+                                                    </tr>
+                                                </tbody>
+
                                             </table>
                                         </div>
                                     </div>
@@ -316,6 +363,9 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                     </div>
                 </React.Fragment>);
             }
+            else {
+                return <div>No Permission</div>
+            }
 
         }
         else {
@@ -334,6 +384,35 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             </React.Fragment>);
         }
 
+    }
+
+    protected showCurrStage() {
+        //console.log(this.state.Stage);
+
+        if (this.state.Stage === '0') {
+            return ("Initial");
+        }
+        else if (this.state.Stage === '1') {
+            return ("Bid");
+        }
+        else if (this.state.Stage === '2') {
+            return ("Work Order");
+        }
+        else if (this.state.Stage === '3') {
+            return ("Invoice");
+        }
+        else if (this.state.Stage === '4') {
+            return ("Pending Accounting Review")
+        }
+        else if (this.state.Stage === '5') {
+            return ("Complete")
+        }
+        else if (this.state.Stage === '6') {
+            return ("Archived")
+        }
+        else {
+            return ("Unknown");
+        }
     }
     protected initItem(index: number) {
         return {
@@ -360,7 +439,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         }
     }
 
-    protected updateItemList(list:any) {
+    protected updateItemList(list: any) {
         this.setState({ Item: list });
     }
 
@@ -502,25 +581,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                     // console.log(list[index].Taxable);
                                     this.setState({ Item: list });
                                 }} title="pano">Is360</button>
-                                {/* <div>{this.state.test}</div> */}
-                            <Component.itemModal item={this.state.Item} test={this.state.test} each={value} index={index} updateItemList={this.updateItemList.bind(this)} Tax={this.state.Tax}/>
-                            {/* <Modal isOpen={this.state.show}>
-                                <ModalBody>
-                                    <div>asad</div>
-                                </ModalBody>
-
-                            </Modal>
-                            <button style={{
-                                marginTop: '3px',
-                                marginLeft: '5px',
-                                fontSize: '14px',
-                                width: '65px',
-                                height: '29px',
-                                // backgroundColor: this.state.Item[index].pano === "true" ? 'lightblue' : 'red'
-                            }}
-                                className={"btn btn-primary btn-sm"}
-                                onClick={this.editItem}
-                                title="edit">Edit</button> */}
+                            <Component.itemModal item={this.state.Item} each={value} index={index} updateItemList={this.updateItemList.bind(this)} Tax={this.state.Tax} />
                             <button
                                 style={{
                                     // paddingTop: '20px',
@@ -538,7 +599,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                         <React.Fragment>
                             <table style={{ width: "100%" }}>
                                 <thead>
-                                    <tr>
+                                    <tr key={index}>
                                         <th>Category</th>
                                         <th>Item</th>
                                         <th>Description</th>
@@ -582,9 +643,9 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         )
     }
 
-    
 
-    
+
+
     protected mapPicture(picture: any[], desc: string, descCN: string) {
         if (localStorage.getItem("Authority") === '3') {
             return (
@@ -672,7 +733,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         }
     }
 
-    protected convert360(item){
+    protected convert360(item) {
 
     }
 
@@ -837,7 +898,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                         <div style={{ marginTop: "10px", overflow: "auto", height: this.height, boxShadow: "0 0 35px 10px #EBEDEF inset" }} className="sidebar-body-action">
                             {this.state.Item.map(function (item, index) {
                                 return (
-                                    <div><button className="btn btn-link btn-sm" style={{ color: this.stageColor(item) }} onClick={this.scrollToAnchor.bind(this, index)}>{item.Cate}-{item.Item}</button></div>
+                                    <div key={index}><button className="btn btn-link btn-sm" style={{ color: this.stageColor(item) }} onClick={this.scrollToAnchor.bind(this, index)}>{item.Cate}-{item.Item}</button></div>
                                 )
                             }.bind(this))}
                         </div>
@@ -848,7 +909,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         )
     }
 
-    protected submit(){
+    protected submit() {
 
     }
 

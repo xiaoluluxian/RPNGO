@@ -24,35 +24,22 @@ export interface IState {
 
 
 class PageGhotiAddtask extends React.Component<IProps, IState> {
-
+    height: number = 0
     state = {
         alluser: [],
+        allVendors:[],
         username: "",
         clients: [],
-        company: "",
+        client: "",
     };
 
     public constructor(props) {
         super(props);
         this.pushPage = this.pushPage.bind(this);
+        this.submitTask = this.submitTask.bind(this);
     }
 
     public componentDidMount() {
-        $.ajax({
-            url: 'https://rpnserver.appspot.com/findAllUsers',
-
-            headers: {
-                Authorization: "Bearer " + localStorage.getItem('Token'),
-            },
-            method: 'GET',
-            datatype: "json",
-            data: JSON.stringify({
-            }),
-            success: (function (result) {
-                console.log(result);
-                this.setState({ alluser: result });
-            }).bind(this),
-        });
         $.ajax({
             url: 'https://rpnserver.appspot.com/findAllClient',
 
@@ -68,9 +55,25 @@ class PageGhotiAddtask extends React.Component<IProps, IState> {
                 this.setState({ clients: result });
             }).bind(this),
         });
+        $.ajax({
+            url: 'https://rpnserver.appspot.com/findAllVendors',
+
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem('Token'),
+            },
+            method: 'GET',
+            datatype: "json",
+            data: JSON.stringify({
+            }),
+            success: (function (result) {
+                console.log(result);
+                this.setState({ allVendors: result });
+            }).bind(this),
+        });
     }
 
     public render() {
+        this.height = window.innerHeight * 0.75
         return (<div className="page">
             <Component.leftBar page="register" pushPage={this.pushPage.bind(this)} />
             <Component.topBar page="register" pushPage={this.pushPage.bind(this)} />
@@ -85,20 +88,172 @@ class PageGhotiAddtask extends React.Component<IProps, IState> {
                 <div className="mainTable">
                     <div className="card shadow mb-4">
                         <div className="card-header py-3">
-                    
+
                         </div>
-                        <div className="card-body py-3">
-                    
+                        <div style={{height: this.height, overflow: "auto"}}className="card-body py-3">
+                            <div className="panel panel-info">
+                                <form className="form-horizontal" method="post">
+                                    <div id="div_id_propertyaddress" className="form-group required">
+                                        <label className="control-label col-md-4  requiredField"> Property Address<span className="asteriskField"></span> </label>
+                                        <div className="controls col-md-8 ">
+                                            <input className="input-md  textinput textInput form-control" id="propaddr" name="propaddr" placeholder="Property Address" style={{ marginBottom: "5px" }} type="text" ></input>
+                                        </div>
+                                    </div>
+                                    <div id="div_id_assetnumber" className="form-group required">
+                                        <label className="control-label col-md-4  requiredField"> Asset Number<span className="asteriskField"></span> </label>
+                                        <div className="controls col-md-8 ">
+                                            <input className="input-md  textinput textInput form-control" id="assetnum" name="assetnum" placeholder="Asset Number" style={{ marginBottom: "5px" }} type="text" ></input>
+                                        </div>
+                                    </div>
+                                    <div id="div_id_startdate" className="form-group required">
+                                        <label className="control-label col-md-4  requiredField"> Start Date<span className="asteriskField"></span> </label>
+                                        <div className="controls col-md-8 ">
+                                            <input className="input-md  textinput textInput form-control" id="startdate" name="startdate" placeholder="Start Date" style={{ marginBottom: "5px" }} type="date" ></input>
+                                        </div>
+                                    </div>
+                                    <div id="div_id_duedate" className="form-group required">
+                                        <label className="control-label col-md-4  requiredField"> Due Date<span className="asteriskField"></span> </label>
+                                        <div className="controls col-md-8 ">
+                                            <input className="input-md  textinput textInput form-control" id="duedate" name="duedate" placeholder="Due Date" style={{ marginBottom: "5px" }} type="date" ></input>
+                                        </div>
+                                    </div>
+                                    <div className="form-row" style={{marginLeft:"10px"}}>
+                                        <div className="form-group col-md-2">
+                                            <label >State</label>
+                                            <input type="text" className="form-control" id="state" />
+                                        </div>
+                                        <div className="form-group col-md-2">
+                                            <label>County</label>
+                                            <input type="text" className="form-control" id="county" />
+                                        </div>
+                                        <div className="form-group col-md-2">
+                                            <label>City</label>
+                                            <input type="text" className="form-control" id="city" />
+                                        </div>
+                                        <div className="form-group col-md-2">
+                                            <label>ZipCode</label>
+                                            <input type="text" className="form-control" id="zipcode" />
+                                        </div>
+                                    </div>
+
+                                    <div id="div_id_desc" className="form-group required">
+                                        <label className="control-label col-md-4  requiredField"> Description<span className="asteriskField"></span> </label>
+                                        <div className="controls col-md-8 ">
+                                            <textarea className="input-md  textinput textInput form-control" id="description" name="description" placeholder="Desscription" style={{ marginBottom: "5px" }}></textarea>
+                                        </div>
+                                    </div>
+                                    <div id="div_id_LBnum" className="form-group required">
+                                        <label className="control-label col-md-4  requiredField">Lock Box Number<span className="asteriskField"></span> </label>
+                                        <div className="controls col-md-8 ">
+                                            <input className="input-md  textinput textInput form-control" id="lockboxnumber" name="lockboxnumber" placeholder="Lock Box Number" style={{ marginBottom: "5px" }} type="text" ></input>
+                                        </div>
+                                    </div>
+                                    <div className="form-row" style={{marginLeft:"10px"}}>
+                                        <div className="form-group col-md-2">
+                                            <label>Client</label>
+                                            <select className="form-control" id='client' onChange={e => { this.setState({ client: e.target.value }) }}>
+                                                <option>Choose Client</option>
+                                                {this.state.clients ? this.state.clients.map(function (item, key) {
+
+                                                    return (
+                                                        <option key={key}>{item.Company}</option>
+                                                    )
+                                                }.bind(this)) : <div></div>}
+                                            </select>
+                                        </div>
+                                        <div className="form-group col-md-2">
+                                            <label>Vendor</label>
+                                            <select className="form-control" id='client' onChange={e => { this.getUserByVendor(e.target.value) }}>
+                                                <option>Choose Vendor</option>
+                                                {this.state.allVendors ? this.state.allVendors.map(function (item, key) {
+                                                    return (
+                                                        <option key={key}>{item.Company}</option>
+                                                    )
+                                                }.bind(this)) : <div></div>}
+                                            </select>
+                                        </div>
+                                        <div className="form-group col-md-2">
+                                            <label>Vendor User</label>
+                                            <select className="form-control" id='client' onChange={e => { this.setState({username:e.target.value})}}>
+                                                <option>Choose User</option>
+                                                {this.state.alluser ? this.state.alluser.map(function (item, key) {
+                                                    return (
+                                                        <option key={key}>{item.Username}</option>
+                                                    )
+                                                }.bind(this)) : <div></div>}
+                                            </select>
+                                        </div>
+                                        
+                                    </div>
+
+                                </form>
+                                <button id="submit" type="submit" name="submit" style={{ marginBottom: "10px" }} className="btn btn-primary  col-md-8" onClick={this.submitTask} value="submit">Submit</button>
+                            </div>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
         </div>);
     }
 
+    protected getUserByVendor(vendor:string){
+        let name = vendor.replace(" ","%20")
+        $.ajax({
+            url: 'https://rpnserver.appspot.com/findUsersByCompany?company='+name,
+            method: 'GET',
+            datatype: "json",
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem('Token'),
+            },
+            
+            success: function (data) {
+                console.log(data);
+                this.setState({alluser:data})
+
+            }.bind(this),
+        });
+    }
+
     protected pushPage(page: String) {
         this.props.history.push(page)
+    }
+
+    protected submitTask() {
+        let name = [];
+        name.push(this.state.username);
+        let StartDate = [];
+        StartDate.push($('#startdate').val());
+        let DueDate = [];
+        DueDate.push($('#duedate').val());
+        let citylist=$('#state').val()+"/"+$('#county').val()+"/"+$('#city').val()+"/"+$('#zipcode').val()
+        
+
+        $.ajax({
+            url: 'https://rpnserver.appspot.com/initTask',
+            method: 'POST',
+            datatype: "json",
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem('Token'),
+            },
+            data: JSON.stringify({
+                asset_num: $('#assetnum').val(),
+                StartDate: StartDate,
+                DueDate: DueDate,
+                City: citylist,
+                Address: $('#propaddr').val(),
+                Desc: $('#description').val(),
+                keycode: $('#lockboxnumber').val(),
+                client: this.state.client,
+                Username: name,
+                //stage:$('#stage').val()
+            }),
+            success: function (data) {
+                //console.log(data);
+                this.props.history.push('/main');
+
+            }.bind(this),
+        });
     }
 }
 

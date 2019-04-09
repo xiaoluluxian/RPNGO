@@ -19,7 +19,7 @@ export interface IProps {
     index: number;
     updateItemList: any;
     Tax: any;
-    test: string;
+    
 }
 
 export interface IState {

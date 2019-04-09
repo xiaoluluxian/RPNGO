@@ -98,7 +98,7 @@ class PageGhotiLogin extends React.Component<IProps, IState> {
                 password: $('#PW').val(),
             }),
             success: (function (data) {
-                // console.log(data);
+                console.log(data);
                 var result = JSON.parse(data);
                 //this.IProps.key = data;
                 //console.log(result.Authority);
