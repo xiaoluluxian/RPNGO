@@ -30,7 +30,7 @@ class ComponentGhotiLeftBar extends React.Component<IProps, IState> {
         if (this.props.page === "ad") {
             return <div>123</div>
         }
-        else if (this.props.page === "main"||"register"||"userProfile") {
+        else if (this.props.page === "main"||"register"||"userProfile"||"generalProfile") {
             return (
                 <div className="wrapper">
                     <div className="sidebar">
@@ -81,7 +81,7 @@ class ComponentGhotiLeftBar extends React.Component<IProps, IState> {
                                 </div>
                             </div>
                             <div style={{
-                                borderBottom: "1px solid #E5E5E5"
+                               
                             }} className="sidebar-body-action">
                                 <div style={{ paddingTop: "5%" }}>
                                     <button className="link" style={{
@@ -92,6 +92,21 @@ class ComponentGhotiLeftBar extends React.Component<IProps, IState> {
                                     }}onClick={this.props.pushPage.bind(this,"/register")}>
                                         <div className="body-icon"><i style={{ color: "#AFA35F" }} className="fas fa-user-plus"></i></div>
                                         <div className="body-text">Register</div>
+                                    </button>
+                                </div>
+                            </div>
+                            <div style={{
+                                borderBottom: "1px solid #E5E5E5"
+                            }} className="sidebar-body-action">
+                                <div style={{ paddingTop: "5%" }}>
+                                    <button className="link" style={{
+                                        width: "100%",
+                                        backgroundColor: "Transparent",
+                                        border: "none",
+                                        outline: "none"
+                                    }}onClick={this.props.pushPage.bind(this,"/generalProfile")}>
+                                        <div className="body-icon"><i style={{ color: "#4B47FF" }} className="fas fa-address-card"></i></div>
+                                        <div className="body-text">Profile</div>
                                     </button>
                                 </div>
                             </div>

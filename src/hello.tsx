@@ -26,7 +26,8 @@ class Hello extends React.Component<{}, {}> {
                 <Route path="/" exact component={Page.login} />
                 <Route path="/main" component={Page.main} />
                 <Route path="/edittask" component={Page.edittask} />
-                <Route path="/userprofile" component={Page.userProfile} />
+                <Route path="/userProfile" component={Page.userProfile} />
+                <Route path="/generalProfile" component={Page.generalProfile} />
                 <Route path="/register" component={Page.register} />
                 <Route path="/addtask" component={Page.addtask} />
                 <Route path="/photo" component={(props)=><div>{console.log(props)}{props.match.params.name}</div>}/>

@@ -216,7 +216,7 @@ class PageGhotiRegister extends React.Component<IProps, IState> {
                                 <div id="div_id_assetnumber" className="form-group required">
                                     <label className="control-label col-md-4  requiredField"> Address<span className="asteriskField"></span> </label>
                                     <div className="controls col-md-10 ">
-                                        <input className="input-md  textinput textInput form-control" id="address" name="address" placeholder="Address..." style={{ marginBottom: "5px" }} type="text" ></input>
+                                        <input className="input-md  textinput textInput form-control" id="clientaddress" name="address" placeholder="Address..." style={{ marginBottom: "5px" }} type="text" ></input>
                                     </div>
                                 </div>
                                 <div id="div_id_assetnumber" className="form-group required">
@@ -741,9 +741,9 @@ class PageGhotiRegister extends React.Component<IProps, IState> {
                     ContractorLic: $('#CLicense').val(),
                     ContractorLicExpireDate: $('#CLEDate').val(),
                     GenInsurance: $('#GLInsurance').val(),
-                    GenInsuraceExpireDate: $('#GLIEDate').val(),
+                    GenInsuranceExpireDate: $('#GLIEDate').val(),
                     WCInsurance: $('#WCInsurance').val(),
-                    WCInsuraceExpireDate: $('#WCIEDate').val(),
+                    WCInsuranceExpireDate: $('#WCIEDate').val(),
                     PerformedServices: PerformedServices,
                     LicensedServices: LicensedServices,
                     ABCNum: $('#ABCNumber').val(),

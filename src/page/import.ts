@@ -10,6 +10,7 @@ import PageGhotiEdittask from './edittask.page';
 import PageGhotiUserProfile from './userProfile.page';
 import PageGhotiRegister from './register.page';
 import PageGhotiAddtask from './addtask.page';
+import PageGhotiGeneralProfile from './generalProfile.page';
 export {
     PageGhotiLogin as login,
     PageGhotiMain as main,
@@ -17,4 +18,5 @@ export {
     PageGhotiUserProfile as userProfile,
     PageGhotiRegister as register,
     PageGhotiAddtask as addtask,
+    PageGhotiGeneralProfile as generalProfile,
 };
