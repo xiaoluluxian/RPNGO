@@ -448,6 +448,20 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
                                         <input className="input-md  textinput textInput form-control" value={this.state.ClientAddress} onChange={e => { this.setState({ address: e.target.value }) }} id="address" name="address" placeholder="Address..." style={{ marginBottom: "5px" }} type="text" ></input>
                                     </div>
                                 </div>
+                                <div id="div_id_assetnumber" className="form-group required">
+                                    <label className="control-label col-md-4  requiredField"> Icon<span className="asteriskField"></span> </label>
+                                    <div style={{
+                                        width: "60%",
+                                        marginLeft: "15px"
+                                    }} className="input-group-prepend input-group-sm">
+                                        <span className="input-group-text">{this.state.VendorIcon ? <img style={{ width: "25px", height: "25px" }} src={this.state.ClientIcon} /> : <div></div>}</span>
+                                        <div className="custom-file">
+                                            <input type="file" className="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01"
+                                                onChange={(e) => { this.addIcon(e.target.files) }}></input>
+                                            <label className="custom-file-label" >Upload Icon</label>
+                                        </div>
+                                    </div>
+                                </div>
                             </form>
                             <button id="submit" type="submit" name="submit" style={{ marginBottom: "10px" }} className="btn btn-primary  col-md-8" onClick={this.submit} value="submit">Submit</button>
                         </div> </div>
@@ -462,13 +476,249 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
         }
         else if (this.state.currStage === '2') {
             return (
-                <div>2</div>
+                <React.Fragment>
+                    <div id="signupbox" style={{ marginTop: "5px", float: "left", width: "47%", borderRight: "1px solid #E5E5E5" }} className="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+                        <div className="panel panel-info" >
+                            <form className="form-horizontal" method="post" >
+                                <div id="div_id_propertyaddress" className="form-group required">
+                                    <label className="control-label col-md-8  requiredField"> Company<span className="asteriskField"></span> </label>
+                                    <div className="controls col-md-10 ">
+                                        <input className="input-md  textinput textInput form-control" id="Vendor" name="Vendor" placeholder="Company..." style={{ marginBottom: "5px" }} type="text" ></input>
+                                    </div>
+                                </div>
+                                <div id="div_id_assetnumber" className="form-group required">
+                                    <label className="control-label col-md-8  requiredField"> Address<span className="asteriskField"></span> </label>
+                                    <div className="controls col-md-10 ">
+                                        <input className="input-md  textinput textInput form-control" id="VendorAddress" name="VendorAddress" placeholder="Address..." style={{ marginBottom: "5px" }} type="text" ></input>
+                                    </div>
+                                </div>
+                                <div id="div_id_assetnumber" className="form-group required">
+                                    <label className="control-label col-md-8  requiredField"> Primary Contact<span className="asteriskField"></span> </label>
+                                    <div className="controls col-md-10 ">
+                                        <input className="input-md  textinput textInput form-control" id="VendorUser" name="vendoraddress" placeholder="Contact..." style={{ marginBottom: "5px" }} type="text" ></input>
+                                    </div>
+                                </div>
+                                <div id="div_id_assetnumber" className="form-group required">
+                                    <label className="control-label col-md-8  requiredField"> Phone<span className="asteriskField"></span> </label>
+                                    <div className="controls col-md-10 ">
+                                        <input className="input-md  textinput textInput form-control" id="VendorPhone" name="VendorPhone" placeholder="Phone..." style={{ marginBottom: "5px" }} type="text" ></input>
+                                    </div>
+                                </div>
+                                <div id="div_id_assetnumber" className="form-group required">
+                                    <label className="control-label col-md-8  requiredField"> Email<span className="asteriskField"></span> </label>
+                                    <div className="controls col-md-10">
+                                        <input className="input-md  textinput textInput form-control" id="VendorEmail" name="VendorEmail" placeholder="Eamil..." style={{ marginBottom: "5px" }} type="text" ></input>
+                                    </div>
+                                </div>
+                                <div id="div_id_assetnumber" className="form-group required">
+                                    <label className="control-label col-md-8  requiredField"> EIN/SSN<span className="asteriskField"></span> </label>
+                                    <div className="controls col-md-10 ">
+                                        <input className="input-md  textinput textInput form-control" id="EINorSSN" name="EINorSSN" placeholder="EIN/SSN..." style={{ marginBottom: "5px" }} type="text" ></input>
+                                    </div>
+                                </div>
+                                <div id="div_id_assetnumber" className="form-group required">
+                                    <label className="control-label col-md-8  requiredField"> General Liability Insurance<span className="asteriskField"></span> </label>
+                                    <div className="controls col-md-10 ">
+                                        <input className="input-md  textinput textInput form-control" id="GLInsurance" name="Insurance" placeholder="General Liability Insurance..." style={{ marginBottom: "5px" }} type="text" ></input>
+                                    </div>
+                                </div>
+                                <div id="div_id_assetnumber" className="form-group required">
+                                    <label className="control-label col-md-8  requiredField"> General Liability Insurance Expire Date<span className="asteriskField"></span> </label>
+                                    <div className="controls col-md-10 ">
+                                        <input type="date" className="input-md  textinput textInput form-control" id="GLIEDate" name="IEDate" style={{ marginBottom: "5px" }}></input>
+                                    </div>
+                                </div>
+                                <div id="div_id_assetnumber" className="form-group required">
+                                    <label className="control-label col-md-8  requiredField"> WC Insurance<span className="asteriskField"></span> </label>
+                                    <div className="controls col-md-10 ">
+                                        <input className="input-md  textinput textInput form-control" id="WCInsurance" name="Insurance" placeholder="General Liability Insurance..." style={{ marginBottom: "5px" }} type="text" ></input>
+                                    </div>
+                                </div>
+                                <div id="div_id_assetnumber" className="form-group required">
+                                    <label className="control-label col-md-8  requiredField"> WC Insurance Expire Date<span className="asteriskField"></span> </label>
+                                    <div className="controls col-md-10 ">
+                                        <input type="date" className="input-md  textinput textInput form-control" id="WCIEDate" name="IEDate" style={{ marginBottom: "5px" }}></input>
+                                    </div>
+                                </div>
+                                <div id="div_id_assetnumber" className="form-group required">
+                                    <label className="control-label col-md-8  requiredField"> Business License<span className="asteriskField"></span> </label>
+                                    <div className="controls col-md-10 ">
+                                        <input className="input-md  textinput textInput form-control" id="BLicense" name="Insurance" placeholder="Business License..." style={{ marginBottom: "5px" }} type="text" ></input>
+                                    </div>
+                                </div>
+                                <div id="div_id_assetnumber" className="form-group required">
+                                    <label className="control-label col-md-8  requiredField"> Business License Expire Date<span className="asteriskField"></span> </label>
+                                    <div className="controls col-md-10 ">
+                                        <input type="date" className="input-md  textinput textInput form-control" id="BLEDate" name="IEDate" style={{ marginBottom: "5px" }}></input>
+                                    </div>
+                                </div>
+                                <div id="div_id_assetnumber" className="form-group required">
+                                    <label className="control-label col-md-8 requiredField"> Contractor License<span className="asteriskField"></span> </label>
+                                    <div className="controls col-md-10 ">
+                                        <input className="input-md  textinput textInput form-control" id="CLicense" name="Insurance" placeholder="Contractor License..." style={{ marginBottom: "5px" }} type="text" ></input>
+                                    </div>
+                                </div>
+                                <div id="div_id_assetnumber" className="form-group required">
+                                    <label className="control-label col-md-8  requiredField"> Contractor License Expire Date<span className="asteriskField"></span> </label>
+                                    <div className="controls col-md-10 ">
+                                        <input type="date" className="input-md  textinput textInput form-control" id="CLEDate" name="IEDate" style={{ marginBottom: "5px" }}></input>
+                                    </div>
+                                </div>
+                                <div id="div_id_assetnumber" className="form-group required">
+                                    <label className="control-label col-md-8  requiredField"> ABCNumber<span className="asteriskField"></span> </label>
+                                    <div className="controls col-md-10 ">
+                                        <input className="input-md  textinput textInput form-control" id="ABCNumber" name="ABCNumber" placeholder="ABCNumber..." style={{ marginBottom: "5px" }} type="text" ></input>
+                                    </div>
+                                </div>
+                                <div id="div_id_assetnumber" className="form-group required">
+                                    <label className="control-label col-md-8  requiredField"> ICOLevel<span className="asteriskField"></span> </label>
+                                    <div className="controls col-md-10 ">
+                                        <input className="input-md  textinput textInput form-control" id="ICOLevel" name="ICOLevel" placeholder="ICOLevel..." style={{ marginBottom: "5px" }} type="text" ></input>
+                                    </div>
+                                </div>
+
+                                <div id="div_id_assetnumber" className="form-group required">
+                                    <label className="control-label col-md-4  requiredField"> Icon<span className="asteriskField"></span> </label>
+                                    <div style={{
+                                        width: "60%",
+                                        marginLeft: "15px"
+                                    }} className="input-group-prepend input-group-sm">
+                                        <span className="input-group-text">{this.state.VendorIcon ? <img style={{ width: "25px", height: "25px" }} src={this.state.VendorIcon} /> : <div></div>}</span>
+                                        <div className="custom-file">
+                                            <input type="file" className="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01"
+                                                onChange={(e) => { this.addIcon(e.target.files) }}></input>
+                                            <label className="custom-file-label" >Upload Icon</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <button id="submit" type="submit" name="submit" style={{ marginLeft: "15px" }} className="btn btn-primary  col-md-9" onClick={this.submit} value="submit">Submit</button>
+                        </div>
+                    </div>
+                    <div id="signupbox" style={{ marginTop: "15px", width: "47%", float: "right" }} className="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+                        <div id="div_id_assetnumber" className="form-group required">
+                            <label className="control-label col-md-4  requiredField"> Performed Services<span className="asteriskField"></span> </label>
+                            <div style={{ marginLeft: "15px" }} className="form-check">
+                                <input style={{ marginTop: "7px" }} className="form-check-input" type="checkbox" id="PropertyInspection" />
+                                <label className="form-check-label">
+                                    Property Inspection
+                                        </label>
+                            </div>
+                            <div style={{ marginLeft: "15px" }} className="form-check">
+                                <input style={{ marginTop: "7px" }} className="form-check-input" type="checkbox" id="PropertyPreservation" />
+                                <label className="form-check-label">
+                                    Property Preservation
+                                        </label>
+                            </div>
+                            <div style={{ marginLeft: "15px" }} className="form-check">
+                                <input style={{ marginTop: "7px" }} className="form-check-input" type="checkbox" id="REO" />
+                                <label className="form-check-label">
+                                    REO
+                                        </label>
+                            </div>
+                            <div style={{ marginLeft: "15px" }} className="form-check">
+                                <input style={{ marginTop: "7px" }} className="form-check-input" type="checkbox" id="HazardClaim" />
+                                <label className="form-check-label">
+                                    Hazard Claim
+                                        </label>
+                            </div>
+                            <div style={{ marginLeft: "15px" }} className="form-check">
+                                <input style={{ marginTop: "7px" }} className="form-check-input" type="checkbox" id="QualityControl" />
+                                <label className="form-check-label">
+                                    Quality Control
+                                        </label>
+                            </div>
+                        </div>
+                        <div id="div_id_assetnumber" className="form-group required">
+                            <label className="control-label col-md-4  requiredField"> Licensed Services<span className="asteriskField"></span> </label>
+                            <div style={{ marginLeft: "15px" }} className="form-check">
+                                <input style={{ marginTop: "7px" }} className="form-check-input" type="checkbox" id="MoldRemediation" />
+                                <label className="form-check-label">
+                                    Mold Remediation
+                                        </label>
+                            </div>
+                            <div style={{ marginLeft: "15px" }} className="form-check">
+                                <input style={{ marginTop: "7px" }} className="form-check-input" type="checkbox" id="Electrical" />
+                                <label className="form-check-label">
+                                    Electrical
+                                        </label>
+                            </div>
+                            <div style={{ marginLeft: "15px" }} className="form-check">
+                                <input style={{ marginTop: "7px" }} className="form-check-input" type="checkbox" id="Demolition" />
+                                <label className="form-check-label">
+                                    Demolition
+                                        </label>
+                            </div>
+                            <div style={{ marginLeft: "15px" }} className="form-check">
+                                <input style={{ marginTop: "7px" }} className="form-check-input" type="checkbox" id="Plumbing" />
+                                <label className="form-check-label">
+                                    Plumbing
+                                        </label>
+                            </div>
+                            <div style={{ marginLeft: "15px" }} className="form-check">
+                                <input style={{ marginTop: "7px" }} className="form-check-input" type="checkbox" id="HealthHazard" />
+                                <label className="form-check-label">
+                                    Health Hazard
+                                        </label>
+                            </div>
+                            <div style={{ marginLeft: "15px" }} className="form-check">
+                                <input style={{ marginTop: "7px" }} className="form-check-input" type="checkbox" id="Roofing" />
+                                <label className="form-check-label">
+                                    Roofing
+                                        </label>
+                            </div>
+                            <div style={{ marginLeft: "15px" }} className="form-check">
+                                <input style={{ marginTop: "7px" }} className="form-check-input" type="checkbox" id="GeneralContracting" />
+                                <label className="form-check-label">
+                                    General Contracting
+                                        </label>
+                            </div>
+                        </div>
+                        <div id="div_id_assetnumber" className="form-group required">
+                            <div className="form-group">
+                                <label >Cover State (Format: State-County) (Use line break to separate State-County) </label>
+                                <textarea id="CoverState" style={{ width: "70%", height: "150px" }}>
+
+                                </textarea>
+                            </div>
+                        </div>
+                    </div>
+                </React.Fragment>
             )
         }
         else {
             return void 0
         }
     }
+
+    protected addIcon(File: FileList) {
+        var formData = new FormData();
+        formData.append('image', File[0]);
+        $.ajax({
+            url: 'https://rpntechserver.appspot.com/uploadImage',
+            method: 'POST',
+            enctype: 'multipart/form-data',
+            dataType: 'json',
+            fileElementId: 'file-input',
+            cache: false,
+            processData: false,
+            contentType: false,
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem('Token'),
+            },
+            data: formData,
+            success: function (result) {
+                if (this.state.currStage === "1") {
+                    this.setState({ ClientIcon: result });
+                }
+                else {
+                    this.setState({ VendorIcon: result });
+                }
+
+            }.bind(this),
+        });
+    }
+
     protected addCategory() {
         let list = this.state.CheckList;
         list.push(this.initCategory());
@@ -626,6 +876,12 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
                     this.props.history.push("/main");
                 }).bind(this),
             });
+        }
+        else if(this.state.currStage==='2'){
+
+        }
+        else{
+            
         }
     }
 }

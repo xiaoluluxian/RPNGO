@@ -11,6 +11,9 @@ import PageGhotiUserProfile from './userProfile.page';
 import PageGhotiRegister from './register.page';
 import PageGhotiAddtask from './addtask.page';
 import PageGhotiGeneralProfile from './generalProfile.page';
+import PageGhotiPrintTask from './printTask.page';
+import PageGhotiClientEdit from './clientEdit.page';
+import PageGhotiVendorEdit from './vendorEdit.page';
 export {
     PageGhotiLogin as login,
     PageGhotiMain as main,
@@ -19,4 +22,7 @@ export {
     PageGhotiRegister as register,
     PageGhotiAddtask as addtask,
     PageGhotiGeneralProfile as generalProfile,
+    PageGhotiPrintTask as printTask,
+    PageGhotiClientEdit as clientEdit,
+    PageGhotiVendorEdit as vendorEdit,
 };

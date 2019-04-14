@@ -38,7 +38,10 @@
     "userProfile",
     "register",
     "addtask",
-    "generalProfile"
+    "generalProfile",
+    "printTask",
+    "clientEdit",
+    "vendorEdit"
   ],
   "funcs": [],
   "lambdas": [],

@@ -153,7 +153,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
     public render() {
         this.height = window.innerHeight
         this.height = this.height * 0.65
-        if (localStorage.getItem("Authority") === '5' || '4' || '0') {
+        if (localStorage.getItem("Authority") === '5' || '4' ||'3'|| '0') {
             if (this.reload == 4) {
                 return (<React.Fragment>
                     <div className="page">
@@ -315,13 +315,9 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                                     </tr>
                                 </thead>
                                 <tbody style={{
-                                    // display:"block",
-                                    // overflow:"auto",
-                                    // height:"450px",
-                                    // width:"100%"
+                                
                                 }}>
-
-                                    {this.state.data.map(function (item, key) {
+                                    {this.state.data?this.state.data.map(function (item, key) {
                                         let temp = '#a' + key;
                                         let temp2 = 'a' + key;
                                         return (
@@ -354,7 +350,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
 
                                             </tr>
                                         )
-                                    }.bind(this))}
+                                    }.bind(this)):void 0}
                                 </tbody>
                             </table>
 

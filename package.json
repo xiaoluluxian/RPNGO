@@ -48,9 +48,13 @@
     "dependencies": {
         "bootstrap": "^4.3.1",
         "cheerio": "^1.0.0-rc.2",
+        "d.js": "^0.7.5",
+        "dot": "^1.1.2",
         "file-saver": "^2.0.1",
         "immutable": "^3.8.2",
         "jquery": "^3.3.1",
+        "jszip": "^3.2.1",
+        "jszip-utils": "0.0.2",
         "photo-sphere-viewer": "^3.5.1",
         "popper.js": "^1.14.7",
         "rc-slider": "^8.6.7",
@@ -58,6 +62,8 @@
         "react-dom": "^16.8.4",
         "react-hot-loader": "^4.8.0",
         "react-router-dom": "^5.0.0",
-        "reactstrap": "^7.1.0"
+        "reactstrap": "^7.1.0",
+        "three": "^0.103.0",
+        "uevent": "^2.0.0"
     }
 }

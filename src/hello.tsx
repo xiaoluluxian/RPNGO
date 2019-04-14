@@ -30,6 +30,7 @@ class Hello extends React.Component<{}, {}> {
                 <Route path="/generalProfile" component={Page.generalProfile} />
                 <Route path="/register" component={Page.register} />
                 <Route path="/addtask" component={Page.addtask} />
+                <Route path="/printTask" component={Page.printTask} />
                 <Route path="/photo" component={(props)=><div>{console.log(props)}{props.match.params.name}</div>}/>
             </React.Fragment>
         );

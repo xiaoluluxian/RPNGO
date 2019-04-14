@@ -19,6 +19,8 @@ import * as FileSaver from 'file-saver';
 import * as Cheerio from "cheerio"
 import * as PhotoSphereViewer from "photo-sphere-viewer";
 import Slider from 'rc-slider'
+import * as JSZip from "jszip"
+import * as JSZipUtils from "jszip-utils"
 
 export interface IProps {
     history: any
@@ -49,6 +51,10 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
     state = {
         Loading: 0,
         pictureDDropdown: false,
+        changeStageModal: false,
+        duplicateModal: false,
+        generalModal: false,
+        versionArray: [],
         //page:null,
         Address: '',
         Area: '',
@@ -67,7 +73,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         LBNum: '',
         Note: '',
         Stage: '',
-        StartDate: '',
+        StartDate: [],
         Stories: '',
         TotalCost: '',
         TotalImage: 0,
@@ -83,13 +89,24 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         TaskStatus: '',
         Client: '',
         ClientIcon: '',
+        Progress: "",
+        Version: 0,
+        VersionSize: 0,
+        SharedID: "",
         // test: 'test',
         // x: "a",
         CheckList: [],
         Comment: "",
         Markers: [],
         currImgID: "",
+        currImgSrc:"",
 
+
+        DupDescription: "",
+        DupUsername: "",
+
+        allVendors: [],
+        alluserForVendor: []
 
 
 
@@ -108,23 +125,11 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             data: JSON.stringify({
             }),
             success: (function (result) {
-                //let test: IPage=JSON.parse(result.toString);
-                // console.log(test);
                 console.log(result);
-                // console.log(JSON.stringify(result));
-                // let citylist = [];
-                // citylist = result.City.split("/");
-                // this.setState({
-                //     State:citylist[0],
-                //     County:citylist[1],
-                //     City:citylist[2],
-                //     ZipCode:citylist[3],
-                // })
                 this.setState({ City: result.City })
                 this.setState({ Address: result.Address });
                 this.setState({ Area: result.Area });
                 this.setState({ BillTo: result.BillTo });
-
                 this.setState({ CompletionDate: result.CompletionDate });
                 this.setState({ Desc: result.Desc });
                 this.setState({ DescCN: result.DescCN });
@@ -142,13 +147,26 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                 this.setState({ Year: result.Year });
                 this.setState({ AssetNum: result.asset_num });
                 this.setState({ uploadLink: result.upload_link });
-                this.setState({ Tax: result.Tax });
+                result.Tax ? this.setState({ Tax: result.Tax }) : this.setState({ Tax: "0" })
                 this.setState({ Username: result.Username });
                 this.setState({ Client: result.Client });
                 this.setState({ TaskStatus: result.TaskStatus });
                 this.setState({ CheckList: result.CheckList });
                 this.setState({ Comment: result.Comment });
                 this.setState({ ClientIcon: result.ClientIcon })
+                this.setState({
+                    Progress: result.Progress,
+                    Version: result.Version,
+                    VersionSize: result.VersionSize,
+                    SharedID: result.SharedID,
+                    DupDescription: result.Desc
+                })
+                let temp = []
+                for (let i = result.VersionSize; i > 0; i--) {
+                    temp.push(i);
+                }
+                console.log(temp)
+                this.setState({ versionArray: temp })
                 this.reload += 1;
                 this.setState({ Loading: this.reload })
 
@@ -161,6 +179,22 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                 this.reload += 1;
                 console.log(this.reload)
                 this.setState({ Loading: this.reload })
+            }).bind(this),
+        });
+
+        $.ajax({
+            url: 'https://rpnserver.appspot.com/findAllVendors',
+
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem('Token'),
+            },
+            method: 'GET',
+            datatype: "json",
+            data: JSON.stringify({
+            }),
+            success: (function (result) {
+                console.log(result);
+                this.setState({ allVendors: result });
             }).bind(this),
         });
         $.ajax({
@@ -261,10 +295,17 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         this.showProcess = this.showProcess.bind(this);
         this.mapPicture = this.mapPicture.bind(this);
         this.showCurrStage = this.showCurrStage.bind(this);
+        this.showStage = this.showStage.bind(this);
+        this.convert360 = this.convert360.bind(this);
+        this.submit360 = this.submit360.bind(this);
+        this.generateURL = this.generateURL.bind(this);
 
         this.updateItemList = this.updateItemList.bind(this);
 
         this.submit = this.submit.bind(this);
+        this.submitStage = this.submitStage.bind(this);
+        this.duplicateTask = this.duplicateTask.bind(this);
+        this.getUserByVendor = this.getUserByVendor.bind(this);
     }
 
     public render() {
@@ -283,15 +324,414 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             else if (localStorage.getItem("Authority") === "3" || "4" || "5") {
                 return (<React.Fragment>
                     <div className="page">
-                        {this.showLeftBar()}
+                        {this.showLeftBar(TotalAmount)}
                         <div className="editPage">
                             <div className="editContainer">
                                 <div className="card shadow mb-4">
+                                    <Modal isOpen={this.state.changeStageModal} toggle={e => { this.setState({ changeStageModal: false }) }} size="lg">
+                                        <ModalHeader toggle={e => { this.setState({ changeStageModal: false }) }}>Change Stage</ModalHeader>
+                                        <ModalBody>
+                                            <div className="input-group-prepend">
+                                                <span className="input-group-text">User To Remove</span>
+                                                <div className="custom-file">
+                                                    <input className="form-control" id="userToRemove" value={this.state.Username[parseInt(this.state.Stage)]} disabled></input>
+                                                </div>
+                                            </div>
+                                            <div style={{ marginTop: "10px" }} className="input-group-prepend">
+                                                <span className="input-group-text">Stage To</span>
+                                                <div className="custom-file">
+                                                    <input className="form-control" id="userToRemove" value={this.showCurrStage()} disabled></input>
+                                                </div>
+                                            </div>
+                                            <div style={{ marginTop: "10px" }} className="input-group-prepend">
+                                                <span className="input-group-text">User to Set</span>
+                                                <div className="custom-file">
+                                                    <select id="setUser" className="form-control">
+                                                        {this.state.alluser.map(function (item, key) {
+                                                            <option>ChooseUser</option>
+                                                            return (
+                                                                <option key={key}>{item.Username}</option>
+                                                            )
+                                                        }.bind(this))}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div style={{ marginTop: "10px" }} className="input-group-prepend">
+                                                <span className="input-group-text">StartDate</span>
+                                                <div className="custom-file">
+                                                    <input type="date" className="form-control" id="stageStartDate"></input>
+                                                </div>
+                                            </div>
+                                            <div style={{ marginTop: "10px" }} className="input-group-prepend">
+                                                <span className="input-group-text">DueDate</span>
+                                                <div className="custom-file">
+                                                    <input type="date" className="form-control" id="stageDueDate" ></input>
+                                                </div>
+                                            </div>
+                                            <button style={{
+                                                marginLeft: "10px",
+                                                marginTop: "10px",
+                                                width: "80px",
+                                                height: "35px"
+                                            }}
+                                                title="sbmit" onClick={this.submitStage}>Submit</button>
+                                        </ModalBody>
+                                    </Modal>
+                                    <Modal isOpen={this.state.duplicateModal} toggle={e => { this.setState({ duplicateModal: false }) }} size="lg">
+                                        <ModalHeader toggle={e => { this.setState({ duplicateModal: false }) }}>Duplicate Task</ModalHeader>
+                                        <ModalBody>
+                                            <div className="input-group-prepend input-group-sm" style={{ marginBottom: "0px" }}>
+                                                <span className="input-group-text" id="basic-addon1" style={{
+                                                    color: "black",
+                                                    height: "31px"
+                                                    // fontSize:'13px'
+                                                }}>Address</span>
+                                                <input type="text" className="form-control" placeholder="Category..." aria-label="Category" aria-describedby="basic-addon1"
+                                                    id='cate' value={this.state.Address}
+                                                    style={{
+                                                        color: "black",
+                                                        // width:"99%"
+                                                    }}
+
+                                                    disabled></input>
+                                            </div>
+                                            <div className="input-group-prepend input-group-sm" style={{ marginBottom: "0px" }}>
+                                                <span className="input-group-text" id="basic-addon1" style={{
+                                                    color: "black",
+                                                    height: "31px"
+                                                    // fontSize:'13px'
+                                                }}>Asset Number</span>
+                                                <input type="text" className="form-control" placeholder="Category..." aria-label="Category" aria-describedby="basic-addon1"
+                                                    id='cate' value={this.state.AssetNum}
+                                                    style={{
+                                                        color: "black",
+                                                        // width:"99%"
+                                                    }}
+
+                                                    disabled></input>
+                                            </div>
+                                            <div className="input-group-prepend input-group-sm" style={{ marginBottom: "0px" }}>
+                                                <span className="input-group-text" id="basic-addon1" style={{
+                                                    color: "black",
+                                                    height: "100px"
+                                                    // fontSize:'13px'
+                                                }}>Description</span>
+                                                <textarea className="form-control" placeholder="Description..." aria-label="Description" aria-describedby="basic-addon1"
+                                                    id='description' value={this.state.DupDescription}
+                                                    onChange={e => {
+                                                        this.setState({ DupDescription: e.target.value })
+                                                    }}
+                                                    style={{
+                                                        // width: "425px",
+                                                        height: "100px",
+                                                        resize: "none"
+                                                    }}>
+                                                    ></textarea>
+                                            </div>
+                                            <div className="input-group-prepend input-group-sm" style={{ marginBottom: "0px" }}>
+                                                <span className="input-group-text" id="basic-addon1" style={{
+                                                    color: "black",
+                                                    height: "31px"
+                                                    // fontSize:'13px'
+                                                }}>StartDate</span>
+                                                <input type="date" className="form-control" placeholder="Category..." aria-label="Category" aria-describedby="basic-addon1"
+                                                    id='DupStartDate'
+
+                                                    style={{
+                                                        color: "black",
+                                                        // width:"99%"
+                                                    }}
+
+                                                ></input>
+                                            </div>
+                                            <div className="input-group-prepend input-group-sm" style={{ marginBottom: "0px" }}>
+                                                <span className="input-group-text" id="basic-addon1" style={{
+                                                    color: "black",
+                                                    height: "31px"
+                                                    // fontSize:'13px'
+                                                }}>DueDate</span>
+                                                <input type="date" className="form-control" placeholder="Category..." aria-label="Category" aria-describedby="basic-addon1"
+                                                    id='DupDueDate'
+                                                    style={{
+                                                        color: "black",
+                                                        // width:"99%"
+                                                    }}
+
+                                                ></input>
+                                            </div>
+                                            <div className="input-group-prepend input-group-sm" style={{ marginBottom: "0px" }}>
+                                                <span className="input-group-text" id="basic-addon1" style={{
+                                                    color: "black",
+                                                    height: "31px"
+                                                    // fontSize:'13px'
+                                                }}>Client</span>
+                                                <input type="text" className="form-control" placeholder="Category..." aria-label="Category" aria-describedby="basic-addon1"
+                                                    id='client' value={this.state.Client}
+                                                    style={{
+                                                        color: "black",
+                                                        // width:"99%"
+                                                    }}
+
+                                                    disabled></input>
+                                            </div>
+                                            <div className="form-row" style={{ marginLeft: "10px" }}>
+
+                                                <div className="form-group col-md-4">
+                                                    <label>Vendor</label>
+                                                    <select className="form-control" id='client' onChange={e => { this.getUserByVendor(e.target.value) }}>
+                                                        <option>Choose Vendor</option>
+                                                        {this.state.allVendors ? this.state.allVendors.map(function (item, key) {
+                                                            return (
+                                                                <option key={key}>{item.Company}</option>
+                                                            )
+                                                        }.bind(this)) : <div></div>}
+                                                    </select>
+                                                </div>
+                                                <div className="form-group col-md-4">
+                                                    <label>Vendor User</label>
+                                                    <select className="form-control" id='client' onChange={e => { this.setState({ DupUsername: e.target.value }) }}>
+                                                        <option>Choose User</option>
+                                                        {this.state.alluser ? this.state.alluserForVendor.map(function (item, key) {
+                                                            return (
+                                                                <option key={key}>{item.Username}</option>
+                                                            )
+                                                        }.bind(this)) : <div></div>}
+                                                    </select>
+                                                </div>
+
+                                                <button id="submit" type="submit" name="submit" style={{ marginBottom: "10px" }} className="btn btn-primary  col-md-8" onClick={this.duplicateTask} value="submit">Submit</button>
+
+                                            </div>
+                                        </ModalBody>
+                                    </Modal>
+                                    <Modal isOpen={this.state.generalModal} toggle={e => { this.setState({ generalModal: false }) }} size="lg">
+                                        <ModalHeader toggle={e => { this.setState({ generalModal: false }) }}>General Info</ModalHeader>
+                                        <ModalBody>
+                                            <div className="input-group-prepend input-group-sm" style={{ marginBottom: "2px", width: "99%" }}>
+                                                <span className="input-group-text" id="basic-addon1" style={{
+                                                    color: "black",
+                                                    height: "29px",
+
+                                                    // fontSize:'13px'
+                                                }}>Property Address</span>
+                                                <input type="text" className="form-control" placeholder="Address" aria-label="Property Address" aria-describedby="basic-addon1"
+                                                    id='propaddr' value={this.state.Address}
+                                                    onChange={e => this.setState({ Address: e.target.value })} style={{ color: "black" }}
+                                                ></input>
+                                            </div>
+                                            <div className="input-group-prepend input-group-sm" style={{ marginBottom: "2px", width: "99%" }}>
+                                                <span className="input-group-text" id="basic-addon1" style={{
+                                                    color: "black",
+                                                    height: "29px"
+                                                    // fontSize:'13px'
+                                                }}>Asset Number</span>
+                                                <input type="text" className="form-control" placeholder="Asset Number" aria-label="Asset Number" aria-describedby="basic-addon1"
+                                                    id='assetnumber' value={this.state.AssetNum}
+                                                    onChange={e => this.setState({ AssetNum: e.target.value })} style={{ color: "black" }}
+                                                ></input>
+                                            </div>
+                                            <div className="input-group-prepend input-group-sm" style={{ marginBottom: "2px", width: "99%" }}>
+                                                <span className="input-group-text" id="basic-addon1" style={{
+                                                    color: "black",
+                                                    height: "29px"
+                                                    // fontSize:'13px'
+                                                }}>Invoice Number</span>
+                                                <input type="text" className="form-control" placeholder="Invoice Number" aria-label="Invoice Number" aria-describedby="basic-addon1"
+                                                    id='invoicenumber' value={this.state.Invoice}
+                                                    onChange={e => { this.setState({ Invoice: e.target.value }) }} style={{ color: "black" }}
+                                                ></input>
+                                            </div>
+                                            <div className="input-group-prepend input-group-sm" style={{ marginBottom: "2px", width: "99%" }}>
+                                                <span className="input-group-text" id="basic-addon1" style={{
+                                                    color: "black",
+                                                    height: "29px"
+                                                    // fontSize:'13px'
+                                                }}>Start Date</span>
+                                                <input type="date" className="form-control" placeholder="StartDate" aria-label="StartDate" aria-describedby="basic-addon1"
+                                                    id='startdate' value={this.state.StartDate[parseInt(this.state.Stage)]}
+                                                    onChange={e => {
+                                                        let date = this.state.StartDate;
+                                                        date[parseInt(this.state.Stage)] = e.target.value;
+                                                        this.setState({ StartDate: date })
+                                                    }} style={{ color: "black" }}
+                                                ></input>
+                                            </div>
+                                            <div className="input-group-prepend input-group-sm" style={{ marginBottom: "2px", width: "99%" }}>
+                                                <span className="input-group-text" id="basic-addon1" style={{
+                                                    color: "black",
+                                                    height: "29px"
+                                                    // fontSize:'13px'
+                                                }}>Due Date</span>
+                                                <input type="date" className="form-control" placeholder="DueDate" aria-label="DueDate" aria-describedby="basic-addon1"
+                                                    id='duedate' value={this.state.DueDate[parseInt(this.state.Stage)]}
+                                                    onChange={e => {
+                                                        let date = this.state.DueDate;
+                                                        date[parseInt(this.state.Stage)] = e.target.value;
+                                                        this.setState({ DueDate: date })
+                                                    }} style={{ color: "black" }}
+                                                ></input>
+                                            </div>
+                                            <div className="input-group-prepend input-group-sm" style={{ marginBottom: "2px", width: "99%" }}>
+                                                <span className="input-group-text" id="basic-addon1" style={{
+                                                    color: "black",
+                                                    height: "29px"
+                                                    // fontSize:'13px'
+                                                }}>Complete Date</span>
+                                                <input type="date" className="form-control" placeholder="CompletionDate" aria-label="CompletionDate" aria-describedby="basic-addon1"
+                                                    id='completiondate' value={this.state.CompletionDate[parseInt(this.state.Stage)]}
+                                                    onChange={e => {
+                                                        let date = this.state.CompletionDate;
+                                                        date[parseInt(this.state.Stage)] = e.target.value
+                                                        this.setState({ CompletionDate: date });
+                                                    }} style={{ color: "black" }}
+                                                ></input>
+                                            </div>
+
+                                            <div className="input-group-prepend input-group-sm" style={{ marginBottom: "2px", width: "99%" }}>
+                                                <span className="input-group-text" id="basic-addon1" style={{
+                                                    color: "black",
+                                                    height: "29px"
+                                                    // fontSize:'13px'
+                                                }}>City/State/Zip Code</span>
+                                                <input autoComplete="false" type="text" className="form-control" placeholder="city/zip code"
+                                                    value={this.state.City}
+                                                    onChange={e => {
+                                                        this.setState({ City: e.target.value });
+                                                    }} style={{ color: "black" }}
+                                                ></input>
+                                            </div>
+                                            <div className="input-group-prepend input-group-sm" style={{ marginBottom: "2px", width: "99%" }}>
+                                                <span className="input-group-text" id="basic-addon1" style={{
+                                                    color: "black",
+                                                    height: "29px"
+                                                    // fontSize:'13px'
+                                                }}>Lock Box Number</span>
+                                                <input type="text" className="form-control" placeholder="lockboxnumber" aria-label="LockBoxNumber" aria-describedby="basic-addon1"
+                                                    id='city' value={this.state.LBNum}
+                                                    onChange={e => {
+                                                        this.setState({ LBNum: e.target.value });
+                                                    }} style={{ color: "black" }}
+                                                ></input>
+                                            </div>
+                                            <div className="input-group-prepend input-group-sm" style={{ marginBottom: "2px", width: "99%" }}>
+                                                <span className="input-group-text" id="basic-addon1" style={{
+                                                    color: "black",
+                                                    height: "29px"
+                                                    // fontSize:'13px'
+                                                }}>Client</span>
+                                                <input type="text" className="form-control" placeholder="client..." aria-label="Client" aria-describedby="basic-addon1"
+                                                    id='client' value={this.state.Client} disabled
+                                                    onChange={e => {
+                                                        this.setState({ Client: e.target.value });
+                                                    }} style={{ color: "black" }}
+                                                ></input>
+                                            </div>
+                                            <div className="input-group-prepend input-group-sm" style={{ marginBottom: "2px", width: "99%" }}>
+                                                <span className="input-group-text" id="basic-addon1" style={{
+                                                    color: "black",
+                                                    height: "100px"
+                                                    // fontSize:'13px'
+                                                }}>Note</span>
+                                                <textarea className="form-control" placeholder="Noteeeeeeeeeeeee..." aria-label="Note" aria-describedby="basic-addon1"
+                                                    id='city' value={this.state.Note}
+                                                    onChange={e => {
+                                                        this.setState({ Note: e.target.value });
+                                                    }} style={{
+                                                        color: "black",
+                                                        width: "100%",
+                                                        height: "100px",
+                                                        resize: "none"
+                                                    }}
+                                                ></textarea>
+                                            </div>
+                                            <div className="input-group-prepend input-group-sm" style={{ marginBottom: "2px", width: "99%" }}>
+                                                <span className="input-group-text" id="basic-addon1" style={{
+                                                    color: "black",
+                                                    height: "29px"
+                                                    // fontSize:'13px'
+                                                }}>Tax</span>
+                                                <input type="text" className="form-control" placeholder="Enter Tax Please..." aria-label="Tax" aria-describedby="basic-addon1"
+                                                    id='tax' value={this.state.Tax}
+                                                    onChange={e => {
+                                                        this.setState({ Tax: e.target.value });
+                                                        let tempi = this.state.Item;
+                                                        for (let i = 0; i < tempi.length; i++) {
+                                                            tempi[i].Tax = parseFloat((tempi[i].Qty * tempi[i].PPU * (parseFloat(e.target.value) / 100)).toFixed(2));
+
+                                                            tempi[i].Amount = parseFloat((parseFloat(tempi[i].Tax) + parseFloat(tempi[i].Cost)).toFixed(2));
+                                                            // console.log(tempi[i].Amount);
+
+                                                        }
+                                                        this.setState({ Item: tempi });
+                                                    }} style={{ color: "black" }}
+                                                ></input>
+                                            </div>
+                                            <div className="input-group-prepend input-group-sm" style={{ marginBottom: "2px", width: "99%" }}>
+                                                <span className="input-group-text" id="basic-addon1" style={{
+                                                    color: "black",
+                                                    height: "29px"
+                                                    // fontSize:'13px'
+                                                }}>BillTo</span>
+                                                <input type="text" className="form-control" placeholder="bill to..." aria-label="BillTo" aria-describedby="basic-addon1"
+                                                    id='billto' value={this.state.Client}
+                                                    onChange={e => {
+                                                        this.setState({ BillTo: e.target.value });
+                                                    }} style={{ color: "black" }}
+                                                    disabled></input>
+                                            </div>
+                                            <div className="input-group-prepend input-group-sm" style={{ marginBottom: "2px", width: "99%" }}>
+                                                <span className="input-group-text" id="basic-addon1" style={{
+                                                    color: "black",
+                                                    height: "100px"
+                                                    // fontSize:'13px'
+                                                }}>Description</span>
+                                                <textarea className="form-control" placeholder="Description..." aria-label="Description" aria-describedby="basic-addon1"
+                                                    id='description' value={this.state.Desc}
+                                                    onChange={e => {
+                                                        this.setState({ Desc: e.target.value });
+                                                    }} style={{
+                                                        color: "black",
+                                                        width: "100%",
+                                                        height: "100px",
+                                                        resize: "none"
+                                                    }}
+                                                ></textarea>
+                                            </div>
+                                            <div className="input-group-prepend input-group-sm" style={{ marginBottom: "2px", width: "99%" }}>
+                                                <span className="input-group-text" id="basic-addon1" style={{
+                                                    color: "black",
+                                                    height: "100px"
+                                                    // fontSize:'13px'
+                                                }}>DescriptionCN</span>
+                                                <textarea className="form-control" placeholder="DescriptionCN..." aria-label="DescriptionCN" aria-describedby="basic-addon1"
+                                                    id='descriptionCN' value={this.state.DescCN}
+                                                    onChange={e => {
+                                                        this.setState({ DescCN: e.target.value });
+                                                    }} style={{
+                                                        color: "black",
+                                                        width: "100%",
+                                                        height: "100px",
+                                                        resize: "none"
+                                                    }}
+                                                ></textarea>
+                                            </div>
+                                        </ModalBody>
+                                    </Modal>
                                     <div className="card-header py-3">
-                                        <div 
+                                        <div
                                             className="left">
                                             <h4 style={{}}>{this.showCurrStage()} - {this.state.Username[parseInt(this.state.Stage)] ? this.state.Username[parseInt(this.state.Stage)] : void 0}</h4>
-
+                                            <button style={{
+                                                marginTop: '3px',
+                                                marginLeft: '5px',
+                                                fontSize: '14px',
+                                                width: '65px',
+                                                height: '29px',
+                                                // backgroundColor: this.state.Item[index].pano === "true" ? 'lightblue' : 'red'
+                                            }}
+                                                className={"btn btn-primary btn-sm"}
+                                                onClick={() => this.setState({ generalModal: true })}
+                                                title="edit">Edit</button>
                                         </div>
                                     </div>
                                     <div className="card-body">
@@ -330,10 +770,22 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                             <table style={{ marginRight: "30px", float: "right" }} className="editTableTop">
                                                 <tbody>
                                                     <tr>
+                                                        <th>Invoice Number</th><td>{this.state.Invoice}</td>
+                                                    </tr>
+                                                    <tr>
                                                         <th>Description</th><td>{this.state.Desc}{this.state.DescCN ? "/" + this.state.DescCN : void 0}</td>
                                                     </tr>
                                                     <tr>
                                                         <th>Note</th><td>{this.state.Note}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Tax</th><td>{this.state.Tax}%</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Total Tax</th><td>${taxTotal}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Total Amount</th><td>${TotalAmount}</td>
                                                     </tr>
                                                 </tbody>
 
@@ -360,6 +812,71 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                             </div>
 
                         </div>
+                        <div id="sphere" className="sphere">
+                        <div className="sphere-content">
+                            <span className="closep">&times;</span>
+                            
+                            <div style={{
+                                float: "left",
+                                width: "35%",
+                                height: "90%",
+                                overflow: "scroll",
+                                marginTop: "3%",
+                            }}>
+                                <div className="form-group" style={{
+                                    width: "99%"
+                                }}>
+                                    {this.state.Markers.length == 0 ? <div></div> : this.state.Markers.map(function (item, key) {
+                                        return (
+                                            <div className="input-group-prepend input-group-sm" style={{ marginBottom: "2px", width: "99%" }}>
+                                                <span className="input-group-text" id="basic-addon1" style={{
+                                                    color: "black",
+                                                    height: "100px"
+                                                    // fontSize:'13px'
+                                                }}>Description{key + 1}</span>
+                                                <textarea className="form-control" placeholder="Description..." aria-label="Description" aria-describedby="basic-addon1"
+                                                    id='description' value={item.Description}
+                                                    onChange={e => {
+                                                        let list = this.state.Markers;
+                                                        list[key].Description = e.target.value;
+                                                        this.setState({ Markers: list });
+                                                    }} style={{
+                                                        color: "black",
+                                                        width: "100%",
+                                                        height: "100px",
+                                                        resize: "none"
+                                                    }}
+                                                ></textarea>
+                                            </div>
+                                        )
+                                    }.bind(this))}
+
+                                </div>
+                                <div className="form-group row" style={{
+                                    width: "50%"
+                                }}>
+                                    <div className="col-sm-10">
+                                        <button onClick={this.submit360} className="btn btn-primary">Submit</button>
+                                        <button style={{ marginLeft: "10px" }} onClick={this.generateURL} className="btn btn-info">URL</button>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div id="spherepic" style={{
+                                float: "right",
+                                width: "60%",
+                                height: "90%"
+                            }}></div>
+                            <div style={{
+                                position: "relative",
+                                marginTop: "45px",
+                            }}></div>
+
+
+                        </div>
+
+                    </div>
                     </div>
                 </React.Fragment>);
             }
@@ -371,7 +888,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         else {
             return (<React.Fragment>
                 <div className="page">
-                    {this.showLeftBar()}
+                    {this.showLeftBar(TotalAmount)}
                     <div style={{ float: "right", width: "85%", height: "100%" }}>
                         <div style={{ marginLeft: "49%", marginTop: "30%" }}>
                             <img style={{ marginLeft: "3%" }} src="https://www.googleapis.com/download/storage/v1/b/post-images-rpntech/o/e7f0a5e2-6279-44df-8507-0a6a09dddc2f?generation=1553525595322811&alt=media" />
@@ -384,6 +901,145 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             </React.Fragment>);
         }
 
+    }
+
+    protected duplicateTask() {
+        let CompletionDate = new Array(7);
+        let name = [];
+        name.push(this.state.DupUsername);
+        let StartDate = new Array(7);
+        StartDate[0] = $('#DupStartDate').val();
+        let DueDate = new Array(7);
+        DueDate[0] = $('#DupDueDate').val();
+        // let citylist=$('#state').val()+"/"+$('#county').val()+"/"+$('#city').val()+"/"+$('#zipcode').val();
+
+        $.ajax({
+            url: 'https://rpnserver.appspot.com/duplicateTask?shared_id=' + this.state.SharedID,
+            method: 'POST',
+            datatype: "json",
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem('Token'),
+            },
+            data: JSON.stringify({
+                asset_num: this.state.AssetNum,
+                StartDate: StartDate,
+                DueDate: DueDate,
+                CompletionDate: CompletionDate,
+                City: this.state.City,
+                Address: this.state.Address,
+                Desc: this.state.DupDescription,
+                Keycode: this.state.LBNum,
+                Client: this.state.Client,
+                Username: name,
+                //stage:$('#stage').val()
+            }),
+            success: function (data) {
+                console.log(data);
+                alert("Dupicate Successfully!")
+
+            }.bind(this),
+        });
+    }
+
+    protected getUserByVendor(vendor: string) {
+        let name = vendor.replace(" ", "%20")
+        $.ajax({
+            url: 'https://rpnserver.appspot.com/findUsersByCompany?company=' + name,
+            method: 'GET',
+            datatype: "json",
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem('Token'),
+            },
+
+            success: function (data) {
+                console.log(data);
+                this.setState({ alluserForVendor: data })
+
+            }.bind(this),
+        });
+    }
+
+    protected submitStage() {
+        let StartDate = this.state.StartDate;
+        StartDate[parseInt(this.state.Stage)] = $("#stageStartDate").val();
+        let DueDate = this.state.DueDate;
+        DueDate[parseInt(this.state.Stage)] = $("#stageDueDate").val();
+        $.ajax({
+            url: 'https://rpnserver.appspot.com/updateTask?task_id=' + localStorage.getItem("currTask") + "&shared_id=" + this.state.SharedID,
+
+            method: 'POST',
+            datatype: "json",
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem('Token'),
+            },
+            data: JSON.stringify({
+                Address: this.state.Address,
+                Area: this.state.Area,
+                billTo: this.state.BillTo,
+                City: this.state.City,
+                CompletionDate: this.state.CompletionDate,
+                Desc: this.state.Desc,
+                Invoice: this.state.Invoice,
+                InvoiceDate: this.state.InvoiceDate,
+                DueDate: DueDate,
+                ItemList: this.state.Item,
+                KeyCode: this.state.LBNum,
+                Note: this.state.Note,
+                Stage: this.state.Stage,
+                StartDate: StartDate,
+                Stories: this.state.Stories,
+                TotalCost: this.state.TotalCost,
+                TotalImage: this.state.TotalImage,
+                Year: this.state.Year,
+                asset_num: this.state.AssetNum,
+                upload_link: this.state.uploadLink,
+                Tax: this.state.Tax,
+                Username: this.state.Username,
+                TaskStatus: this.state.TaskStatus,
+                Client: this.state.Client,
+                CheckList: this.state.CheckList,
+                Comment: this.state.Comment,
+                ClientIcon: this.state.ClientIcon,
+                Version: this.state.Version,
+                Progress: this.state.Progress,
+                VersionSize: this.state.VersionSize
+            }),
+            success: function (data) {
+                var fd = new FormData();
+                var newname = $('#setUser').val();
+                if (this.state.Username[parseInt(this.state.Stage)] === undefined) {
+
+                    fd.append('userToAdd', newname);
+                    fd.append('task_id', localStorage.getItem('currTask'));
+                    fd.append('shared_id', this.state.SharedID);
+                    fd.append('stage', this.state.Stage);
+                }
+                else {
+                    fd.append('userToRemove', this.state.Username[parseInt(this.state.Stage)]);
+                    fd.append('userToAdd', newname);
+                    fd.append('task_id', localStorage.getItem('currTask'));
+                    fd.append('shared_id', this.state.SharedID);
+                    fd.append('stage', this.state.Stage);
+                }
+
+                $.ajax({
+                    url: 'https://rpnserver.appspot.com/addTaskToUser',
+                    //url: 'http://192.168.0.66:8080/addTaskToUserII?userToRemove='+this.state.oldUser+'&userToAdd='+$('#setUser').val()+'&task_id='+localStorage.getItem('currTask'),
+                    method: 'POST',
+                    dataType: 'json',
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem('Token'),
+                    },
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    data: fd,
+                    success: function (data) {
+                        alert("Submit Successfully!")
+                    }.bind(this),
+                });
+            }.bind(this),
+        });
     }
 
     protected showCurrStage() {
@@ -414,6 +1070,20 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             return ("Unknown");
         }
     }
+    protected showStage() {
+        return (
+            <select value={this.state.Stage} style={{ marginTop: "10px" }} id='setStage' className="form-control" onChange={e => this.setState({ changeStageModal: true, Stage: e.target.value })}>
+                <option value="0">Initial</option>
+                <option value="1">Bid</option>
+                <option value="2">Work Order</option>
+                <option value="3">Invoice</option>
+                <option value="4">Pending Accounting Review</option>
+                <option value="5">Complete</option>
+                <option value="6">Archived</option>
+            </select>
+        )
+
+    }
     protected initItem(index: number) {
         return {
             After: [],
@@ -432,6 +1102,8 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             UM: '',
             PPU: 0,
             Cost: 0,
+            SubCost: 0,
+            SubPPU: 0,
             Pano: "",
             description_cn: "",
             measure: "",
@@ -473,10 +1145,10 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                     onChange={
                                         function (num) {
                                             let list = this.state.Item;
-                                            list.completeness = num + "";
+                                            list[index].completeness = num.toString();
                                             this.setState({ Item: list })
-                                        }
-                                    } defaultValue={this.state.Item[index].Completeness ? parseInt(this.state.Item[index].Completeness) : 0} />
+                                        }.bind(this)
+                                    } defaultValue={this.state.Item[index].completeness ? parseInt(this.state.Item[index].completeness) : 0} />
                             </div>
                         </div>
                         <div className="right">
@@ -606,6 +1278,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                         <th>UM</th>
                                         <th>QTY</th>
                                         <th>PPU</th>
+                                        <th>Tax</th>
                                         <th>Amount</th>
                                         {/* <th>Process</th>
                                     <th>Status</th> */}
@@ -619,16 +1292,17 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                         <td>{value.UM}</td>
                                         <td>{value.Qty}</td>
                                         <td>{value.PPU}</td>
-                                        <td>{value.Cost}</td>
+                                        <td>{value.Tax}</td>
+                                        <td>{value.Amount}</td>
                                         {/* <td>{this.showProcess(value.Process)}</td>
                                         <td>{this.showStatus(value.Status)}</td> */}
                                     </tr>
-                                    <tr><th style={{ textAlign: "center", borderBottom: "#FFFFFF", borderTop: "#FFFFFF" }} colSpan={7}>Before </th></tr>
-                                    <tr><td style={{ borderBottom: "#FFFFFF", borderTop: "#FFFFFF" }} colSpan={7}>{this.mapPicture(value.Before, value.description, value.Comments)}</td></tr>
-                                    <tr><th style={{ textAlign: "center", borderBottom: "#FFFFFF" }} colSpan={7}> During </th></tr>
-                                    <tr><td style={{ borderBottom: "#FFFFFF", borderTop: "#FFFFFF" }} colSpan={7}>{this.mapPicture(value.During, value.description, value.Comments)}</td></tr>
-                                    <tr><th style={{ textAlign: "center", borderBottom: "#FFFFFF" }} colSpan={7}> After </th></tr>
-                                    <tr><td style={{ borderTop: "#FFFFFF" }} colSpan={7}>{this.mapPicture(value.After, value.description, value.Comments)}</td></tr>
+                                    <tr><th style={{ textAlign: "center", borderBottom: "#FFFFFF", borderTop: "#FFFFFF" }} colSpan={8}>Before </th></tr>
+                                    <tr><td style={{ borderBottom: "#FFFFFF", borderTop: "#FFFFFF" }} colSpan={8}>{this.mapPicture(value.Before, value.description, value.Comments)}</td></tr>
+                                    <tr><th style={{ textAlign: "center", borderBottom: "#FFFFFF" }} colSpan={8}> During </th></tr>
+                                    <tr><td style={{ borderBottom: "#FFFFFF", borderTop: "#FFFFFF" }} colSpan={8}>{this.mapPicture(value.During, value.description, value.Comments)}</td></tr>
+                                    <tr><th style={{ textAlign: "center", borderBottom: "#FFFFFF" }} colSpan={8}> After </th></tr>
+                                    <tr><td style={{ borderTop: "#FFFFFF" }} colSpan={8}>{this.mapPicture(value.After, value.description, value.Comments)}</td></tr>
                                     {/* <tr><td style={{ borderLeftColor: "#FFFFFF", borderBottomColor: "#FFFFFF" }}>&nbsp;</td><th style={{textAlign:"center",borderBottom:"#FFFFFF", borderTop:"#FFFFFF"}}colSpan={6}>Before </th></tr>
                                     <tr><td style={{ borderLeftColor: "#FFFFFF", borderBottomColor: "#FFFFFF" }}>&nbsp;</td><td style={{borderBottom:"#FFFFFF", borderTop:"#FFFFFF"}} colSpan={6}>{this.mapPicture(value.Before, value.description, value.Comments)}</td></tr>
                                     <tr><td style={{ borderLeftColor: "#FFFFFF", borderBottomColor: "#FFFFFF" }}>&nbsp;</td><th style={{textAlign:"center",borderBottom:"#FFFFFF"}} colSpan={6}> During </th></tr>
@@ -647,7 +1321,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
 
 
     protected mapPicture(picture: any[], desc: string, descCN: string) {
-        if (localStorage.getItem("Authority") === '3') {
+        if (localStorage.getItem("Authority") === '0') {
             return (
                 picture.map(function (item, key) {
                     return (
@@ -667,7 +1341,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                     src={item.Src}
                                     onClick={this.convert360.bind(this, item)}
                                 />
-                                <div style={{ width: "97%" }}>{key + 1}.{desc}{descCN ? "/" + descCN : ""}</div>
+                                <div style={{ width: "97%" }}>{key + 1}.{desc}</div>
                             </div>
 
                         </div>
@@ -733,8 +1407,177 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         }
     }
 
-    protected convert360(item) {
+    protected submit360(){
+        let list = this.state.Item;
+        for (let i = 0; i < this.state.Markers.length; i++) {
+            list.push({
+                Cate: ".Marker",
+                After: [],
+                Amount: 0,
+                During: [],
+                Process: '0',
+                Status: '0',
+                Tax: 0,
+                Taxable: true,
+                description: this.state.Markers[i].Description,
+                Comments: '',
+                Item: (i + 1),
+                Qty: 0,
+                UM: '',
+                PPU: 0,
+                Cost: 0,
+                SubPPU: 0,
+                SubCost:0,
+                completeness:"0",
+                Before: [],
+                Pano: "false",
+                description_cn: "",
+            })
+        }
+        this.setState({ Item: list })
+        $.ajax({
+            url: 'https://rpnserver.appspot.com/updateMarker?image_id=' + this.state.currImgID,
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem('Token'),
+            },
+            method: 'POST',
+            datatype: "json",
+            data: JSON.stringify({
+                markers: this.state.Markers
+            }),
+            success: (function (result) {
+                // console.log(result);
+                window.alert("360 Markers saved successfully!")
+            }).bind(this),
 
+        })
+    }
+    protected convert360(pic) {
+        this.setState({ currImgID: pic.ImageID });
+        this.setState({ currImgSrc: pic.Src })
+
+        var modal = document.getElementById('sphere');
+
+        // Get the button that opens the modal
+
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("closep")[0];
+
+        // When the user clicks the button, open the modal 
+        modal.style.display = "block";
+
+        let div = document.getElementById('spherepic');
+        let PSV;
+        $.ajax({
+            url: "https://rpnserver.appspot.com/findImageMarkerByImageID?imageID=" + pic.ImageID,
+            method: 'GET',
+            datatype: "json",
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem('Token'),
+            },
+            // data: test,
+            success: function (data) {
+                console.log(data)
+                this.setState({ Markers: data.Markers })
+                // console.log(this.state.Markers);
+                PSV = new PhotoSphereViewer({
+                    panorama: pic.Src,
+                    container: div,
+                    time_anim: false,
+                    navbar: true,
+                    navbar_style: {
+                        backgroundColor: "silver",
+                    },
+                    markers: (function () {
+                        var marlist = [];
+                        for (let i = 0; i < this.state.Markers.length; i++) {
+                            marlist.push({
+                                id: this.state.Markers[i].singleMarkID,
+                                longitude: this.state.Markers[i].coord_y,
+                                latitude: this.state.Markers[i].CoordinateX,
+                                image: "https://cdn4.iconfinder.com/data/icons/peppyicons/512/660011-location-512.png",
+                                width: 32,
+                                height: 32,
+                                tooltip: (i + 1) + '. ' + this.state.Markers[i].Description,
+                                content: this.state.Markers[i].Description,
+                                data: {
+                                    generated: true
+                                }
+                            })
+                        };
+                        return marlist;
+                    }.bind(this)()),
+                })
+                PSV.on('click', function (e) {
+                    let createMar = {
+                        id: '#' + Math.random(),
+                        tooltip: this.state.Markers.Description,
+                        longitude: e.longitude,
+                        latitude: e.latitude,
+                        image: "https://cdn4.iconfinder.com/data/icons/peppyicons/512/660011-location-512.png",
+                        content: "",
+                        // content:this.edit360marker(),
+                        width: 32,
+                        height: 32,
+                        anchor: 'bottom center',
+                        data: {
+                            generated: true
+                        }
+                    }
+                    PSV.addMarker(createMar);
+                    let tempMar = this.state.Markers;
+                    let item = this.state.Item;
+                    tempMar.push({
+                        CoordinateX: createMar.latitude,
+                        Description: "",
+                        coord_y: createMar.longitude,
+                        singleMarkID: createMar.id
+                    })
+                    this.setState({ Markers: tempMar });
+                    console.log(this.state.Markers);
+                }.bind(this));
+
+                /**
+                 * Delete a generated marker when the user clicks on it
+                 */
+                PSV.on('select-marker', function (marker, dblclick) {
+                    if (marker.data && marker.data.generated) {
+                        if (dblclick) {
+                            let rmid = PSV.getCurrentMarker(marker).id
+                            console.log(rmid);
+                            let temp = this.state.Markers;
+                            if (temp.length == 1) {
+                                temp = [];
+                            }
+                            else {
+                                for (let i = 0; i < temp.length; i++) {
+
+                                    if (temp[i].singleMarkID === rmid) {
+                                        temp.splice(i, 1);
+                                        break;
+                                    }
+                                }
+                            }
+
+                            this.setState({ Markers: temp })
+                            PSV.removeMarker(marker);
+                        }
+                    }
+                }.bind(this));
+                // When the user clicks anywhere outside of the modal, close it
+                window.onclick = function (event) {
+                    if (event.target == span) {
+                        PSV.destroy();
+                        modal.style.display = "none";
+                    }
+                }
+            }.bind(this),
+        })
+    }
+
+    protected generateURL() {
+        window.alert(this.state.currImgSrc);
     }
 
     protected showProcess(value) {
@@ -759,7 +1602,78 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
     }
 
     protected downloadItemPics(item) {
+        let itempics = item.Before.concat(item.During, item.After);
+        let pics = [];
+        for (let i = 0; i < itempics.length; i++) {
+            pics.push(itempics[i].Src)
+        }
 
+        function resetMessage() {
+            $("#result")
+                .removeClass()
+                .text("");
+        }
+        /**
+         * show a successful message.
+         * @param {String} text the text to show.
+         */
+        function showMessage(text) {
+            resetMessage();
+            $("#result")
+                .addClass("alert alert-success")
+                .text(text);
+        }
+        /**
+         * show an error message.
+         * @param {String} text the text to show.
+         */
+        function showError(text) {
+            resetMessage();
+            $("#result")
+                .addClass("alert alert-danger")
+                .text(text);
+        }
+
+
+        function urlToPromise(url) {
+            console.log(url)
+            return new Promise(function (resolve, reject) {
+                JSZipUtils.getBinaryContent(url, function (err, data) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(data);
+                    }
+                });
+            });
+        }
+        resetMessage();
+        var zip = new JSZip();
+
+        // find every checked item
+        pics.forEach(function (url) {
+            console.log(url);
+            var filename = url.replace(/.*\//g, "") + ".jpg";
+            zip.file(filename, urlToPromise(url), { binary: true });
+        });
+        var add = this.state.Address
+        // when everything has been downloaded, we can trigger the dl
+        zip.generateAsync({ type: "blob" }, function updateCallback(metadata) {
+            var msg = "progression : " + metadata.percent.toFixed(2) + " %";
+            if (metadata.currentFile) {
+                msg += ", current file = " + metadata.currentFile;
+            }
+            showMessage(msg);
+        })
+            .then(function callback(blob) {
+
+                FileSaver.saveAs(blob, add + "_" + item.Cate + item.Item + ".zip");
+                showMessage("done !");
+            }, function (e) {
+                showError(e);
+            });
+
+        return false;
     }
     protected showTopBar() {
         return (
@@ -804,7 +1718,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             </div>
         )
     }
-    protected showLeftBar() {
+    protected showLeftBar(TotalAmount:any) {
         return (
             <div style={{ position: "fixed" }} className="wrapper">
                 <div className="sidebar">
@@ -845,7 +1759,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                             <div style={{ paddingTop: "5%" }}>
                                 <button className="btn btn-primary" style={{
                                     width: "100%",
-                                }} onClick={this.submit}>Submit</button>
+                                }} onClick={this.submit.bind(this,TotalAmount)}>Submit</button>
                             </div>
                         </div>
                         <div className="sidebar-body-action">
@@ -860,14 +1774,16 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                             <div style={{ paddingTop: "5%" }}>
                                 <button className="btn btn-primary" style={{
                                     width: "45%",
-                                }}>PrintPDF</button>
+                                }} onClick={() => this.props.history.push("/printTask")}>PrintPDF</button>
                                 <button className="btn btn-primary" style={{
                                     width: "45%",
-                                    float: "right",
-                                    // marginLeft:"5px"
-                                }}>JSON</button>
+                                    float: "right"
+                                }} onClick={() => this.setState({ duplicateModal: true })}>Duplicate</button>
+
                             </div>
+
                         </div>
+
                         <div className="sidebar-body-action">
                             <div style={{ paddingTop: "5%" }}>
                                 <button className="btn btn-primary" style={{
@@ -895,6 +1811,13 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                 </DropdownMenu>
                             </Dropdown>
                         </div>
+
+                        {this.showStage()}
+                        <select value={this.state.Version + this.state.VersionSize + ""} style={{ marginTop: "10px" }} id='setStage' className="form-control" onChange={e => this.findPrevVersion(e.target.value)}>
+                            {this.state.versionArray.map(function (item, index) {
+                                return (<option key={index}>{item}</option>)
+                            }.bind(this))}
+                        </select>
                         <div style={{ marginTop: "10px", overflow: "auto", height: this.height, boxShadow: "0 0 35px 10px #EBEDEF inset" }} className="sidebar-body-action">
                             {this.state.Item.map(function (item, index) {
                                 return (
@@ -902,6 +1825,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                 )
                             }.bind(this))}
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -909,8 +1833,184 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         )
     }
 
-    protected submit() {
+    protected deleteMarkerList() {
+        let list = this.state.Item;
+        let temp = [];
+        for (let i = 0; i < list.length; i++) {
+            if (list[i].Cate.includes(".Marker")) {
+            }
+            else {
+                temp.push(list[i]);
+            }
+        }
+        this.setState({ Item: temp });
+    }
 
+    protected findPrevVersion(version: any) {
+        let current = version - this.state.VersionSize
+        $.ajax({
+            url: 'https://rpnserver.appspot.com/findPrevTask?shared_id=' + this.state.SharedID + "&version=" + current,
+            method: 'GET',
+            datatype: "json",
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem('Token'),
+            },
+
+            success: function (result) {
+                this.setState({ City: result.City })
+                this.setState({ Address: result.Address });
+                this.setState({ Area: result.Area });
+                this.setState({ BillTo: result.BillTo });
+                this.setState({ CompletionDate: result.CompletionDate });
+                this.setState({ Desc: result.Desc });
+                this.setState({ DescCN: result.DescCN });
+                this.setState({ Invoice: result.Invoice });
+                this.setState({ DueDate: result.DueDate });
+                this.setState({ InvoiceDate: result.InvoiceDate });
+                this.setState({ Item: result.ItemList });
+                this.setState({ LBNum: result.KeyCode });
+                this.setState({ Note: result.Note });
+                this.setState({ Stage: result.Stage });
+                this.setState({ StartDate: result.StartDate });
+                this.setState({ Stories: result.Stories });
+                this.setState({ TotalCost: result.TotalCost });
+                this.setState({ TotalImage: result.TotalImage });
+                this.setState({ Year: result.Year });
+                this.setState({ AssetNum: result.asset_num });
+                this.setState({ uploadLink: result.upload_link });
+                result.Tax ? this.setState({ Tax: result.Tax }) : this.setState({ Tax: "0" })
+                this.setState({ Username: result.Username });
+                this.setState({ Client: result.Client });
+                this.setState({ TaskStatus: result.TaskStatus });
+                this.setState({ CheckList: result.CheckList });
+                this.setState({ Comment: result.Comment });
+                this.setState({ ClientIcon: result.ClientIcon })
+                this.setState({
+                    Progress: result.Progress,
+                    Version: result.Version,
+                    VersionSize: result.VersionSize,
+                    SharedID: result.SharedID,
+                    DupDescription: result.Desc,
+                    
+                })
+                localStorage.setItem("currTask", result.TaskID)
+                let temp = []
+                for (let i = result.VersionSize; i > 0; i--) {
+                    temp.push(i);
+                }
+                console.log(temp)
+                this.setState({ versionArray: temp })
+            }.bind(this),
+        });
+    }
+
+
+    protected submit(TotalAmount) {
+        let mark = 1;
+        for (let i = 0; i < this.state.Item.length; i++) {
+            if (this.state.Item[i].Process !== '1' || this.state.Item[i].Status !== '1') {
+                mark = 0;
+                break;
+            }
+        }
+
+        if (mark == 1) {
+
+            this.setState({ TaskStatus: "1" }, () => {
+                $.ajax({
+                    url: 'https://rpnserver.appspot.com/updateTask?task_id=' + localStorage.getItem("currTask") + "&shared_id=" + this.state.SharedID,
+
+                    method: 'POST',
+                    datatype: "json",
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem('Token'),
+                    },
+                    data: JSON.stringify({
+                        Address: this.state.Address,
+                        Area: this.state.Area,
+                        billTo: this.state.BillTo,
+                        City: this.state.City,
+                        CompletionDate: this.state.CompletionDate,
+                        Desc: this.state.Desc,
+                        DescCN: this.state.DescCN,
+                        Invoice: this.state.Invoice,
+                        InvoiceDate: this.state.InvoiceDate,
+                        DueDate: this.state.DueDate,
+                        ItemList: this.state.Item,
+                        KeyCode: this.state.LBNum,
+                        Note: this.state.Note,
+                        Stage: this.state.Stage,
+                        StartDate: this.state.StartDate,
+                        Stories: this.state.Stories,
+                        TotalImage: this.state.TotalImage,
+                        Year: this.state.Year,
+                        asset_num: this.state.AssetNum,
+                        upload_link: this.state.uploadLink,
+                        Tax: this.state.Tax,
+                        Username: this.state.Username,
+                        TaskStatus: this.state.TaskStatus,
+                        Client: this.state.Client,
+                        CheckList: this.state.CheckList,
+                        Comment: this.state.Comment,
+                        ClientIcon: this.state.ClientIcon,
+                        Version: this.state.Version,
+                        Progress: this.state.Progress,
+                        VersionSize: this.state.VersionSize,
+                        TotalCost: TotalAmount.toString()
+                    }),
+                    success: function (data) {
+                        alert("Submit Successfully!")
+                    }.bind(this),
+                });
+            });
+        }
+        else {
+            this.setState({ TaskStatus: "0" }, () => {
+                $.ajax({
+                    url: 'https://rpnserver.appspot.com/updateTask?task_id=' + localStorage.getItem("currTask") + "&shared_id=" + this.state.SharedID,
+                    method: 'POST',
+                    datatype: "json",
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem('Token'),
+                    },
+                    data: JSON.stringify({
+                        Address: this.state.Address,
+                        Area: this.state.Area,
+                        billTo: this.state.BillTo,
+                        City: this.state.City,
+                        CompletionDate: this.state.CompletionDate,
+                        Desc: this.state.Desc,
+                        DescCN: this.state.DescCN,
+                        Invoice: this.state.Invoice,
+                        InvoiceDate: this.state.InvoiceDate,
+                        DueDate: this.state.DueDate,
+                        ItemList: this.state.Item,
+                        KeyCode: this.state.LBNum,
+                        Note: this.state.Note,
+                        Stage: this.state.Stage,
+                        StartDate: this.state.StartDate,
+                        Stories: this.state.Stories,
+                        TotalImage: this.state.TotalImage,
+                        Year: this.state.Year,
+                        asset_num: this.state.AssetNum,
+                        upload_link: this.state.uploadLink,
+                        Tax: this.state.Tax,
+                        Username: this.state.Username,
+                        TaskStatus: this.state.TaskStatus,
+                        Client: this.state.Client,
+                        CheckList: this.state.CheckList,
+                        Comment: this.state.Comment,
+                        Version: this.state.Version,
+                        Progress: this.state.Progress,
+                        VersionSize: this.state.VersionSize,
+                        TotalCost: TotalAmount.toString()
+                    }),
+                    success: function (data) {
+                        alert("Submit Successfully!")
+                    }.bind(this),
+                });
+            });
+        }
     }
 
     protected stageColor(item: any) {

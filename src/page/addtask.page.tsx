@@ -222,11 +222,12 @@ class PageGhotiAddtask extends React.Component<IProps, IState> {
     protected submitTask() {
         let name = [];
         name.push(this.state.username);
-        let StartDate = [];
-        StartDate.push($('#startdate').val());
-        let DueDate = [];
-        DueDate.push($('#duedate').val());
-        let citylist=$('#state').val()+"/"+$('#county').val()+"/"+$('#city').val()+"/"+$('#zipcode').val()
+        let StartDate = new Array(7);
+        StartDate[0]=$('#startdate').val();
+        let DueDate = new Array(7);
+        DueDate[0]=$('#duedate').val();
+        let citylist=$('#state').val()+"/"+$('#county').val()+"/"+$('#city').val()+"/"+$('#zipcode').val();
+        let CompletionDate = new Array(7);
         
 
         $.ajax({
@@ -240,6 +241,7 @@ class PageGhotiAddtask extends React.Component<IProps, IState> {
                 asset_num: $('#assetnum').val(),
                 StartDate: StartDate,
                 DueDate: DueDate,
+                CompletionDate: CompletionDate,
                 City: citylist,
                 Address: $('#propaddr').val(),
                 Desc: $('#description').val(),
