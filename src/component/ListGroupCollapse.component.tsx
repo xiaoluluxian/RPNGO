@@ -47,10 +47,10 @@ class ComponentGhotiListGroupCollapse extends React.Component<IProps, IState> {
                 <React.Fragment>
                     <li>Initial: {username[0]}</li>
                     <li>Bid: {void 0}</li>
-                    <li>WorkOrder: {void 0}</li>
+                    <li>Client Approval: {void 0}</li>
+                    <li>Work Order: {void 0}</li>
+                    <li>Quality Assurance: {void 0}</li>
                     <li>Invoice: {void 0}</li>
-                    <li>Pending Account Review: {void 0}</li>
-                    <li>Complete: {void 0}</li>
                     <li>Archived: {void 0}</li>
                 </React.Fragment>
             )
@@ -60,10 +60,10 @@ class ComponentGhotiListGroupCollapse extends React.Component<IProps, IState> {
                 <React.Fragment>
                     <li>Initial: {username[0]}</li>
                     <li>Bid: {username[1]}</li>
-                    <li>WorkOrder: {void 0}</li>
+                    <li>Client Approval: {void 0}</li>
+                    <li>Work Order: {void 0}</li>
+                    <li>Quality Assurance: {void 0}</li>
                     <li>Invoice: {void 0}</li>
-                    <li>Pending Account Review: {void 0}</li>
-                    <li>Complete: {void 0}</li>
                     <li>Archived: {void 0}</li>
                 </React.Fragment>
             )
@@ -73,10 +73,10 @@ class ComponentGhotiListGroupCollapse extends React.Component<IProps, IState> {
                 <React.Fragment>
                     <li>Initial: {username[0]}</li>
                     <li>Bid: {username[1]}</li>
-                    <li>WorkOrder: {username[2]}</li>
+                    <li>Client Approval: {username[2]}</li>
+                    <li>Work Order: {void 0}</li>
+                    <li>Quality Assurance: {void 0}</li>
                     <li>Invoice: {void 0}</li>
-                    <li>Pending Account Review: {void 0}</li>
-                    <li>Complete: {void 0}</li>
                     <li>Archived: {void 0}</li>
                 </React.Fragment>
             )
@@ -86,10 +86,10 @@ class ComponentGhotiListGroupCollapse extends React.Component<IProps, IState> {
                 <React.Fragment>
                     <li>Initial: {username[0]}</li>
                     <li>Bid: {username[1]}</li>
-                    <li>WorkOrder: {username[2]}</li>
-                    <li>Invoice: {username[3]}</li>
-                    <li>Pending Account Review: {void 0}</li>
-                    <li>Complete: {void 0}</li>
+                    <li>Client Approval: {username[2]}</li>
+                    <li>Work Order: {username[3]}</li>
+                    <li>Quality Assurance: {void 0}</li>
+                    <li>Invoice: {void 0}</li>
                     <li>Archived: {void 0}</li>
                 </React.Fragment>
             )
@@ -99,10 +99,10 @@ class ComponentGhotiListGroupCollapse extends React.Component<IProps, IState> {
                 <React.Fragment>
                     <li>Initial: {username[0]}</li>
                     <li>Bid: {username[1]}</li>
-                    <li>WorkOrder: {username[2]}</li>
-                    <li>Invoice: {username[3]}</li>
-                    <li>Pending Account Review: {username[4]}</li>
-                    <li>Complete: {void 0}</li>
+                    <li>Client Approval: {username[2]}</li>
+                    <li>Work Order: {username[3]}</li>
+                    <li>Quality Assurance: {username[4]}</li>
+                    <li>Invoice: {void 0}</li>
                     <li>Archived: {void 0}</li>
                 </React.Fragment>
             )
@@ -112,10 +112,10 @@ class ComponentGhotiListGroupCollapse extends React.Component<IProps, IState> {
                 <React.Fragment>
                     <li>Initial: {username[0]}</li>
                     <li>Bid: {username[1]}</li>
-                    <li>WorkOrder: {username[2]}</li>
-                    <li>Invoice: {username[3]}</li>
-                    <li>Pending Account Review: {username[4]}</li>
-                    <li>Complete: {username[5]}</li>
+                    <li>Client Approval: {username[2]}</li>
+                    <li>Work Order: {username[3]}</li>
+                    <li>Quality Assurance: {username[4]}</li>
+                    <li>Invoice: {username[5]}</li>
                     <li>Archived: {void 0}</li>
                 </React.Fragment>
             )
@@ -124,10 +124,10 @@ class ComponentGhotiListGroupCollapse extends React.Component<IProps, IState> {
             <React.Fragment>
                 <li>Initial: {username[0]}</li>
                 <li>Bid: {username[1]}</li>
-                <li>WorkOrder: {username[2]}</li>
-                <li>Invoice: {username[3]}</li>
-                <li>Pending Account Review: {username[4]}</li>
-                <li>Complete: {username[5]}</li>
+                <li>Client Approval: {username[2]}</li>
+                <li>Work Order: {username[3]}</li>
+                <li>Quality Assurance: {username[4]}</li>
+                <li>Invoice: {username[5]}</li>
                 <li>Archived: {username[6]}</li>
             </React.Fragment>
         }

@@ -21,6 +21,7 @@ import * as PhotoSphereViewer from "photo-sphere-viewer";
 import Slider from 'rc-slider'
 import * as JSZip from "jszip"
 import * as JSZipUtils from "jszip-utils"
+import { createVerify } from 'crypto';
 
 export interface IProps {
     history: any
@@ -99,7 +100,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         Comment: "",
         Markers: [],
         currImgID: "",
-        currImgSrc:"",
+        currImgSrc: "",
 
 
         DupDescription: "",
@@ -161,12 +162,12 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                     SharedID: result.SharedID,
                     DupDescription: result.Desc
                 })
-                let temp = []
-                for (let i = result.VersionSize; i > 0; i--) {
-                    temp.push(i);
-                }
-                console.log(temp)
-                this.setState({ versionArray: temp })
+                // let temp = []
+                // for (let i = result.VersionSize; i > 0; i--) {
+                //     temp.push(i);
+                // }
+                // // console.log(temp)
+                // this.setState({ versionArray: temp })
                 this.reload += 1;
                 this.setState({ Loading: this.reload })
 
@@ -284,6 +285,22 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                 this.setState({ Loading: this.reload })
             }).bind(this),
         });
+        $.ajax({
+            url: "https://rpnserver.appspot.com/findVersionStatusBySharedId?shared_id=" + localStorage.getItem("currSharedID"),
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem('Token'),
+            },
+            method: 'GET',
+            datatype: "json",
+            data: JSON.stringify({
+            }),
+            success: (function (result) {
+                this.setState({ versionArray: result })
+            }).bind(this),
+            error: (function (jqXHR, textStatus, errorThrown) {
+                console.log(errorThrown)
+            }).bind(this),
+        })
     }
 
     public constructor(props) {
@@ -299,8 +316,10 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         this.convert360 = this.convert360.bind(this);
         this.submit360 = this.submit360.bind(this);
         this.generateURL = this.generateURL.bind(this);
-
+        this.addWHP = this.addWHP.bind(this);
         this.updateItemList = this.updateItemList.bind(this);
+        this.pushPage = this.pushPage.bind(this)
+        this.changeChecklist = this.changeChecklist.bind(this)
 
         this.submit = this.submit.bind(this);
         this.submitStage = this.submitStage.bind(this);
@@ -319,7 +338,20 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
 
         if (this.reload == 5) {
             if (localStorage.getItem("Authority") === "0") {
-                return <div>client</div>
+                return (
+                    <React.Fragment>
+                        <div className="page">
+                            <Component.leftBar page="main" pushPage={this.pushPage.bind(this)} />
+                            <div className="editPage">
+                                <div className="editContainer">
+                                    <div className="card shadow mb-4">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </React.Fragment>
+                )
             }
             else if (localStorage.getItem("Authority") === "3" || "4" || "5") {
                 return (<React.Fragment>
@@ -340,7 +372,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                             <div style={{ marginTop: "10px" }} className="input-group-prepend">
                                                 <span className="input-group-text">Stage To</span>
                                                 <div className="custom-file">
-                                                    <input className="form-control" id="userToRemove" value={this.showCurrStage()} disabled></input>
+                                                    <input className="form-control" id="userToRemove" value={this.showCurrStage(this.state.Stage)} disabled></input>
                                                 </div>
                                             </div>
                                             <div style={{ marginTop: "10px" }} className="input-group-prepend">
@@ -592,7 +624,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                                     color: "black",
                                                     height: "29px"
                                                     // fontSize:'13px'
-                                                }}>City/State/Zip Code</span>
+                                                }}>City/State/County/Zip Code</span>
                                                 <input autoComplete="false" type="text" className="form-control" placeholder="city/zip code"
                                                     value={this.state.City}
                                                     onChange={e => {
@@ -720,7 +752,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                     <div className="card-header py-3">
                                         <div
                                             className="left">
-                                            <h4 style={{}}>{this.showCurrStage()} - {this.state.Username[parseInt(this.state.Stage)] ? this.state.Username[parseInt(this.state.Stage)] : void 0}</h4>
+                                            <h4 style={{}}>{this.showCurrStage(this.state.Stage)} - {this.state.Username[parseInt(this.state.Stage)] ? this.state.Username[parseInt(this.state.Stage)] : void 0}</h4>
                                             <button style={{
                                                 marginTop: '3px',
                                                 marginLeft: '5px',
@@ -813,70 +845,70 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
 
                         </div>
                         <div id="sphere" className="sphere">
-                        <div className="sphere-content">
-                            <span className="closep">&times;</span>
-                            
-                            <div style={{
-                                float: "left",
-                                width: "35%",
-                                height: "90%",
-                                overflow: "scroll",
-                                marginTop: "3%",
-                            }}>
-                                <div className="form-group" style={{
-                                    width: "99%"
+                            <div className="sphere-content">
+                                <span className="closep">&times;</span>
+
+                                <div style={{
+                                    float: "left",
+                                    width: "35%",
+                                    height: "90%",
+                                    overflow: "scroll",
+                                    marginTop: "3%",
                                 }}>
-                                    {this.state.Markers.length == 0 ? <div></div> : this.state.Markers.map(function (item, key) {
-                                        return (
-                                            <div className="input-group-prepend input-group-sm" style={{ marginBottom: "2px", width: "99%" }}>
-                                                <span className="input-group-text" id="basic-addon1" style={{
-                                                    color: "black",
-                                                    height: "100px"
-                                                    // fontSize:'13px'
-                                                }}>Description{key + 1}</span>
-                                                <textarea className="form-control" placeholder="Description..." aria-label="Description" aria-describedby="basic-addon1"
-                                                    id='description' value={item.Description}
-                                                    onChange={e => {
-                                                        let list = this.state.Markers;
-                                                        list[key].Description = e.target.value;
-                                                        this.setState({ Markers: list });
-                                                    }} style={{
+                                    <div className="form-group" style={{
+                                        width: "99%"
+                                    }}>
+                                        {this.state.Markers.length == 0 ? <div></div> : this.state.Markers.map(function (item, key) {
+                                            return (
+                                                <div className="input-group-prepend input-group-sm" style={{ marginBottom: "2px", width: "99%" }}>
+                                                    <span className="input-group-text" id="basic-addon1" style={{
                                                         color: "black",
-                                                        width: "100%",
-                                                        height: "100px",
-                                                        resize: "none"
-                                                    }}
-                                                ></textarea>
-                                            </div>
-                                        )
-                                    }.bind(this))}
+                                                        height: "100px"
+                                                        // fontSize:'13px'
+                                                    }}>Description{key + 1}</span>
+                                                    <textarea className="form-control" placeholder="Description..." aria-label="Description" aria-describedby="basic-addon1"
+                                                        id='description' value={item.Description}
+                                                        onChange={e => {
+                                                            let list = this.state.Markers;
+                                                            list[key].Description = e.target.value;
+                                                            this.setState({ Markers: list });
+                                                        }} style={{
+                                                            color: "black",
+                                                            width: "100%",
+                                                            height: "100px",
+                                                            resize: "none"
+                                                        }}
+                                                    ></textarea>
+                                                </div>
+                                            )
+                                        }.bind(this))}
 
-                                </div>
-                                <div className="form-group row" style={{
-                                    width: "50%"
-                                }}>
-                                    <div className="col-sm-10">
-                                        <button onClick={this.submit360} className="btn btn-primary">Submit</button>
-                                        <button style={{ marginLeft: "10px" }} onClick={this.generateURL} className="btn btn-info">URL</button>
                                     </div>
+                                    <div className="form-group row" style={{
+                                        width: "50%"
+                                    }}>
+                                        <div className="col-sm-10">
+                                            <button onClick={this.submit360} className="btn btn-primary">Submit</button>
+                                            <button style={{ marginLeft: "10px" }} onClick={this.generateURL} className="btn btn-info">URL</button>
+                                        </div>
 
+                                    </div>
                                 </div>
+
+                                <div id="spherepic" style={{
+                                    float: "right",
+                                    width: "60%",
+                                    height: "90%"
+                                }}></div>
+                                <div style={{
+                                    position: "relative",
+                                    marginTop: "45px",
+                                }}></div>
+
+
                             </div>
 
-                            <div id="spherepic" style={{
-                                float: "right",
-                                width: "60%",
-                                height: "90%"
-                            }}></div>
-                            <div style={{
-                                position: "relative",
-                                marginTop: "45px",
-                            }}></div>
-
-
                         </div>
-
-                    </div>
                     </div>
                 </React.Fragment>);
             }
@@ -936,9 +968,40 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             success: function (data) {
                 console.log(data);
                 alert("Dupicate Successfully!")
+                window.location.reload()
 
             }.bind(this),
         });
+    }
+    protected addWHP() {
+        let list = this.state.Item;
+        let WHP = {
+            After: [],
+            Amount: 0,
+            During: [],
+            Process: '0',
+            Status: '0',
+            Tax: 0,
+            Taxable: true,
+            description: '',
+            Cate: 'WholeHousePhotos',
+            Comments: '',
+            Item: 1,
+            Qty: 0,
+            UM: '',
+            PPU: 0,
+            Cost: 0,
+            completeness: "0",
+            SubCost: 0,
+            SubPPU: 0,
+
+            Before: []
+        }
+        list.push(WHP);
+        this.setState({ Item: list });
+    }
+    protected pushPage(page: String) {
+        this.props.history.push(page)
     }
 
     protected getUserByVendor(vendor: string) {
@@ -1036,34 +1099,35 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                     data: fd,
                     success: function (data) {
                         alert("Submit Successfully!")
+                        window.location.reload()
                     }.bind(this),
                 });
             }.bind(this),
         });
     }
 
-    protected showCurrStage() {
+    protected showCurrStage(stage) {
         //console.log(this.state.Stage);
 
-        if (this.state.Stage === '0') {
+        if (stage === '0') {
             return ("Initial");
         }
-        else if (this.state.Stage === '1') {
+        else if (stage === '1') {
             return ("Bid");
         }
-        else if (this.state.Stage === '2') {
+        else if (stage === '2') {
+            return ("Client Approval");
+        }
+        else if (stage === '3') {
             return ("Work Order");
         }
-        else if (this.state.Stage === '3') {
-            return ("Invoice");
+        else if (stage === '4') {
+            return ("Quality Assurance")
         }
-        else if (this.state.Stage === '4') {
-            return ("Pending Accounting Review")
+        else if (stage === '5') {
+            return ("Invoice")
         }
-        else if (this.state.Stage === '5') {
-            return ("Complete")
-        }
-        else if (this.state.Stage === '6') {
+        else if (stage === '6') {
             return ("Archived")
         }
         else {
@@ -1075,10 +1139,10 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             <select value={this.state.Stage} style={{ marginTop: "10px" }} id='setStage' className="form-control" onChange={e => this.setState({ changeStageModal: true, Stage: e.target.value })}>
                 <option value="0">Initial</option>
                 <option value="1">Bid</option>
-                <option value="2">Work Order</option>
-                <option value="3">Invoice</option>
-                <option value="4">Pending Accounting Review</option>
-                <option value="5">Complete</option>
+                <option value="2">Client Approval</option>
+                <option value="3">Work Order</option>
+                <option value="4">Quality Assurance</option>
+                <option value="5">Invoice</option>
                 <option value="6">Archived</option>
             </select>
         )
@@ -1407,7 +1471,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         }
     }
 
-    protected submit360(){
+    protected submit360() {
         let list = this.state.Item;
         for (let i = 0; i < this.state.Markers.length; i++) {
             list.push({
@@ -1427,8 +1491,8 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                 PPU: 0,
                 Cost: 0,
                 SubPPU: 0,
-                SubCost:0,
-                completeness:"0",
+                SubCost: 0,
+                completeness: "0",
                 Before: [],
                 Pano: "false",
                 description_cn: "",
@@ -1718,7 +1782,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             </div>
         )
     }
-    protected showLeftBar(TotalAmount:any) {
+    protected showLeftBar(TotalAmount: any) {
         return (
             <div style={{ position: "fixed" }} className="wrapper">
                 <div className="sidebar">
@@ -1759,14 +1823,14 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                             <div style={{ paddingTop: "5%" }}>
                                 <button className="btn btn-primary" style={{
                                     width: "100%",
-                                }} onClick={this.submit.bind(this,TotalAmount)}>Submit</button>
+                                }} onClick={this.submit.bind(this, TotalAmount)}>Submit</button>
                             </div>
                         </div>
                         <div className="sidebar-body-action">
                             <div style={{ paddingTop: "5%" }}>
                                 <button className="btn btn-info" style={{
                                     width: "100%",
-                                }}>CheckList</button>
+                                }}onClick={this.changeChecklist}> CheckList</button>
                             </div>
                         </div>
 
@@ -1788,7 +1852,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                             <div style={{ paddingTop: "5%" }}>
                                 <button className="btn btn-primary" style={{
                                     width: "45%",
-                                }}>AddWHP</button>
+                                }} onClick={this.addWHP}>AddWHP</button>
                                 <button className="btn btn-primary" style={{
                                     width: "45%",
                                     float: "right",
@@ -1805,17 +1869,17 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                     DownloadPics
                                 </DropdownToggle>
                                 <DropdownMenu>
-                                    <button className="btn btn-secondary" style={{ width: "100%", margin: "auto", border: "none", borderBottom: "1px solid #E5E5E5", borderTop: "1px solid #E5E5E5" }}>Before</button>
-                                    <button className="btn btn-secondary" style={{ width: "100%", margin: "auto", border: "none", borderBottom: "1px solid #E5E5E5" }}>During</button>
-                                    <button className="btn btn-secondary" style={{ width: "100%", margin: "auto", border: "none", borderBottom: "1px solid #E5E5E5" }}>After</button>
+                                    <button onClick={this.downloadPics.bind(this,"Before")}className="btn btn-secondary" style={{ width: "100%", margin: "auto", border: "none", borderBottom: "1px solid #E5E5E5", borderTop: "1px solid #E5E5E5" }}>Before</button>
+                                    <button onClick={this.downloadPics.bind(this,"During")}className="btn btn-secondary" style={{ width: "100%", margin: "auto", border: "none", borderBottom: "1px solid #E5E5E5" }}>During</button>
+                                    <button onClick={this.downloadPics.bind(this,"After")}className="btn btn-secondary" style={{ width: "100%", margin: "auto", border: "none", borderBottom: "1px solid #E5E5E5" }}>After</button>
                                 </DropdownMenu>
                             </Dropdown>
                         </div>
 
                         {this.showStage()}
-                        <select value={this.state.Version + this.state.VersionSize + ""} style={{ marginTop: "10px" }} id='setStage' className="form-control" onChange={e => this.findPrevVersion(e.target.value)}>
+                        <select value={this.state.Version} style={{ marginTop: "10px" }} id='setStage' className="form-control" onChange={e => this.findPrevVersion(e.target.value)}>
                             {this.state.versionArray.map(function (item, index) {
-                                return (<option key={index}>{item}</option>)
+                                return (<option style={{ color: item.Status === '0' ? "#A00A0A" : "#18A409" }} key={index} value={item.Version}>{item.Version + this.state.VersionSize}-{this.showCurrStage(item.Stage)}</option>)
                             }.bind(this))}
                         </select>
                         <div style={{ marginTop: "10px", overflow: "auto", height: this.height, boxShadow: "0 0 35px 10px #EBEDEF inset" }} className="sidebar-body-action">
@@ -1832,6 +1896,144 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
 
         )
     }
+    protected changeChecklist(){
+        this.props.history.push("/checklist");
+    }
+
+    protected downloadPics(type: string) {
+        function resetMessage() {
+            $("#result")
+                .removeClass()
+                .text("");
+        }
+        /**
+         * show a successful message.
+         * @param {String} text the text to show.
+         */
+        function showMessage(text) {
+            resetMessage();
+            $("#result")
+                .addClass("alert alert-success")
+                .text(text);
+        }
+        /**
+         * show an error message.
+         * @param {String} text the text to show.
+         */
+        function showError(text) {
+            resetMessage();
+            $("#result")
+                .addClass("alert alert-danger")
+                .text(text);
+        }
+
+
+        function urlToPromise(url) {
+            console.log(url)
+            return new Promise(function (resolve, reject) {
+                JSZipUtils.getBinaryContent(url, function (err, data) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(data);
+                    }
+                });
+            });
+        }
+        if (type === 'Before') {
+            resetMessage();
+            var zip = new JSZip();
+            var urls = this.state.Before;
+            // find every checked item
+            urls.forEach(function (url) {
+                console.log(url);
+                var filename = url.replace(/.*\//g, "") + ".jpg";
+                zip.file(filename, urlToPromise(url), { binary: true });
+            });
+            var add = this.state.Address
+            // when everything has been downloaded, we can trigger the dl
+            zip.generateAsync({ type: "blob" }, function updateCallback(metadata) {
+                var msg = "progression : " + metadata.percent.toFixed(2) + " %";
+                if (metadata.currentFile) {
+                    msg += ", current file = " + metadata.currentFile;
+                }
+                showMessage(msg);
+            })
+                .then(function callback(blob) {
+
+                    FileSaver.saveAs(blob, add + "-Before.zip");
+                    showMessage("done !");
+                }, function (e) {
+                    showError(e);
+                });
+
+            return false;
+        }
+        else if(type==='During'){
+            resetMessage();
+            var zip = new JSZip();
+            var urls = this.state.During;
+            // find every checked item
+            urls.forEach(function (url) {
+                console.log(url);
+                var filename = url.replace(/.*\//g, "") + ".jpg";
+                zip.file(filename, urlToPromise(url), { binary: true });
+            });
+            var add = this.state.Address
+            // when everything has been downloaded, we can trigger the dl
+            zip.generateAsync({ type: "blob" }, function updateCallback(metadata) {
+                var msg = "progression : " + metadata.percent.toFixed(2) + " %";
+                if (metadata.currentFile) {
+                    msg += ", current file = " + metadata.currentFile;
+                }
+                showMessage(msg);
+            })
+                .then(function callback(blob) {
+
+                    FileSaver.saveAs(blob, add + "-During.zip");
+                    showMessage("done !");
+                }, function (e) {
+                    showError(e);
+                });
+
+            return false;
+        }
+        else if(type==='After'){
+            resetMessage();
+            var zip = new JSZip();
+            var urls = this.state.After;
+            // find every checked item
+            urls.forEach(function (url) {
+                console.log(url);
+                var filename = url.replace(/.*\//g, "") + ".jpg";
+                zip.file(filename, urlToPromise(url), { binary: true });
+            });
+            var add = this.state.Address
+            // when everything has been downloaded, we can trigger the dl
+            zip.generateAsync({ type: "blob" }, function updateCallback(metadata) {
+                var msg = "progression : " + metadata.percent.toFixed(2) + " %";
+                if (metadata.currentFile) {
+                    msg += ", current file = " + metadata.currentFile;
+                }
+                showMessage(msg);
+            })
+                .then(function callback(blob) {
+
+                    FileSaver.saveAs(blob, add + "-After.zip");
+                    showMessage("done !");
+                }, function (e) {
+                    showError(e);
+                });
+
+            return false;
+        }
+        else{
+
+        }
+
+
+
+    }
 
     protected deleteMarkerList() {
         let list = this.state.Item;
@@ -1847,7 +2049,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
     }
 
     protected findPrevVersion(version: any) {
-        let current = version - this.state.VersionSize
+        let current = version
         $.ajax({
             url: 'https://rpnserver.appspot.com/findPrevTask?shared_id=' + this.state.SharedID + "&version=" + current,
             method: 'GET',
@@ -1857,49 +2059,50 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             },
 
             success: function (result) {
-                this.setState({ City: result.City })
-                this.setState({ Address: result.Address });
-                this.setState({ Area: result.Area });
-                this.setState({ BillTo: result.BillTo });
-                this.setState({ CompletionDate: result.CompletionDate });
-                this.setState({ Desc: result.Desc });
-                this.setState({ DescCN: result.DescCN });
-                this.setState({ Invoice: result.Invoice });
-                this.setState({ DueDate: result.DueDate });
-                this.setState({ InvoiceDate: result.InvoiceDate });
-                this.setState({ Item: result.ItemList });
-                this.setState({ LBNum: result.KeyCode });
-                this.setState({ Note: result.Note });
-                this.setState({ Stage: result.Stage });
-                this.setState({ StartDate: result.StartDate });
-                this.setState({ Stories: result.Stories });
-                this.setState({ TotalCost: result.TotalCost });
-                this.setState({ TotalImage: result.TotalImage });
-                this.setState({ Year: result.Year });
-                this.setState({ AssetNum: result.asset_num });
-                this.setState({ uploadLink: result.upload_link });
-                result.Tax ? this.setState({ Tax: result.Tax }) : this.setState({ Tax: "0" })
-                this.setState({ Username: result.Username });
-                this.setState({ Client: result.Client });
-                this.setState({ TaskStatus: result.TaskStatus });
-                this.setState({ CheckList: result.CheckList });
-                this.setState({ Comment: result.Comment });
-                this.setState({ ClientIcon: result.ClientIcon })
-                this.setState({
-                    Progress: result.Progress,
-                    Version: result.Version,
-                    VersionSize: result.VersionSize,
-                    SharedID: result.SharedID,
-                    DupDescription: result.Desc,
-                    
-                })
+                // this.setState({ City: result.City })
+                // this.setState({ Address: result.Address });
+                // this.setState({ Area: result.Area });
+                // this.setState({ BillTo: result.BillTo });
+                // this.setState({ CompletionDate: result.CompletionDate });
+                // this.setState({ Desc: result.Desc });
+                // this.setState({ DescCN: result.DescCN });
+                // this.setState({ Invoice: result.Invoice });
+                // this.setState({ DueDate: result.DueDate });
+                // this.setState({ InvoiceDate: result.InvoiceDate });
+                // this.setState({ Item: result.ItemList });
+                // this.setState({ LBNum: result.KeyCode });
+                // this.setState({ Note: result.Note });
+                // this.setState({ Stage: result.Stage });
+                // this.setState({ StartDate: result.StartDate });
+                // this.setState({ Stories: result.Stories });
+                // this.setState({ TotalCost: result.TotalCost });
+                // this.setState({ TotalImage: result.TotalImage });
+                // this.setState({ Year: result.Year });
+                // this.setState({ AssetNum: result.asset_num });
+                // this.setState({ uploadLink: result.upload_link });
+                // result.Tax ? this.setState({ Tax: result.Tax }) : this.setState({ Tax: "0" })
+                // this.setState({ Username: result.Username });
+                // this.setState({ Client: result.Client });
+                // this.setState({ TaskStatus: result.TaskStatus });
+                // this.setState({ CheckList: result.CheckList });
+                // this.setState({ Comment: result.Comment });
+                // this.setState({ ClientIcon: result.ClientIcon })
+                // this.setState({
+                //     Progress: result.Progress,
+                //     Version: result.Version,
+                //     VersionSize: result.VersionSize,
+                //     SharedID: result.SharedID,
+                //     DupDescription: result.Desc,
+
+                // })
                 localStorage.setItem("currTask", result.TaskID)
-                let temp = []
-                for (let i = result.VersionSize; i > 0; i--) {
-                    temp.push(i);
-                }
-                console.log(temp)
-                this.setState({ versionArray: temp })
+                // let temp = []
+                // for (let i = result.VersionSize; i > 0; i--) {
+                //     temp.push(i);
+                // }
+                // console.log(temp)
+                // this.setState({ versionArray: temp })
+                window.location.reload()
             }.bind(this),
         });
     }
@@ -1907,6 +2110,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
 
     protected submit(TotalAmount) {
         let mark = 1;
+        let Progress = 0;
         for (let i = 0; i < this.state.Item.length; i++) {
             if (this.state.Item[i].Process !== '1' || this.state.Item[i].Status !== '1') {
                 mark = 0;
@@ -1960,6 +2164,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                     }),
                     success: function (data) {
                         alert("Submit Successfully!")
+                        window.location.reload()
                     }.bind(this),
                 });
             });
@@ -1998,6 +2203,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                         Username: this.state.Username,
                         TaskStatus: this.state.TaskStatus,
                         Client: this.state.Client,
+                        ClientIcon: this.state.ClientIcon,
                         CheckList: this.state.CheckList,
                         Comment: this.state.Comment,
                         Version: this.state.Version,
@@ -2007,6 +2213,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                     }),
                     success: function (data) {
                         alert("Submit Successfully!")
+                        window.location.reload()
                     }.bind(this),
                 });
             });

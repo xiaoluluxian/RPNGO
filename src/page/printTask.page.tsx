@@ -231,7 +231,7 @@ class PageGhotiPrintTask extends React.Component<IProps, IState> {
                 </React.Fragment>
             )
         }
-        else if (this.state.Stage === "1") {
+        else if (this.state.Stage === "1"||this.state.Stage === "2") {
             return (
                 <React.Fragment>
                     <div style={{
@@ -362,7 +362,7 @@ class PageGhotiPrintTask extends React.Component<IProps, IState> {
                 </React.Fragment>
             )
         }
-        else if (this.state.Stage === "2") {
+        else if (this.state.Stage === "3"||this.state.Stage === "4") {
             return (
                 
                 <React.Fragment>

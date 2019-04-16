@@ -45,6 +45,7 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
         ClientIcon: "",
         ClientID: "",
 
+        VendorID:"",
         VendorABC: "",
         VendorAddress: "",
         BusinessLic: "",
@@ -62,7 +63,7 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
         PerformedServices: [],
         VendorPhone: "",
         VendorContact: "",
-        VendorRegion:[],
+        VendorRegion: "",
         WCInsurance: "",
         WCIEDate: "",
         VendorScore: ""
@@ -261,28 +262,36 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
                 }),
                 success: (function (result) {
                     console.log(result);
+                    let region = ""
+                    for (let i = 0; i < result.Region.length; i++) {
+                        region += result.Region[i].state;
+                        region += '-'
+                        region += result.Region[i].county;
+                        region += '\n'
+                    }
                     this.setState({
                         VendorABC: result.ABCNum,
                         VendorAddress: result.Address,
                         BusinessLic: result.BusinessLic,
                         BLEDate: result.BusinessLicExpireDate,
                         Vendor: result.Company,
-                        ContractorLic:result.ContractorLic,
+                        ContractorLic: result.ContractorLic,
                         CLEDate: result.ContractorLicExpireDate,
                         EINorSSN: result.EINorSSN,
                         VendorEmail: result.Email,
                         GenInsurance: result.GenInsurance,
                         GIEDate: result.GenInsuranceExpireDate,
-                        ICO: result.ICOLecel,
+                        ICO: result.ICOLevel,
                         VendorIcon: result.Icon,
-                        LicensedServices: result.LicensedServies,
+                        LicensedServices: result.LicensedServices,
                         PerformedServices: result.PerformedServices,
                         VendorPhone: result.Phone,
                         VendorContact: result.PrimaryContact,
-                        VendorRegion: result.Region,
+                        VendorRegion: region,
                         WCInsurance: result.WCInsurance,
                         WCIEDate: result.WCInsuranceExpireDate,
-                        VendorScore: result.Score
+                        VendorScore: result.Score,
+                        VendorID:result.ID
                     })
 
                 }).bind(this),
@@ -483,97 +492,97 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
                                 <div id="div_id_propertyaddress" className="form-group required">
                                     <label className="control-label col-md-8  requiredField"> Company<span className="asteriskField"></span> </label>
                                     <div className="controls col-md-10 ">
-                                        <input className="input-md  textinput textInput form-control" id="Vendor" name="Vendor" placeholder="Company..." style={{ marginBottom: "5px" }} type="text" ></input>
+                                        <input value={this.state.Vendor} className="input-md  textinput textInput form-control" onChange={e => this.setState({ Vendor: e.target.value })} id="Vendor" name="Vendor" placeholder="Company..." style={{ marginBottom: "5px" }} type="text" ></input>
                                     </div>
                                 </div>
                                 <div id="div_id_assetnumber" className="form-group required">
                                     <label className="control-label col-md-8  requiredField"> Address<span className="asteriskField"></span> </label>
                                     <div className="controls col-md-10 ">
-                                        <input className="input-md  textinput textInput form-control" id="VendorAddress" name="VendorAddress" placeholder="Address..." style={{ marginBottom: "5px" }} type="text" ></input>
+                                        <input value={this.state.VendorAddress} onChange={e => this.setState({ VendorAddress: e.target.value })} className="input-md  textinput textInput form-control" id="VendorAddress" name="VendorAddress" placeholder="Address..." style={{ marginBottom: "5px" }} type="text" ></input>
                                     </div>
                                 </div>
                                 <div id="div_id_assetnumber" className="form-group required">
                                     <label className="control-label col-md-8  requiredField"> Primary Contact<span className="asteriskField"></span> </label>
                                     <div className="controls col-md-10 ">
-                                        <input className="input-md  textinput textInput form-control" id="VendorUser" name="vendoraddress" placeholder="Contact..." style={{ marginBottom: "5px" }} type="text" ></input>
+                                        <input value={this.state.VendorContact} onChange={e => this.setState({ VendorContact: e.target.value })} className="input-md  textinput textInput form-control" id="VendorUser" name="vendoraddress" placeholder="Contact..." style={{ marginBottom: "5px" }} type="text" ></input>
                                     </div>
                                 </div>
                                 <div id="div_id_assetnumber" className="form-group required">
                                     <label className="control-label col-md-8  requiredField"> Phone<span className="asteriskField"></span> </label>
                                     <div className="controls col-md-10 ">
-                                        <input className="input-md  textinput textInput form-control" id="VendorPhone" name="VendorPhone" placeholder="Phone..." style={{ marginBottom: "5px" }} type="text" ></input>
+                                        <input value={this.state.VendorPhone} onChange={e => this.setState({ VendorPhone: e.target.value })} className="input-md  textinput textInput form-control" id="VendorPhone" name="VendorPhone" placeholder="Phone..." style={{ marginBottom: "5px" }} type="text" ></input>
                                     </div>
                                 </div>
                                 <div id="div_id_assetnumber" className="form-group required">
                                     <label className="control-label col-md-8  requiredField"> Email<span className="asteriskField"></span> </label>
                                     <div className="controls col-md-10">
-                                        <input className="input-md  textinput textInput form-control" id="VendorEmail" name="VendorEmail" placeholder="Eamil..." style={{ marginBottom: "5px" }} type="text" ></input>
+                                        <input value={this.state.VendorEmail} onChange={e => this.setState({ VendorEmail: e.target.value })} className="input-md  textinput textInput form-control" id="VendorEmail" name="VendorEmail" placeholder="Eamil..." style={{ marginBottom: "5px" }} type="text" ></input>
                                     </div>
                                 </div>
                                 <div id="div_id_assetnumber" className="form-group required">
                                     <label className="control-label col-md-8  requiredField"> EIN/SSN<span className="asteriskField"></span> </label>
                                     <div className="controls col-md-10 ">
-                                        <input className="input-md  textinput textInput form-control" id="EINorSSN" name="EINorSSN" placeholder="EIN/SSN..." style={{ marginBottom: "5px" }} type="text" ></input>
+                                        <input value={this.state.EINorSSN} onChange={e => this.setState({ EINorSSN: e.target.value })} className="input-md  textinput textInput form-control" id="EINorSSN" name="EINorSSN" placeholder="EIN/SSN..." style={{ marginBottom: "5px" }} type="text" ></input>
                                     </div>
                                 </div>
                                 <div id="div_id_assetnumber" className="form-group required">
                                     <label className="control-label col-md-8  requiredField"> General Liability Insurance<span className="asteriskField"></span> </label>
                                     <div className="controls col-md-10 ">
-                                        <input className="input-md  textinput textInput form-control" id="GLInsurance" name="Insurance" placeholder="General Liability Insurance..." style={{ marginBottom: "5px" }} type="text" ></input>
+                                        <input value={this.state.GenInsurance} onChange={e => this.setState({ GenInsurance: e.target.value })} className="input-md  textinput textInput form-control" id="GLInsurance" name="Insurance" placeholder="General Liability Insurance..." style={{ marginBottom: "5px" }} type="text" ></input>
                                     </div>
                                 </div>
                                 <div id="div_id_assetnumber" className="form-group required">
                                     <label className="control-label col-md-8  requiredField"> General Liability Insurance Expire Date<span className="asteriskField"></span> </label>
                                     <div className="controls col-md-10 ">
-                                        <input type="date" className="input-md  textinput textInput form-control" id="GLIEDate" name="IEDate" style={{ marginBottom: "5px" }}></input>
+                                        <input value={this.state.GIEDate} onChange={e => this.setState({ GIEDate: e.target.value })} type="date" className="input-md  textinput textInput form-control" id="GLIEDate" name="IEDate" style={{ marginBottom: "5px" }}></input>
                                     </div>
                                 </div>
                                 <div id="div_id_assetnumber" className="form-group required">
-                                    <label className="control-label col-md-8  requiredField"> WC Insurance<span className="asteriskField"></span> </label>
+                                    <label className="control-label col-md-8  requiredField"> Work Comp Insurance<span className="asteriskField"></span> </label>
                                     <div className="controls col-md-10 ">
-                                        <input className="input-md  textinput textInput form-control" id="WCInsurance" name="Insurance" placeholder="General Liability Insurance..." style={{ marginBottom: "5px" }} type="text" ></input>
+                                        <input value={this.state.WCInsurance} onChange={e => this.setState({ WCInsurance: e.target.value })} className="input-md  textinput textInput form-control" id="WCInsurance" name="Insurance" placeholder="General Liability Insurance..." style={{ marginBottom: "5px" }} type="text" ></input>
                                     </div>
                                 </div>
                                 <div id="div_id_assetnumber" className="form-group required">
-                                    <label className="control-label col-md-8  requiredField"> WC Insurance Expire Date<span className="asteriskField"></span> </label>
+                                    <label className="control-label col-md-8  requiredField"> Work Comp Insurance Expire Date<span className="asteriskField"></span> </label>
                                     <div className="controls col-md-10 ">
-                                        <input type="date" className="input-md  textinput textInput form-control" id="WCIEDate" name="IEDate" style={{ marginBottom: "5px" }}></input>
+                                        <input value={this.state.WCIEDate} onChange={e => this.setState({ WCIEDate: e.target.value })} type="date" className="input-md  textinput textInput form-control" id="WCIEDate" name="IEDate" style={{ marginBottom: "5px" }}></input>
                                     </div>
                                 </div>
                                 <div id="div_id_assetnumber" className="form-group required">
                                     <label className="control-label col-md-8  requiredField"> Business License<span className="asteriskField"></span> </label>
                                     <div className="controls col-md-10 ">
-                                        <input className="input-md  textinput textInput form-control" id="BLicense" name="Insurance" placeholder="Business License..." style={{ marginBottom: "5px" }} type="text" ></input>
+                                        <input value={this.state.BusinessLic} onChange={e => this.setState({ BusinessLic: e.target.value })} className="input-md  textinput textInput form-control" id="BLicense" name="Insurance" placeholder="Business License..." style={{ marginBottom: "5px" }} type="text" ></input>
                                     </div>
                                 </div>
                                 <div id="div_id_assetnumber" className="form-group required">
                                     <label className="control-label col-md-8  requiredField"> Business License Expire Date<span className="asteriskField"></span> </label>
                                     <div className="controls col-md-10 ">
-                                        <input type="date" className="input-md  textinput textInput form-control" id="BLEDate" name="IEDate" style={{ marginBottom: "5px" }}></input>
+                                        <input value={this.state.BLEDate} onChange={e => this.setState({ BLEDate: e.target.value })} type="date" className="input-md  textinput textInput form-control" id="BLEDate" name="IEDate" style={{ marginBottom: "5px" }}></input>
                                     </div>
                                 </div>
                                 <div id="div_id_assetnumber" className="form-group required">
                                     <label className="control-label col-md-8 requiredField"> Contractor License<span className="asteriskField"></span> </label>
                                     <div className="controls col-md-10 ">
-                                        <input className="input-md  textinput textInput form-control" id="CLicense" name="Insurance" placeholder="Contractor License..." style={{ marginBottom: "5px" }} type="text" ></input>
+                                        <input value={this.state.ContractorLic} onChange={e => this.setState({ ContractorLic: e.target.value })} className="input-md  textinput textInput form-control" id="CLicense" name="Insurance" placeholder="Contractor License..." style={{ marginBottom: "5px" }} type="text" ></input>
                                     </div>
                                 </div>
                                 <div id="div_id_assetnumber" className="form-group required">
                                     <label className="control-label col-md-8  requiredField"> Contractor License Expire Date<span className="asteriskField"></span> </label>
                                     <div className="controls col-md-10 ">
-                                        <input type="date" className="input-md  textinput textInput form-control" id="CLEDate" name="IEDate" style={{ marginBottom: "5px" }}></input>
+                                        <input value={this.state.CLEDate} onChange={e => this.setState({ CLEDate: e.target.value })} type="date" className="input-md  textinput textInput form-control" id="CLEDate" name="IEDate" style={{ marginBottom: "5px" }}></input>
                                     </div>
                                 </div>
                                 <div id="div_id_assetnumber" className="form-group required">
                                     <label className="control-label col-md-8  requiredField"> ABCNumber<span className="asteriskField"></span> </label>
                                     <div className="controls col-md-10 ">
-                                        <input className="input-md  textinput textInput form-control" id="ABCNumber" name="ABCNumber" placeholder="ABCNumber..." style={{ marginBottom: "5px" }} type="text" ></input>
+                                        <input value={this.state.VendorABC} onChange={e => this.setState({ VendorABC: e.target.value })} className="input-md  textinput textInput form-control" id="ABCNumber" name="ABCNumber" placeholder="ABCNumber..." style={{ marginBottom: "5px" }} type="text" ></input>
                                     </div>
                                 </div>
                                 <div id="div_id_assetnumber" className="form-group required">
                                     <label className="control-label col-md-8  requiredField"> ICOLevel<span className="asteriskField"></span> </label>
                                     <div className="controls col-md-10 ">
-                                        <input className="input-md  textinput textInput form-control" id="ICOLevel" name="ICOLevel" placeholder="ICOLevel..." style={{ marginBottom: "5px" }} type="text" ></input>
+                                        <input value={this.state.ICO} onChange={e => this.setState({ ICO: e.target.value })} className="input-md  textinput textInput form-control" id="ICOLevel" name="ICOLevel" placeholder="ICOLevel..." style={{ marginBottom: "5px" }} type="text" ></input>
                                     </div>
                                 </div>
 
@@ -598,86 +607,62 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
                     <div id="signupbox" style={{ marginTop: "15px", width: "47%", float: "right" }} className="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
                         <div id="div_id_assetnumber" className="form-group required">
                             <label className="control-label col-md-4  requiredField"> Performed Services<span className="asteriskField"></span> </label>
-                            <div style={{ marginLeft: "15px" }} className="form-check">
-                                <input style={{ marginTop: "7px" }} className="form-check-input" type="checkbox" id="PropertyInspection" />
-                                <label className="form-check-label">
-                                    Property Inspection
-                                        </label>
-                            </div>
-                            <div style={{ marginLeft: "15px" }} className="form-check">
-                                <input style={{ marginTop: "7px" }} className="form-check-input" type="checkbox" id="PropertyPreservation" />
-                                <label className="form-check-label">
-                                    Property Preservation
-                                        </label>
-                            </div>
-                            <div style={{ marginLeft: "15px" }} className="form-check">
-                                <input style={{ marginTop: "7px" }} className="form-check-input" type="checkbox" id="REO" />
-                                <label className="form-check-label">
-                                    REO
-                                        </label>
-                            </div>
-                            <div style={{ marginLeft: "15px" }} className="form-check">
-                                <input style={{ marginTop: "7px" }} className="form-check-input" type="checkbox" id="HazardClaim" />
-                                <label className="form-check-label">
-                                    Hazard Claim
-                                        </label>
-                            </div>
-                            <div style={{ marginLeft: "15px" }} className="form-check">
-                                <input style={{ marginTop: "7px" }} className="form-check-input" type="checkbox" id="QualityControl" />
-                                <label className="form-check-label">
-                                    Quality Control
-                                        </label>
-                            </div>
+                            {this.state.PerformedServices.map(function (item, index) {
+                                // console.log(item.includes('-'))
+                                if (item.includes('-') == true) {
+                                    let temp = item.split('-');
+                                    return (
+                                        <div key={index} style={{ marginLeft: "15px" }} className="form-check">
+                                            <input style={{ marginTop: "7px" }} className="form-check-input" type="checkbox" id={temp[1]} />
+                                            <label className="form-check-label">
+                                                {temp[1]}
+                                            </label>
+                                        </div>
+                                    )
+                                }
+                                else {
+                                    return (
+                                        <div key={index}style={{ marginLeft: "15px" }} className="form-check">
+                                            <input defaultChecked style={{ marginTop: "7px" }} className="form-check-input" type="checkbox" id={item} />
+                                            <label className="form-check-label">
+                                                {item}
+                                            </label>
+                                        </div>
+                                    )
+                                }
+                            }.bind(this))}
+
                         </div>
                         <div id="div_id_assetnumber" className="form-group required">
-                            <label className="control-label col-md-4  requiredField"> Licensed Services<span className="asteriskField"></span> </label>
-                            <div style={{ marginLeft: "15px" }} className="form-check">
-                                <input style={{ marginTop: "7px" }} className="form-check-input" type="checkbox" id="MoldRemediation" />
-                                <label className="form-check-label">
-                                    Mold Remediation
-                                        </label>
-                            </div>
-                            <div style={{ marginLeft: "15px" }} className="form-check">
-                                <input style={{ marginTop: "7px" }} className="form-check-input" type="checkbox" id="Electrical" />
-                                <label className="form-check-label">
-                                    Electrical
-                                        </label>
-                            </div>
-                            <div style={{ marginLeft: "15px" }} className="form-check">
-                                <input style={{ marginTop: "7px" }} className="form-check-input" type="checkbox" id="Demolition" />
-                                <label className="form-check-label">
-                                    Demolition
-                                        </label>
-                            </div>
-                            <div style={{ marginLeft: "15px" }} className="form-check">
-                                <input style={{ marginTop: "7px" }} className="form-check-input" type="checkbox" id="Plumbing" />
-                                <label className="form-check-label">
-                                    Plumbing
-                                        </label>
-                            </div>
-                            <div style={{ marginLeft: "15px" }} className="form-check">
-                                <input style={{ marginTop: "7px" }} className="form-check-input" type="checkbox" id="HealthHazard" />
-                                <label className="form-check-label">
-                                    Health Hazard
-                                        </label>
-                            </div>
-                            <div style={{ marginLeft: "15px" }} className="form-check">
-                                <input style={{ marginTop: "7px" }} className="form-check-input" type="checkbox" id="Roofing" />
-                                <label className="form-check-label">
-                                    Roofing
-                                        </label>
-                            </div>
-                            <div style={{ marginLeft: "15px" }} className="form-check">
-                                <input style={{ marginTop: "7px" }} className="form-check-input" type="checkbox" id="GeneralContracting" />
-                                <label className="form-check-label">
-                                    General Contracting
-                                        </label>
-                            </div>
+                        <label className="control-label col-md-4  requiredField"> Licensed Services<span className="asteriskField"></span> </label>
+                            {this.state.LicensedServices.map(function (item, index) {
+                                if (item.includes('-') == true) {
+                                    let temp = item.split('-');
+                                    return (
+                                        <div key={index} style={{ marginLeft: "15px" }} className="form-check">
+                                            <input style={{ marginTop: "7px" }} className="form-check-input" type="checkbox" id={temp[1]} />
+                                            <label className="form-check-label">
+                                                {temp[1]}
+                                            </label>
+                                        </div>
+                                    )
+                                }
+                                else {
+                                    return (
+                                        <div style={{ marginLeft: "15px" }} className="form-check">
+                                            <input defaultChecked style={{ marginTop: "7px" }} className="form-check-input" type="checkbox" id={item} />
+                                            <label className="form-check-label">
+                                                {item}
+                                            </label>
+                                        </div>
+                                    )
+                                }
+                            }.bind(this))}
                         </div>
                         <div id="div_id_assetnumber" className="form-group required">
                             <div className="form-group">
                                 <label >Cover State (Format: State-County) (Use line break to separate State-County) </label>
-                                <textarea id="CoverState" style={{ width: "70%", height: "150px" }}>
+                                <textarea value={this.state.VendorRegion} onChange={e => this.setState({ VendorRegion: e.target.value })} id="CoverState" style={{ width: "70%", height: "150px" }}>
 
                                 </textarea>
                             </div>
@@ -877,11 +862,74 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
                 }).bind(this),
             });
         }
-        else if(this.state.currStage==='2'){
+        else if (this.state.currStage === '2') {
+            let PerformedServices = [];
+            $('#PropertyInspection').prop("checked") ? PerformedServices.push("PropertyInspection") : PerformedServices.push("False-PropertyInspection")
+            $('#PropertyPreservation').prop("checked") ? PerformedServices.push("PropertyPreservation") : PerformedServices.push("False-PropertyPreservation")
+            $('#REO').prop("checked") ? PerformedServices.push("REO") : PerformedServices.push("False-REO")
+            $('#HazardClaim').prop("checked") ? PerformedServices.push("HazardClaim") : PerformedServices.push("False-HazardClaim")
+            $('#QualityControl').prop("checked") ? PerformedServices.push("QualityControl") : PerformedServices.push("False-QualityControl")
 
+            let LicensedServices = [];
+            $('#MoldRemediation').prop("checked") ? LicensedServices.push("MoldRemediation") : LicensedServices.push("False-MoldRemediation")
+            $('#Electrical').prop("checked") ? LicensedServices.push("Electrical") : LicensedServices.push("False-Electrical")
+            $('#Demolition').prop("checked") ? LicensedServices.push("Demolition") : LicensedServices.push("False-Demolition")
+            $('#Plumbing').prop("checked") ? LicensedServices.push("Plumbing") : LicensedServices.push("False-Plumbing")
+            $('#HealthHazard').prop("checked") ? LicensedServices.push("HealthHazard") : LicensedServices.push("False-HealthHazard")
+            $('#Roofing').prop("checked") ? LicensedServices.push("Roofing") : LicensedServices.push("False-Roofing")
+            $('#GeneralContracting').prop("checked") ? LicensedServices.push("GeneralContracting") : LicensedServices.push("False-GeneralContracting")
+            let temp = this.state.VendorRegion
+            let CoverState = temp.split("\n")
+            // console.log(CoverState);
+            let StateCounty = [];
+            for (let i = 0; i < CoverState.length; i++) {
+                if (CoverState[i]) {
+                    let State = CoverState[i].split("-")[0];
+                    let County = CoverState[i].split("-")[1];
+                    State = State.replace(" ", "")
+                    County = County.replace(" ", "_")
+                    StateCounty.push({ state: State, county: County })
+                }
+            }
+            // console.log(StateCounty);
+            $.ajax({
+                url: 'https://rpnserver.appspot.com/updateVendor?vendorId='+this.state.VendorID,
+                method: 'POST',
+                datatype: "json",
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem('Token'),
+                },
+                data: JSON.stringify({
+                    Company: this.state.Vendor,
+                    Address: this.state.VendorAddress,
+                    icon: this.state.VendorIcon,
+                    Region: StateCounty,
+                    PrimaryContact: this.state.VendorContact,
+                    Phone: this.state.VendorPhone,
+                    Email: this.state.VendorEmail,
+                    EINorSSN: this.state.EINorSSN,
+                    BusinessLic: this.state.BusinessLic,
+                    BusinessLicExpireDate: this.state.BLEDate,
+                    ContractorLic: this.state.ContractorLic,
+                    ContractorLicExpireDate: this.state.CLEDate,
+                    GenInsurance: this.state.GenInsurance,
+                    GenInsuranceExpireDate: this.state.GIEDate,
+                    WCInsurance: this.state.WCInsurance,
+                    WCInsuranceExpireDate: this.state.WCIEDate,
+                    PerformedServices: PerformedServices,
+                    LicensedServices: LicensedServices,
+                    ABCNum: this.state.VendorABC,
+                    ICOLevel: this.state.ICO,
+                    Score: "0"
+                }),
+                success: function (data) {
+                    console.log(data);
+                    this.props.history.push('/main');
+                }.bind(this),
+            });
         }
-        else{
-            
+        else {
+
         }
     }
 }

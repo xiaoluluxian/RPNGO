@@ -106,6 +106,7 @@ class PageGhotiLogin extends React.Component<IProps, IState> {
                 localStorage.setItem('Token', result.Token);
                 localStorage.setItem('Authority', result.Authority);
                 localStorage.setItem('currUser', result.Username);
+                localStorage.setItem('company', result.Company);
                 this.props.history.push('/main');
             }).bind(this),
             error: (function (jqXHR, textStatus, errorThrown) {

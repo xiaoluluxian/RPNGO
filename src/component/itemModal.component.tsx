@@ -218,9 +218,42 @@ class ComponentGhotiItemModal extends React.Component<IProps, IState> {
                             color: "black",
                             height: "29px"
                             // fontSize:'13px'
+                        }}>SubPPU</span>
+                        <input type="number" className="form-control" placeholder="PPU..." aria-label="PPU" aria-describedby="basic-addon1"
+                            id='ppu' value={this.props.each.SubPPU}
+                            style={{
+                                color: "black"
+                            }}
+                            onChange={e => {
+                                let list = this.props.item;
+                                list[this.props.index].SubPPU = parseFloat(e.target.value) || 0;
+                                list[this.props.index].SubCost = list[this.props.index].Qty * list[this.props.index].SubPPU;
+                                this.props.updateItemList(list)
+                            }}
+                        ></input>
+                    </div>
+                    <div className="input-group-prepend input-group-sm" style={{ marginBottom: "0px" }}>
+                        <span className="input-group-text" id="basic-addon1" style={{
+                            color: "black",
+                            height: "29px"
+                            // fontSize:'13px'
                         }}>Cost</span>
                         <input type="number" className="form-control" placeholder="Cost..." aria-label="Cost" aria-describedby="basic-addon1"
                             id='cost' value={this.props.each.Cost}
+                            style={{
+                                color: "black"
+                            }}
+                            disabled
+                        ></input>
+                    </div>
+                    <div className="input-group-prepend input-group-sm" style={{ marginBottom: "0px" }}>
+                        <span className="input-group-text" id="basic-addon1" style={{
+                            color: "black",
+                            height: "29px"
+                            // fontSize:'13px'
+                        }}>SubCost</span>
+                        <input type="number" className="form-control" placeholder="Cost..." aria-label="Cost" aria-describedby="basic-addon1"
+                            id='cost' value={this.props.each.SubCost}
                             style={{
                                 color: "black"
                             }}
@@ -367,6 +400,7 @@ class ComponentGhotiItemModal extends React.Component<IProps, IState> {
     protected hideModal() {
         this.setState({ show: false })
     }
+    
 
     protected addAfterPicture(Files: FileList, index: number, temp: number) {
 
@@ -501,6 +535,8 @@ class ComponentGhotiItemModal extends React.Component<IProps, IState> {
 
 
     }
+
+
 
     protected addBeforePicture(Files: FileList, index: number, temp: number) {
 

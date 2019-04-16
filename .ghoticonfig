@@ -41,7 +41,8 @@
     "generalProfile",
     "printTask",
     "clientEdit",
-    "vendorEdit"
+    "vendorEdit",
+    "checklist"
   ],
   "funcs": [],
   "lambdas": [],
