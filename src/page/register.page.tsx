@@ -38,7 +38,7 @@ class PageGhotiRegister extends React.Component<IProps, IState> {
 
     public componentDidMount() {
         $.ajax({
-            url: "https://rpnserver.appspot.com/findAllVendors",
+            url: "https://rpntechserver.appspot.com/findAllVendors",
             method: 'GET',
             headers: {
                 Authorization: "Bearer " + localStorage.getItem('Token'),
@@ -48,7 +48,7 @@ class PageGhotiRegister extends React.Component<IProps, IState> {
             }.bind(this))
         })
         $.ajax({
-            url: "https://rpnserver.appspot.com/findAllClient",
+            url: "https://rpntechserver.appspot.com/findAllClient",
             method: 'GET',
             headers: {
                 Authorization: "Bearer " + localStorage.getItem('Token'),
@@ -471,7 +471,7 @@ class PageGhotiRegister extends React.Component<IProps, IState> {
     protected changeAuth(auth) {
         if (auth == '0') {
             $.ajax({
-                url: 'https://rpnserver.appspot.com/findAllClient',
+                url: 'https://rpntechserver.appspot.com/findAllClient',
                 method: 'GET',
                 datatype: "json",
                 headers: {
@@ -485,7 +485,7 @@ class PageGhotiRegister extends React.Component<IProps, IState> {
         }
         else if (auth == '1' || auth == '2') {
             $.ajax({
-                url: 'https://rpnserver.appspot.com/findAllVendors',
+                url: 'https://rpntechserver.appspot.com/findAllVendors',
                 method: 'GET',
                 datatype: "json",
                 headers: {
@@ -641,7 +641,7 @@ class PageGhotiRegister extends React.Component<IProps, IState> {
     protected submitTask() {
         if (this.state.currStage === '0') {
             $.ajax({
-                url: 'https://rpnserver.appspot.com/register',
+                url: 'https://rpntechserver.appspot.com/register',
                 //url: 'http://localhost:8080/login',
                 method: 'POST',
                 datatype: "json",
@@ -671,7 +671,7 @@ class PageGhotiRegister extends React.Component<IProps, IState> {
             // $('#address').val(),
             // $('#checklist').val(),);
             $.ajax({
-                url: 'https://rpnserver.appspot.com/createClient',
+                url: 'https://rpntechserver.appspot.com/createClient',
                 method: 'POST',
                 datatype: "json",
                 headers: {
@@ -721,7 +721,7 @@ class PageGhotiRegister extends React.Component<IProps, IState> {
             }
             console.log(StateCounty);
             $.ajax({
-                url: 'https://rpnserver.appspot.com/addVendor',
+                url: 'https://rpntechserver.appspot.com/addVendor',
                 method: 'POST',
                 datatype: "json",
                 headers: {

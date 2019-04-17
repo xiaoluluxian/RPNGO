@@ -90,7 +90,7 @@ class PageGhotiLogin extends React.Component<IProps, IState> {
     protected login() {
 
         $.ajax({
-            url: 'https://rpnserver.appspot.com/login',
+            url: 'https://rpntechserver.appspot.com/login',
             method: 'POST',
             datatype: "json",
             data: JSON.stringify({

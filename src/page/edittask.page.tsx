@@ -118,7 +118,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
     };
     public componentDidMount() {
         $.ajax({
-            url: 'https://rpnserver.appspot.com/findTaskById?task_id=' + localStorage.getItem("currTask"),
+            url: 'https://rpntechserver.appspot.com/findTaskById?task_id=' + localStorage.getItem("currTask"),
             //url: 'http://localhost:8080/login',
             headers: {
                 Authorization: "Bearer " + localStorage.getItem('Token'),
@@ -187,7 +187,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         });
 
         $.ajax({
-            url: 'https://rpnserver.appspot.com/findAllVendors',
+            url: 'https://rpntechserver.appspot.com/findAllVendors',
 
             headers: {
                 Authorization: "Bearer " + localStorage.getItem('Token'),
@@ -202,7 +202,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             }).bind(this),
         });
         $.ajax({
-            url: 'https://rpnserver.appspot.com/findAllImg?task_id=' + localStorage.getItem("currTask") + '&status=before',
+            url: 'https://rpntechserver.appspot.com/findAllImg?task_id=' + localStorage.getItem("currTask") + '&status=before',
             headers: {
                 Authorization: "Bearer " + localStorage.getItem('Token'),
             },
@@ -223,7 +223,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             }).bind(this),
         });
         $.ajax({
-            url: 'https://rpnserver.appspot.com/findAllImg?task_id=' + localStorage.getItem("currTask") + '&status=during',
+            url: 'https://rpntechserver.appspot.com/findAllImg?task_id=' + localStorage.getItem("currTask") + '&status=during',
             headers: {
                 Authorization: "Bearer " + localStorage.getItem('Token'),
             },
@@ -245,7 +245,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             }).bind(this),
         });
         $.ajax({
-            url: 'https://rpnserver.appspot.com/findAllImg?task_id=' + localStorage.getItem("currTask") + '&status=after',
+            url: 'https://rpntechserver.appspot.com/findAllImg?task_id=' + localStorage.getItem("currTask") + '&status=after',
             headers: {
                 Authorization: "Bearer " + localStorage.getItem('Token'),
             },
@@ -267,7 +267,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             }).bind(this),
         });
         $.ajax({
-            url: 'https://rpnserver.appspot.com/findAllUsers',
+            url: 'https://rpntechserver.appspot.com/findAllUsers',
             headers: {
                 Authorization: "Bearer " + localStorage.getItem('Token'),
             },
@@ -289,7 +289,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             }).bind(this),
         });
         $.ajax({
-            url: "https://rpnserver.appspot.com/findVersionStatusBySharedId?shared_id=" + localStorage.getItem("currSharedID"),
+            url: "https://rpntechserver.appspot.com/findVersionStatusBySharedId?shared_id=" + localStorage.getItem("currSharedID"),
             headers: {
                 Authorization: "Bearer " + localStorage.getItem('Token'),
             },
@@ -952,7 +952,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         // let citylist=$('#state').val()+"/"+$('#county').val()+"/"+$('#city').val()+"/"+$('#zipcode').val();
 
         $.ajax({
-            url: 'https://rpnserver.appspot.com/duplicateTask?shared_id=' + this.state.SharedID,
+            url: 'https://rpntechserver.appspot.com/duplicateTask?shared_id=' + this.state.SharedID,
             method: 'POST',
             datatype: "json",
             headers: {
@@ -1013,7 +1013,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
     protected getUserByVendor(vendor: string) {
         let name = vendor.replace(" ", "%20")
         $.ajax({
-            url: 'https://rpnserver.appspot.com/findUsersByCompany?company=' + name,
+            url: 'https://rpntechserver.appspot.com/findUsersByCompany?company=' + name,
             method: 'GET',
             datatype: "json",
             headers: {
@@ -1034,7 +1034,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         let DueDate = this.state.DueDate;
         DueDate[parseInt(this.state.Stage)] = $("#stageDueDate").val();
         $.ajax({
-            url: 'https://rpnserver.appspot.com/updateTask?task_id=' + localStorage.getItem("currTask") + "&shared_id=" + this.state.SharedID,
+            url: 'https://rpntechserver.appspot.com/updateTask?task_id=' + localStorage.getItem("currTask") + "&shared_id=" + this.state.SharedID,
 
             method: 'POST',
             datatype: "json",
@@ -1093,7 +1093,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                 }
 
                 $.ajax({
-                    url: 'https://rpnserver.appspot.com/addTaskToUser',
+                    url: 'https://rpntechserver.appspot.com/addTaskToUser',
                     //url: 'http://192.168.0.66:8080/addTaskToUserII?userToRemove='+this.state.oldUser+'&userToAdd='+$('#setUser').val()+'&task_id='+localStorage.getItem('currTask'),
                     method: 'POST',
                     dataType: 'json',
@@ -1513,7 +1513,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         }
         this.setState({ Item: list })
         $.ajax({
-            url: 'https://rpnserver.appspot.com/updateMarker?image_id=' + this.state.currImgID,
+            url: 'https://rpntechserver.appspot.com/updateMarker?image_id=' + this.state.currImgID,
             headers: {
                 Authorization: "Bearer " + localStorage.getItem('Token'),
             },
@@ -1547,7 +1547,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         let div = document.getElementById('spherepic');
         let PSV;
         $.ajax({
-            url: "https://rpnserver.appspot.com/findImageMarkerByImageID?imageID=" + pic.ImageID,
+            url: "https://rpntechserver.appspot.com/findImageMarkerByImageID?imageID=" + pic.ImageID,
             method: 'GET',
             datatype: "json",
             headers: {
@@ -2097,7 +2097,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
     protected findPrevVersion(version: any) {
         let current = version
         $.ajax({
-            url: 'https://rpnserver.appspot.com/findPrevTask?shared_id=' + this.state.SharedID + "&version=" + current,
+            url: 'https://rpntechserver.appspot.com/findPrevTask?shared_id=' + this.state.SharedID + "&version=" + current,
             method: 'GET',
             datatype: "json",
             headers: {
@@ -2168,7 +2168,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
 
             this.setState({ TaskStatus: "1" }, () => {
                 $.ajax({
-                    url: 'https://rpnserver.appspot.com/updateTask?task_id=' + localStorage.getItem("currTask") + "&shared_id=" + this.state.SharedID,
+                    url: 'https://rpntechserver.appspot.com/updateTask?task_id=' + localStorage.getItem("currTask") + "&shared_id=" + this.state.SharedID,
 
                     method: 'POST',
                     datatype: "json",
@@ -2219,7 +2219,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         else {
             this.setState({ TaskStatus: "0" }, () => {
                 $.ajax({
-                    url: 'https://rpnserver.appspot.com/updateTask?task_id=' + localStorage.getItem("currTask") + "&shared_id=" + this.state.SharedID,
+                    url: 'https://rpntechserver.appspot.com/updateTask?task_id=' + localStorage.getItem("currTask") + "&shared_id=" + this.state.SharedID,
                     method: 'POST',
                     datatype: "json",
                     headers: {

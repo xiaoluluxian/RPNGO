@@ -42,7 +42,7 @@ class PageGhotiAddtask extends React.Component<IProps, IState> {
 
     public componentDidMount() {
         $.ajax({
-            url: 'https://rpnserver.appspot.com/findAllClient',
+            url: 'https://rpntechserver.appspot.com/findAllClient',
 
             headers: {
                 Authorization: "Bearer " + localStorage.getItem('Token'),
@@ -57,7 +57,7 @@ class PageGhotiAddtask extends React.Component<IProps, IState> {
             }).bind(this),
         });
         $.ajax({
-            url: 'https://rpnserver.appspot.com/findAllVendors',
+            url: 'https://rpntechserver.appspot.com/findAllVendors',
 
             headers: {
                 Authorization: "Bearer " + localStorage.getItem('Token'),
@@ -202,7 +202,7 @@ class PageGhotiAddtask extends React.Component<IProps, IState> {
         this.setState({vendor:vendor})
         let name = vendor.replace(" ","%20")
         $.ajax({
-            url: 'https://rpnserver.appspot.com/findUsersByCompany?company='+name,
+            url: 'https://rpntechserver.appspot.com/findUsersByCompany?company='+name,
             method: 'GET',
             datatype: "json",
             headers: {
@@ -233,7 +233,7 @@ class PageGhotiAddtask extends React.Component<IProps, IState> {
         
 
         $.ajax({
-            url: 'https://rpnserver.appspot.com/initTask',
+            url: 'https://rpntechserver.appspot.com/initTask',
             method: 'POST',
             datatype: "json",
             headers: {

@@ -64,7 +64,7 @@ class PageGhotiPrintTask extends React.Component<IProps, IState> {
     public componentDidMount() {
         // console.log(localStorage.getItem("currStage"));
         $.ajax({
-            url: 'https://rpnserver.appspot.com/findTaskById?task_id=' + localStorage.getItem("currTask"),
+            url: 'https://rpntechserver.appspot.com/findTaskById?task_id=' + localStorage.getItem("currTask"),
             //url: 'http://localhost:8080/login',
             headers: {
                 Authorization: "Bearer " + localStorage.getItem('Token'),

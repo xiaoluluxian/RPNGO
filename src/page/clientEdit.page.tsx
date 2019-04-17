@@ -105,7 +105,7 @@ class PageGhotiClientEdit extends React.Component<IProps, IState> {
 
     public componentDidMount() {
         $.ajax({
-            url: 'https://rpnserver.appspot.com/findTaskById?task_id=' + localStorage.getItem("currTask"),
+            url: 'https://rpntechserver.appspot.com/findTaskById?task_id=' + localStorage.getItem("currTask"),
             //url: 'http://localhost:8080/login',
             headers: {
                 Authorization: "Bearer " + localStorage.getItem('Token'),
@@ -394,7 +394,7 @@ class PageGhotiClientEdit extends React.Component<IProps, IState> {
         // if (mark == 1) {
         //     this.setState({ TaskStatus: "1" }, () => {
         //         $.ajax({
-        //             url: 'https://rpnserver.appspot.com/updateTask?task_id=' + localStorage.getItem("currTask") + "&shared_id=" + this.state.SharedID,
+        //             url: 'https://rpntechserver.appspot.com/updateTask?task_id=' + localStorage.getItem("currTask") + "&shared_id=" + this.state.SharedID,
 
         //             method: 'POST',
         //             datatype: "json",
@@ -443,7 +443,7 @@ class PageGhotiClientEdit extends React.Component<IProps, IState> {
         // else {
         //     this.setState({ TaskStatus: "0" }, () => {
         //         $.ajax({
-        //             url: 'https://rpnserver.appspot.com/updateTask?task_id=' + localStorage.getItem("currTask") + "&shared_id=" + this.state.SharedID,
+        //             url: 'https://rpntechserver.appspot.com/updateTask?task_id=' + localStorage.getItem("currTask") + "&shared_id=" + this.state.SharedID,
         //             method: 'POST',
         //             datatype: "json",
         //             headers: {
@@ -561,7 +561,7 @@ class PageGhotiClientEdit extends React.Component<IProps, IState> {
         let div = document.getElementById('spherepic');
         let PSV;
         $.ajax({
-            url: "https://rpnserver.appspot.com/findImageMarkerByImageID?imageID=" + pic.ImageID,
+            url: "https://rpntechserver.appspot.com/findImageMarkerByImageID?imageID=" + pic.ImageID,
             method: 'GET',
             datatype: "json",
             headers: {

@@ -60,7 +60,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
     public componentDidMount() {
         if (localStorage.getItem("Authority") === '5' || localStorage.getItem("Authority") === '4' || localStorage.getItem("Authority") === '3') {
             $.ajax({
-                url: 'https://rpnserver.appspot.com/findAllUsers',
+                url: 'https://rpntechserver.appspot.com/findAllUsers',
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem('Token'),
                 },
@@ -76,7 +76,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                 }).bind(this),
             });
             $.ajax({
-                url: 'https://rpnserver.appspot.com/findAllVendors',
+                url: 'https://rpntechserver.appspot.com/findAllVendors',
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem('Token'),
                 },
@@ -90,7 +90,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                 }).bind(this),
             });
             $.ajax({
-                url: 'https://rpnserver.appspot.com/findAllClient',
+                url: 'https://rpntechserver.appspot.com/findAllClient',
 
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem('Token'),
@@ -107,7 +107,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                 }).bind(this),
             });
             $.ajax({
-                url: 'https://rpnserver.appspot.com/findLatestTasksByStage?stage=running&paging=true&page_index=0&page_size=25',
+                url: 'https://rpntechserver.appspot.com/findLatestTasksByStage?stage=running&paging=true&page_index=0&page_size=25',
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem('Token'),
                 },
@@ -123,7 +123,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                 }).bind(this),
             });
             $.ajax({
-                url: 'https://rpnserver.appspot.com/findLatestTasksByStage?stage=running',
+                url: 'https://rpntechserver.appspot.com/findLatestTasksByStage?stage=running',
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem('Token'),
                 },
@@ -142,7 +142,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
         }
         else if (localStorage.getItem("Authority") === '0') {
             $.ajax({
-                url: "https://rpnserver.appspot.com/findTaskByClient?company=" + localStorage.getItem("company"),
+                url: "https://rpntechserver.appspot.com/findTaskByClient?company=" + localStorage.getItem("company"),
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem('Token'),
                 },
@@ -157,7 +157,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
         }
         else if (localStorage.getItem("Authority") === '2') {
             $.ajax({
-                url: "https://rpnserver.appspot.com/findTasksByVendorWithPaging?vendor=" + localStorage.getItem("company") + "&page_index=" + "0" + "&page_size=" + "25",
+                url: "https://rpntechserver.appspot.com/findTasksByVendorWithPaging?vendor=" + localStorage.getItem("company") + "&page_index=" + "0" + "&page_size=" + "25",
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem('Token'),
                 },
@@ -369,7 +369,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
     }
     protected showVendorTasks(vendor: any) {
         $.ajax({
-            url: "https://rpnserver.appspot.com/findTasksByVendorWithPaging?vendor=" + vendor + "&page_index=" + "0" + "&page_size=" + this.state.currPageSize,
+            url: "https://rpntechserver.appspot.com/findTasksByVendorWithPaging?vendor=" + vendor + "&page_index=" + "0" + "&page_size=" + this.state.currPageSize,
             headers: {
                 Authorization: "Bearer " + localStorage.getItem('Token'),
             },
@@ -389,7 +389,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
 
     protected showClientTasks(client: any){
         $.ajax({
-            url: "https://rpnserver.appspot.com/findTasksByClientWithPaging?client=" + client + "&page_index=" + "0" + "&page_size=" + this.state.currPageSize,
+            url: "https://rpntechserver.appspot.com/findTasksByClientWithPaging?client=" + client + "&page_index=" + "0" + "&page_size=" + this.state.currPageSize,
             headers: {
                 Authorization: "Bearer " + localStorage.getItem('Token'),
             },
@@ -412,7 +412,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
         }
         else{
             $.ajax({
-                url: 'https://rpnserver.appspot.com/findLatestTasksByStage?stage='+ stage+'&paging=true&page_index=0&page_size=25',
+                url: 'https://rpntechserver.appspot.com/findLatestTasksByStage?stage='+ stage+'&paging=true&page_index=0&page_size=25',
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem('Token'),
                 },
@@ -700,7 +700,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
         }
         else {
             $.ajax({
-                url: 'https://rpnserver.appspot.com/findTaskByAddr?address=' + this.state.searchAddr,
+                url: 'https://rpntechserver.appspot.com/findTaskByAddr?address=' + this.state.searchAddr,
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem('Token'),
                 },
@@ -736,7 +736,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
     protected changePageSize(size: String) {
         if (this.state.currStage === '0') {
             $.ajax({
-                url: 'https://rpnserver.appspot.com/findLatestTasksByStage?stage=running&paging=true&page_index=0&page_size=' + size,
+                url: 'https://rpntechserver.appspot.com/findLatestTasksByStage?stage=running&paging=true&page_index=0&page_size=' + size,
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem('Token'),
                 },
@@ -756,7 +756,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
         }
         else if (this.state.currStage === '1') {
             $.ajax({
-                url: "https://rpnserver.appspot.com/findTasksByVendorWithPaging?vendor=" + this.state.currVendor + "&page_index=0" + "&page_size=" + size,
+                url: "https://rpntechserver.appspot.com/findTasksByVendorWithPaging?vendor=" + this.state.currVendor + "&page_index=0" + "&page_size=" + size,
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem('Token'),
                 },

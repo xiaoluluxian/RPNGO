@@ -204,7 +204,7 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
         }
         if (this.state.currStage === '0') {
             $.ajax({
-                url: 'https://rpnserver.appspot.com/findUserByUsername?username=' + name,
+                url: 'https://rpntechserver.appspot.com/findUserByUsername?username=' + name,
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem('Token'),
                 },
@@ -232,7 +232,7 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
         }
         else if (this.state.currStage === '1') {
             $.ajax({
-                url: 'https://rpnserver.appspot.com/findClientByCompanyName?company=' + name,
+                url: 'https://rpntechserver.appspot.com/findClientByCompanyName?company=' + name,
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem('Token'),
                 },
@@ -252,7 +252,7 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
         }
         else if (this.state.currStage === '2') {
             $.ajax({
-                url: 'https://rpnserver.appspot.com/findVendorById?vendorId=' + name,
+                url: 'https://rpntechserver.appspot.com/findVendorById?vendorId=' + name,
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem('Token'),
                 },
@@ -305,7 +305,7 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
     protected changeStage(stage: any) {
         if (stage === '0') {
             $.ajax({
-                url: 'https://rpnserver.appspot.com/findAllUsers',
+                url: 'https://rpntechserver.appspot.com/findAllUsers',
 
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem('Token'),
@@ -323,7 +323,7 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
         }
         else if (stage === '1') {
             $.ajax({
-                url: "https://rpnserver.appspot.com/findAllClient",
+                url: "https://rpntechserver.appspot.com/findAllClient",
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem('Token'),
                 },
@@ -340,7 +340,7 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
         }
         else if (stage === '2') {
             $.ajax({
-                url: "https://rpnserver.appspot.com/findAllVendors",
+                url: "https://rpntechserver.appspot.com/findAllVendors",
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem('Token'),
                 },
@@ -812,7 +812,7 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
     protected submit() {
         if (this.state.currStage === '0') {
             $.ajax({
-                url: 'https://rpnserver.appspot.com/updateUser',
+                url: 'https://rpntechserver.appspot.com/updateUser',
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem('Token'),
                 },
@@ -838,7 +838,7 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
         }
         else if (this.state.currStage === '1') {
             $.ajax({
-                url: 'https://rpnserver.appspot.com/updateUser',
+                url: 'https://rpntechserver.appspot.com/updateUser',
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem('Token'),
                 },
@@ -893,7 +893,7 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
             }
             // console.log(StateCounty);
             $.ajax({
-                url: 'https://rpnserver.appspot.com/updateVendor?vendorId='+this.state.VendorID,
+                url: 'https://rpntechserver.appspot.com/updateVendor?vendorId='+this.state.VendorID,
                 method: 'POST',
                 datatype: "json",
                 headers: {
