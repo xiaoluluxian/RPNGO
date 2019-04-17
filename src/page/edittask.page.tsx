@@ -12,6 +12,7 @@ import logo from '../func/logo';
 import { Dropdown, DropdownToggle, DropdownMenu, Modal, ModalDialog, ModalHeader, ModalTitle, ModalBody, ModalFooter } from "reactstrap"
 
 import Config from '../config/config';
+import * as VRM from './VRM'
 
 import * as $ from "jquery";
 import * as fs from 'fs';
@@ -93,6 +94,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         Progress: "",
         Version: 0,
         VersionSize: 0,
+        Vendor:"",
         SharedID: "",
         // test: 'test',
         // x: "a",
@@ -160,7 +162,8 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                     Version: result.Version,
                     VersionSize: result.VersionSize,
                     SharedID: result.SharedID,
-                    DupDescription: result.Desc
+                    DupDescription: result.Desc,
+                    Vendor: result.Vendor
                 })
                 // let temp = []
                 // for (let i = result.VersionSize; i > 0; i--) {
@@ -328,7 +331,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
     }
 
     public render() {
-        this.height = window.innerHeight * 0.45;
+        this.height = window.innerHeight * 0.4;
         let taxTotal = 0;
         let TotalAmount = 0;
         for (let i of this.state.Item) {
@@ -391,13 +394,13 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                             <div style={{ marginTop: "10px" }} className="input-group-prepend">
                                                 <span className="input-group-text">StartDate</span>
                                                 <div className="custom-file">
-                                                    <input type="date" className="form-control" id="stageStartDate"></input>
+                                                    <input type="date" value={this.state.StartDate[parseInt(this.state.Stage)-1]?this.state.StartDate[parseInt(this.state.Stage)-1]:void 0}className="form-control" id="stageStartDate"></input>
                                                 </div>
                                             </div>
                                             <div style={{ marginTop: "10px" }} className="input-group-prepend">
                                                 <span className="input-group-text">DueDate</span>
                                                 <div className="custom-file">
-                                                    <input type="date" className="form-control" id="stageDueDate" ></input>
+                                                    <input type="date" value={this.state.DueDate[parseInt(this.state.Stage)-1]?this.state.DueDate[parseInt(this.state.Stage)-1]:void 0}className="form-control" id="stageDueDate" ></input>
                                                 </div>
                                             </div>
                                             <button style={{
@@ -838,6 +841,9 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                         onClick={() => {
                                             let list = this.state.Item;
                                             list.push(this.initItem(list.length + 1));
+                                            for(let i=0;i<list.length;i++){
+                                                list[i].Item=i+1;
+                                            }
                                             this.setState({ Item: list });
                                         }}>AddItem</button>
                                 </div>
@@ -1065,7 +1071,8 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                 ClientIcon: this.state.ClientIcon,
                 Version: this.state.Version,
                 Progress: this.state.Progress,
-                VersionSize: this.state.VersionSize
+                VersionSize: this.state.VersionSize,
+                Vendor: this.state.Vendor,
             }),
             success: function (data) {
                 var fd = new FormData();
@@ -1194,6 +1201,9 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                         onClick={() => {
                             let list = this.state.Item;
                             list.splice(index, 0, this.initItem(index + 1));
+                            for(let i=0;i<list.length;i++){
+                                list[i].Item=i+1;
+                            }
                             this.setState({ Item: list });
                         }}>AddItem</button>
                 </div>
@@ -1226,6 +1236,9 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                 className="btn btn-danger btn-sm" onClick={() => {
                                     let list = this.state.Item;
                                     list.splice(index, 1);
+                                    for(let i=0;i<list.length;i++){
+                                        list[i].Item=i+1;
+                                    }
                                     this.setState({ Item: list });
                                 }} title="delete">Delete</button>
                             <button style={{
@@ -1837,24 +1850,30 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                         <div className="sidebar-body-action">
                             <div style={{ paddingTop: "5%" }}>
                                 <button className="btn btn-primary" style={{
-                                    width: "45%",
-                                }} onClick={() => this.props.history.push("/printTask")}>PrintPDF</button>
+                                    width: "47%",
+                                }} onClick={() => this.props.history.push("/printTask")}>PhotoPDF</button>
                                 <button className="btn btn-primary" style={{
-                                    width: "45%",
+                                    width: "47%",
                                     float: "right"
-                                }} onClick={() => this.setState({ duplicateModal: true })}>Duplicate</button>
+                                }} onClick={() => this.props.history.push("/printText")}>TextPDF</button>
 
                             </div>
 
                         </div>
-
+                        <select style={{ marginTop: "10px" }} id='setStage' className="form-control" onChange={e=>this.VRMCheckList(e.target.value)}>
+                            <option value="-1">VRM</option>
+                            <option value='0'>InitialService</option>
+                            <option value='1'>Bi-Weekly</option>
+                            <option value='2'>Winterization</option>
+                        </select>
+                        
                         <div className="sidebar-body-action">
                             <div style={{ paddingTop: "5%" }}>
                                 <button className="btn btn-primary" style={{
-                                    width: "45%",
+                                    width: "47%",
                                 }} onClick={this.addWHP}>AddWHP</button>
                                 <button className="btn btn-primary" style={{
-                                    width: "45%",
+                                    width: "47%",
                                     float: "right",
                                     // marginLeft:"5px"
                                 }}>DelMark</button>
@@ -1895,6 +1914,33 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             </div>
 
         )
+    }
+
+    protected VRMCheckList(stage){
+        if(stage==='0'){
+            let list = this.state.Item;
+            for(let i=0;i<VRM.InitialService.length;i++){
+                list.push(VRM.InitialService[i]);
+            }
+            this.setState({Item:list})
+        }
+        else if(stage==='1'){
+            let list = this.state.Item;
+            for(let i=0;i<VRM.BiWeekly.length;i++){
+                list.push(VRM.BiWeekly[i]);
+            }
+            this.setState({Item:list})
+        }
+        else if (stage==='2'){
+            let list = this.state.Item;
+            for(let i=0;i<VRM.Winterization.length;i++){
+                list.push(VRM.Winterization[i]);
+            }
+            this.setState({Item:list})
+        }
+        else{
+
+        }
     }
     protected changeChecklist(){
         this.props.history.push("/checklist");
@@ -2160,7 +2206,8 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                         Version: this.state.Version,
                         Progress: this.state.Progress,
                         VersionSize: this.state.VersionSize,
-                        TotalCost: TotalAmount.toString()
+                        TotalCost: TotalAmount.toString(),
+                        Vendor:this.state.Vendor
                     }),
                     success: function (data) {
                         alert("Submit Successfully!")
@@ -2209,7 +2256,8 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                         Version: this.state.Version,
                         Progress: this.state.Progress,
                         VersionSize: this.state.VersionSize,
-                        TotalCost: TotalAmount.toString()
+                        TotalCost: TotalAmount.toString(),
+                        Vendor: this.state.Vendor
                     }),
                     success: function (data) {
                         alert("Submit Successfully!")

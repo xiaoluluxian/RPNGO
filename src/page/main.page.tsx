@@ -29,13 +29,15 @@ class PageGhotiMain extends React.Component<IProps, IState> {
         data: [],
         alluser: [],
         clients: [],
+        vendors: [],
         allTasks: [],
-        nonArcTasks: [],
         currPageSize: "25",
         currPage: 0,
         searchAddr: "",
         currtaskLeng: 0,
         userCollapse: false,
+        currStage: "0",
+        currVendor: "",
 
         Loading: 0
     }
@@ -56,7 +58,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
 
     }
     public componentDidMount() {
-        if (localStorage.getItem("Authority") === '5' || localStorage.getItem("Authority") ==='4'||localStorage.getItem("Authority")==='3') {
+        if (localStorage.getItem("Authority") === '5' || localStorage.getItem("Authority") === '4' || localStorage.getItem("Authority") === '3') {
             $.ajax({
                 url: 'https://rpnserver.appspot.com/findAllUsers',
                 headers: {
@@ -71,6 +73,20 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                     this.setState({ alluser: result });
                     this.reload += 1;
                     this.setState({ Loading: this.reload })
+                }).bind(this),
+            });
+            $.ajax({
+                url: 'https://rpnserver.appspot.com/findAllVendors',
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem('Token'),
+                },
+                method: 'GET',
+                datatype: "json",
+                data: JSON.stringify({
+                }),
+                success: (function (result) {
+                    //console.log(result);
+                    this.setState({ vendors: result });
                 }).bind(this),
             });
             $.ajax({
@@ -107,7 +123,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                 }).bind(this),
             });
             $.ajax({
-                url: 'https://rpnserver.appspot.com/findAllTasksByStage?stage=running',
+                url: 'https://rpnserver.appspot.com/findLatestTasksByStage?stage=running',
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem('Token'),
                 },
@@ -124,9 +140,9 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                 }).bind(this),
             });
         }
-        else if(localStorage.getItem("Authority")==='0'){
+        else if (localStorage.getItem("Authority") === '0') {
             $.ajax({
-                url:"https://rpnserver.appspot.com/findTaskByClient?company="+localStorage.getItem("company"),
+                url: "https://rpnserver.appspot.com/findTaskByClient?company=" + localStorage.getItem("company"),
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem('Token'),
                 },
@@ -134,12 +150,29 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                 datatype: "json",
                 data: JSON.stringify({
                 }),
-                success:(function(result){
+                success: (function (result) {
                     this.setState({ data: result });
                 }).bind(this)
             })
         }
-        
+        else if (localStorage.getItem("Authority") === '2') {
+            $.ajax({
+                url: "https://rpnserver.appspot.com/findTasksByVendorWithPaging?vendor=" + localStorage.getItem("company") + "&page_index=" + "0" + "&page_size=" + "25",
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem('Token'),
+                },
+                method: 'GET',
+                datatype: "json",
+                data: JSON.stringify({
+                }),
+                success: (function (result) {
+                    this.setState({
+                        data:result
+                    })
+                }).bind(this),
+            })
+        }
+
 
 
 
@@ -170,7 +203,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
         this.height = window.innerHeight
         this.height = this.height * 0.65
         // console.log(localStorage.getItem("Authority"))
-        if (localStorage.getItem("Authority") === '5' || localStorage.getItem("Authority") === '4' ) {
+        if (localStorage.getItem("Authority") === '5' || localStorage.getItem("Authority") === '4') {
             if (this.reload == 4) {
                 return (<React.Fragment>
                     <div className="page">
@@ -212,27 +245,27 @@ class PageGhotiMain extends React.Component<IProps, IState> {
         }
         else if (localStorage.getItem("Authority") === '3') {
             // console.log(123)
-                return (<React.Fragment>
-                    <div className="page">
-                        <Component.leftBar page="main" pushPage={this.pushPage.bind(this)} />
-                        {this.topBarComponent()}
-                        <div className="content">
-                            <div style={{
-                                color: "#283747",
-                                fontWeight: "bold",
-                                fontSize: "22px",
-                                marginLeft: "15px",
-                                marginTop: "5px"
-                            }}>Dashboard</div>
-                            <div className="mainTable">
-                                {this.showTable()}
+            return (<React.Fragment>
+                <div className="page">
+                    <Component.leftBar page="main" pushPage={this.pushPage.bind(this)} />
+                    {this.topBarComponent()}
+                    <div className="content">
+                        <div style={{
+                            color: "#283747",
+                            fontWeight: "bold",
+                            fontSize: "22px",
+                            marginLeft: "15px",
+                            marginTop: "5px"
+                        }}>Dashboard</div>
+                        <div className="mainTable">
+                            {this.showTable()}
 
-                            </div>
                         </div>
                     </div>
-                </React.Fragment>);
-            
-            
+                </div>
+            </React.Fragment>);
+
+
         }
         else {
             return (<React.Fragment>
@@ -319,20 +352,112 @@ class PageGhotiMain extends React.Component<IProps, IState> {
         localStorage.setItem("currStage", item.Stage);
         localStorage.setItem("currSharedID", item.SharedID)
         //console.log(item.TaskID);
-        this.props.history.push('/edittask');
+        if(localStorage.getItem("Authority")==='0'){
+            this.props.history.push('/clientEdit');
+        }
+        else if(localStorage.getItem("Authority")==='1'||localStorage.getItem("Authority")==='2'){
+            this.props.history.push('/vendorEdit');
+        }
+        else{
+            this.props.history.push('/edittask');
+        }
+        
     }
 
     protected setTask(item) {
 
     }
+    protected showVendorTasks(vendor: any) {
+        $.ajax({
+            url: "https://rpnserver.appspot.com/findTasksByVendorWithPaging?vendor=" + vendor + "&page_index=" + "0" + "&page_size=" + this.state.currPageSize,
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem('Token'),
+            },
+            method: 'GET',
+            datatype: "json",
+            data: JSON.stringify({
+            }),
+            success: (function (result) {
+                console.log(result)
+                this.setState({
+                    currStage:"1",
+                    data:result
+                })
+            }).bind(this),
+        })
+    }
+
+    protected showClientTasks(client: any){
+        $.ajax({
+            url: "https://rpnserver.appspot.com/findTasksByClientWithPaging?client=" + client + "&page_index=" + "0" + "&page_size=" + this.state.currPageSize,
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem('Token'),
+            },
+            method: 'GET',
+            datatype: "json",
+            data: JSON.stringify({
+            }),
+            success: (function (result) {
+                this.setState({
+                    currStage:"2",
+                    data:result
+                })
+            }).bind(this),
+        })
+    }
+
+    protected showStageTasks(stage:any){
+        if(stage==='-1'){
+
+        }
+        else{
+            $.ajax({
+                url: 'https://rpnserver.appspot.com/findLatestTasksByStage?stage='+ stage+'&paging=true&page_index=0&page_size=25',
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem('Token'),
+                },
+                method: 'GET',
+                datatype: "json",
+                data: JSON.stringify({
+                }),
+                success: (function (result) {
+                    this.setState({
+                        currStage:"0",
+                        data:result
+                    })
+                }).bind(this),
+            });
+        }
+    }
 
     protected showTable() {
-        
-        if (localStorage.getItem("Authority") === '3'||localStorage.getItem("Authority") === '4'||localStorage.getItem("Authority") === '5') {
+
+        if (localStorage.getItem("Authority") === '3' || localStorage.getItem("Authority") === '4' || localStorage.getItem("Authority") === '5') {
             return (<React.Fragment>
                 <div className="card shadow mb-4">
                     <div className="card-header py-3">
-
+                        <select style={{ width: "200px", float:"left" }} id='setStage' className="form-control" onChange={e => this.showVendorTasks(e.target.value)}>
+                            <option value="-1">SelectVendor</option>
+                            {this.state.vendors.map(function (item, index) {
+                                return (<option key={index} value={item.Company}>{item.Company}</option>)
+                            }.bind(this))}
+                        </select>
+                        <select style={{ width: "200px", float:"left", marginLeft:"10px" }} id='setStage' className="form-control" onChange={e => this.showClientTasks(e.target.value)}>
+                            <option value="-1">SelectClient</option>
+                            {this.state.clients.map(function (item, index) {
+                                return (<option key={index} value={item.Company}>{item.Company}</option>)
+                            }.bind(this))}
+                        </select>
+                        <select style={{ width: "200px", float:"left", marginLeft:"10px" }} id='setStage' className="form-control" onChange={e => this.showStageTasks(e.target.value)}>
+                            <option value="-1">SelectStage</option>
+                            <option value='0'>Initial</option>
+                            <option value='1'>Bid</option>
+                            <option value='2'>Client Approval</option>
+                            <option value='3'>Work Order</option>
+                            <option value='4'>Quality Assurance</option>
+                            <option value='5'>Invoice</option>
+                            <option value='6'>Archived</option>
+                        </select>
                     </div>
                     <div style={{}} className="card-body">
                         {this.pageSizeComponent()}
@@ -403,7 +528,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                 </div>
             </React.Fragment>)
         }
-        else if (localStorage.getItem("Authority") === '0') {
+        else if (localStorage.getItem("Authority") === '0'||localStorage.getItem("Authority") === '2') {
             return (<React.Fragment>
                 <div className="card shadow mb-4">
                     <div className="card-header py-3">
@@ -482,20 +607,18 @@ class PageGhotiMain extends React.Component<IProps, IState> {
         }
     }
 
-    protected showLogo(item){
-        if(item.ClientIcon){
-            console.log("yes")
+    protected showLogo(item) {
+        if (item.ClientIcon) {
             return (
-                <img src={item.ClientIcon} 
+                <img src={item.ClientIcon}
                     style={{
                         marginRight: "3px",
-                        width:"25px",
-                        height:"25px"
+                        width: "25px",
+                        height: "25px"
                     }} />
             )
         }
-        else{
-            console.log("no")
+        else {
             return
         }
     }
@@ -601,11 +724,51 @@ class PageGhotiMain extends React.Component<IProps, IState> {
     }
 
     protected pushPage(page: String) {
-        this.props.history.push(page)
+        if(page==="/main"){
+            window.location.reload()
+        }
+        else{
+            this.props.history.push(page)
+        }
+        
     }
 
     protected changePageSize(size: String) {
+        if (this.state.currStage === '0') {
+            $.ajax({
+                url: 'https://rpnserver.appspot.com/findLatestTasksByStage?stage=running&paging=true&page_index=0&page_size=' + size,
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem('Token'),
+                },
+                method: 'GET',
+                datatype: "json",
+                data: JSON.stringify({
+                }),
+                success: (function (result) {
+                    this.setState({
+                        data: result,
+                        currPage: '0',
+                        currPageSize: size
+                    });
 
+                }).bind(this),
+            });
+        }
+        else if (this.state.currStage === '1') {
+            $.ajax({
+                url: "https://rpnserver.appspot.com/findTasksByVendorWithPaging?vendor=" + this.state.currVendor + "&page_index=0" + "&page_size=" + size,
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem('Token'),
+                },
+                method: 'GET',
+                datatype: "json",
+                data: JSON.stringify({
+                }),
+                success: (function (result) {
+                    console.log(result);
+                }).bind(this),
+            })
+        }
     }
 }
 

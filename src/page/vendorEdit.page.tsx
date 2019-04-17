@@ -8,27 +8,474 @@ import * as React from 'react';
 import * as Component from '../component/import';
 import * as Func from '../func/import';
 import * as Lambda from '../lambda/import';
+import logo from '../func/logo';
+import { Dropdown, DropdownToggle, DropdownMenu, Modal, ModalDialog, ModalHeader, ModalTitle, ModalBody, ModalFooter } from "reactstrap"
 
 import Config from '../config/config';
 
-export interface IProps {
+import * as $ from "jquery";
+import * as fs from 'fs';
+import * as FileSaver from 'file-saver';
+import * as Cheerio from "cheerio"
+import * as PhotoSphereViewer from "photo-sphere-viewer";
+import Slider from 'rc-slider'
+import * as JSZip from "jszip"
+import * as JSZipUtils from "jszip-utils"
 
+export interface IProps {
+    history: any
 }
 
 export interface IState {
 
 }
+const marks = {
+    0: '0%',
+    10: '10',
+    20: '20',
+    30: '30',
+    40: '40',
+    50: '50',
+    60: '60',
+    70: '70',
+    80: '80',
+    90: '90',
+    100: '100%'
+}
 
 class PageGhotiVendorEdit extends React.Component<IProps, IState> {
+    height: number = 0
+    state = {
+        Loading: 0,
+        // pictureDDropdown: false,
+        // changeStageModal: false,
+        // duplicateModal: false,
+        // generalModal: false,
+        // versionArray: [],
+        //page:null,
+        Address: '',
+        Area: '',
+        BillTo: '',
+        City: '',
+        // State:'',
+        // County:'',
+        // ZipCode:'',
+        CompletionDate: [],
+        Desc: '',
+        DescCN: '',
+        Invoice: '',
+        DueDate: [],
+        InvoiceDate: '',
+        Item: [],
+        LBNum: '',
+        Note: '',
+        Stage: '',
+        StartDate: [],
+        Stories: '',
+        TotalCost: '',
+        TotalImage: 0,
+        Year: '',
+        AssetNum: '',
+        uploadLink: '',
+        Tax: '',
+        Before: [],
+        During: [],
+        After: [],
+        Username: [],
+        alluser: [],
+        TaskStatus: '',
+        Client: '',
+        ClientIcon: '',
+        Progress: "",
+        Version: 0,
+        VersionSize: 0,
+        SharedID: "",
+        // test: 'test',
+        // x: "a",
+        CheckList: [],
+        Comment: "",
+        Markers: [],
+        currImgID: "",
+        currImgSrc: "",
+        // DupDescription: "",
+        // DupUsername: "",
+        // allVendors: [],
+        // alluserForVendor: []
+    };
+
+    public componentDidMount() {
+        $.ajax({
+            url: 'https://rpnserver.appspot.com/findTaskById?task_id=' + localStorage.getItem("currTask"),
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem('Token'),
+            },
+            method: 'GET',
+            datatype: "json",
+            data: JSON.stringify({
+            }),
+            success: (function (result) {
+                console.log(result);
+                this.setState({ City: result.City })
+                this.setState({ Address: result.Address });
+                this.setState({ Area: result.Area });
+                this.setState({ BillTo: result.BillTo });
+                this.setState({ CompletionDate: result.CompletionDate });
+                this.setState({ Desc: result.Desc });
+                this.setState({ DescCN: result.DescCN });
+                this.setState({ Invoice: result.Invoice });
+                this.setState({ DueDate: result.DueDate });
+                this.setState({ InvoiceDate: result.InvoiceDate });
+                this.setState({ Item: result.ItemList });
+                this.setState({ LBNum: result.KeyCode });
+                this.setState({ Note: result.Note });
+                this.setState({ Stage: result.Stage });
+                this.setState({ StartDate: result.StartDate });
+                this.setState({ Stories: result.Stories });
+                this.setState({ TotalCost: result.TotalCost });
+                this.setState({ TotalImage: result.TotalImage });
+                this.setState({ Year: result.Year });
+                this.setState({ AssetNum: result.asset_num });
+                this.setState({ uploadLink: result.upload_link });
+                result.Tax ? this.setState({ Tax: result.Tax }) : this.setState({ Tax: "0" })
+                this.setState({ Username: result.Username });
+                this.setState({ Client: result.Client });
+                this.setState({ TaskStatus: result.TaskStatus });
+                this.setState({ CheckList: result.CheckList });
+                this.setState({ Comment: result.Comment });
+                this.setState({ ClientIcon: result.ClientIcon })
+                this.setState({
+                    Progress: result.Progress,
+                    Version: result.Version,
+                    VersionSize: result.VersionSize,
+                    SharedID: result.SharedID,
+                })
+            }).bind(this),
+        });
+    }
+
     public constructor(props) {
         super(props);
+        this.mapItem = this.mapItem.bind(this);
+        this.mapPicture = this.mapPicture.bind(this);
+        this.showLeftBar = this.showLeftBar.bind(this);
+        this.scrollToAnchor = this.scrollToAnchor.bind(this);
+        this.showCurrStage = this.showCurrStage.bind(this);
+        
     }
 
     public render() {
-        return (<div>
-            <span>Hello, PageGhotiVendorEdit!</span>
-        </div>);
+        this.height = window.innerHeight * 0.7;
+        let taxTotal = 0;
+        let TotalAmount = 0;
+        for (let i of this.state.Item) {
+            TotalAmount += (i.Amount ? i.Amount : 0);
+            taxTotal += (i.Tax ? i.Tax : 0);
+        }
+        // this.setState({TotalAmount:TotalAmount.toString()});
+        if (localStorage.getItem("Authority") === '2') {
+            return (
+                <React.Fragment>
+                    <div className="page">
+                        {this.showLeftBar(TotalAmount)}
+                        <div className="editPage">
+                            <div className="editContainer">
+                                <div className="card shadow mb-4">
+                                    <div className="card-header py-3">
+                                        <div className="left">
+                                            <h4 style={{}}>{this.showCurrStage(this.state.Stage)}</h4>
+                                        </div>
+                                    </div>
+                                    <div className="card-body">
+                                        <div className="editContainerTopLeft">
+                                            <table className="editTableTop">
+                                                <tbody>
+                                                    <tr>
+                                                        <th>Property Address</th><td>{this.state.Address}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Asset Number</th><td>{this.state.AssetNum}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Start Date</th><td>{this.state.StartDate[parseInt(this.state.Stage)] ? this.state.StartDate[parseInt(this.state.Stage)] : void 0}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Due Date</th><td>{this.state.DueDate[parseInt(this.state.Stage)] ? this.state.DueDate[parseInt(this.state.Stage)] : void 0}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Completion Date</th><td>{this.state.CompletionDate[parseInt(this.state.Stage)] ? this.state.CompletionDate[parseInt(this.state.Stage)] : void 0}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>State/County/City/ZipCode</th><td>{this.state.City}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Lock Box Number</th><td>{this.state.LBNum}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Client</th><td>{this.state.Client}</td>
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div className="editContainerTopRight">
+                                            <table style={{ marginRight: "30px", float: "right" }} className="editTableTop">
+                                                <tbody>
+
+                                                    <tr>
+                                                        <th>Description</th><td>{this.state.Desc}{this.state.DescCN ? "/" + this.state.DescCN : void 0}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Note</th><td>{this.state.Note}</td>
+                                                    </tr>
+
+
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                {this.state.Item.map(this.mapItem)}
+                            </div>
+                        </div>
+                    </div>
+                    <div id="sphere" className="sphere">
+                        <div className="sphere-content">
+                            <span className="closep">&times;</span>
+                            <div id="spherepic" style={{
+                                // float: "right",
+                                width: "98%",
+                                height: "90%"
+                            }}></div>
+
+                        </div>
+                    </div>
+                </React.Fragment>
+            );
+        }
+
     }
+
+    protected mapItem(value, index) {
+        return (
+            <div key={index}>
+                <div className="card shadow mb-4" id={"each" + index}>
+                    <div className="card-header py-3">
+                        <div style={{
+
+                        }}
+                            className="left">
+                            <h4 style={{}}>{this.state.Item[index].Cate} - {this.state.Item[index].Item}</h4>
+                            <div style={{ float: "right", width: "30%", marginRight: "50px" }}>
+                                <Slider disabled dots min={0} marks={marks} step={10}
+                                    onChange={
+                                        function (num) {
+                                            let list = this.state.Item;
+                                            list[index].completeness = num.toString();
+                                            this.setState({ Item: list })
+                                        }.bind(this)
+                                    } defaultValue={this.state.Item[index].completeness ? parseInt(this.state.Item[index].completeness) : 0} />
+                            </div>
+                        </div>
+                        <div className="right">
+
+
+                            <button style={{
+                                marginTop: '3px',
+                                marginLeft: '5px',
+                                height: '29px',
+                                fontSize: '14px',
+                            }} disabled
+                                className={this.state.Item[index].Process === '0' ? "btn btn-outline-danger btn-sm" : "btn btn-outline-success btn-sm"} onClick={() => {
+                                    let list = this.state.Item;
+                                    if (list[index].Process === '0') {
+                                        list[index].Process = '1';
+                                        this.setState({ Item: list });
+                                    }
+                                    else {
+                                        list[index].Process = '0';
+                                        this.setState({ Item: list });
+                                    }
+                                }} title="process">{this.state.Item[index].Process === '0' ? "Incomplete" : "Complete"}</button>
+                            <button style={{
+                                marginTop: '3px',
+                                marginLeft: '5px',
+                                height: '29px',
+                                fontSize: '14px',
+                            }}
+                                className={
+                                    this.state.Item[index].Status === '0' ? "btn btn-outline-warning btn-sm" : this.state.Item[index].Status === '1' ? "btn btn-outline-success btn-sm" : "btn btn-outline-danger btn-sm"
+                                }
+                                disabled
+                                title="process">{this.state.Item[index].Status === '0' ? "Unknown" : this.state.Item[index].Status === '1' ? "Approved" : "PushBack"}</button>
+                        </div>
+                    </div>
+                    <div className="card-body">
+                        <React.Fragment>
+                            <table style={{ width: "100%" }}>
+                                <thead>
+                                    <tr key={index}>
+                                        <th>Category</th>
+                                        <th>Item</th>
+                                        <th>Description</th>
+                                        <th>UM</th>
+                                        <th>QTY</th>
+                                        <th>PPU</th>
+                                        <th>Amount</th>
+                                        {/* <th>Process</th>
+                                    <th>Status</th> */}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr key={index}>
+                                        <td>{value.Cate}</td>
+                                        <td>{value.Item}</td>
+                                        <td>{value.description}<div>{value.Comments}</div></td>
+                                        <td>{value.UM}</td>
+                                        <td>{value.Qty}</td>
+                                        <td>{value.SubPPU}</td>
+                                        <td>{value.SubCost}</td>
+                                        {/* <td>{this.showProcess(value.Process)}</td>
+                                        <td>{this.showStatus(value.Status)}</td> */}
+                                    </tr>
+                                    <tr><th style={{ textAlign: "center", borderBottom: "#FFFFFF", borderTop: "#FFFFFF" }} colSpan={8}>Before </th></tr>
+                                    <tr><td style={{ borderBottom: "#FFFFFF", borderTop: "#FFFFFF" }} colSpan={8}>{this.mapPicture(value.Before, value.description, value.Comments)}</td></tr>
+                                    <tr><th style={{ textAlign: "center", borderBottom: "#FFFFFF" }} colSpan={8}> During </th></tr>
+                                    <tr><td style={{ borderBottom: "#FFFFFF", borderTop: "#FFFFFF" }} colSpan={8}>{this.mapPicture(value.During, value.description, value.Comments)}</td></tr>
+                                    <tr><th style={{ textAlign: "center", borderBottom: "#FFFFFF" }} colSpan={8}> After </th></tr>
+                                    <tr><td style={{ borderTop: "#FFFFFF" }} colSpan={8}>{this.mapPicture(value.After, value.description, value.Comments)}</td></tr>
+
+                                </tbody></table>
+                        </React.Fragment>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+    protected mapPicture(picture: any[], desc: string, descCN: string) {
+        return (
+            picture.map(function (item, key) {
+                return (
+                    <div key={key} style={{
+                        // position: 'flex',
+                        flex: 1,
+                        // float:"left"
+                        width: "20%",
+                        display: "inline-block"
+                    }}>
+                        <div>
+                            <img style={{
+                                width: '80%',
+                                height: 'auto',
+                                padding: '3px'
+                            }}
+                                src={item.Src}
+                            />
+                            <div style={{ width: "90%" }}>{key + 1}.{desc}</div>
+                        </div>
+                    </div>
+                )
+            }.bind(this))
+        )
+    }
+    protected showLeftBar(TotalAmount: any) {
+        return (
+            <div style={{ position: "fixed" }} className="wrapper">
+                <div className="sidebar">
+                    <div className="sidebar-header">
+                        <button style={{
+                            width: "100%",
+                            backgroundColor: "Transparent",
+                            border: "none",
+                        }}>
+                            <div className="logo">
+                                <img style={{
+                                    width: "100%"
+                                }} src={logo} />
+                            </div>
+                            <div className="rpnname">
+                                RPN Company
+                            </div>
+                        </button>
+                    </div>
+                    <div className="sidebar-body">
+
+                        <div style={{
+                            borderBottom: "1px solid #E5E5E5"
+                        }} className="sidebar-body-action">
+                            <div style={{ paddingTop: "5%" }}>
+                                <button className="link" style={{
+                                    width: "100%",
+                                    backgroundColor: "Transparent",
+                                    border: "none",
+                                    outline: "none"
+                                }} onClick={function () { this.props.history.push("/main") }.bind(this)}>
+                                    <div className="body-icon"><i style={{ color: "#616161" }} className="fas fa-tasks"></i></div>
+                                    <div className="body-text">Dashboard</div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div style={{ marginTop: "10px", overflow: "auto", height: this.height, boxShadow: "0 0 35px 10px #EBEDEF inset" }} className="sidebar-body-action">
+                            {this.state.Item.map(function (item, index) {
+                                return (
+                                    <div key={index}><button className="btn btn-link btn-sm" style={{ color: this.stageColor(item) }} onClick={this.scrollToAnchor.bind(this, index)}>{item.Cate}-{item.Item}</button></div>
+                                )
+                            }.bind(this))}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        )
+    }
+    protected showCurrStage(stage) {
+        //console.log(this.state.Stage);
+
+        if (stage === '0') {
+            return ("Initial");
+        }
+        else if (stage === '1') {
+            return ("Bid");
+        }
+        else if (stage === '2') {
+            return ("Client Approval");
+        }
+        else if (stage === '3') {
+            return ("Work Order");
+        }
+        else if (stage === '4') {
+            return ("Quality Assurance")
+        }
+        else if (stage === '5') {
+            return ("Invoice")
+        }
+        else if (stage === '6') {
+            return ("Archived")
+        }
+        else {
+            return ("Unknown");
+        }
+    }
+    protected stageColor(item: any) {
+        if (item.Process === '0') {
+            return "#A00A0A"
+        }
+        else if (item.Process === '1' && item.Status != '1') {
+            return "#FFC107"
+        }
+        else {
+            return "#18A409"
+        }
+    }
+
+    protected scrollToAnchor(index: number) {
+        let anchorElement = document.getElementById("each" + index);
+        anchorElement.scrollIntoView({})
+
+    }
+
 }
 
 export default PageGhotiVendorEdit;

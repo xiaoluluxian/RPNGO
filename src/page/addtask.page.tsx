@@ -31,6 +31,7 @@ class PageGhotiAddtask extends React.Component<IProps, IState> {
         username: "",
         clients: [],
         client: "",
+        vendor:"",
     };
 
     public constructor(props) {
@@ -163,7 +164,7 @@ class PageGhotiAddtask extends React.Component<IProps, IState> {
                                         </div>
                                         <div className="form-group col-md-2">
                                             <label>Vendor</label>
-                                            <select className="form-control" id='client' onChange={e => { this.getUserByVendor(e.target.value) }}>
+                                            <select className="form-control" id='vendor' onChange={e => { this.getUserByVendor(e.target.value) }}>
                                                 <option>Choose Vendor</option>
                                                 {this.state.allVendors ? this.state.allVendors.map(function (item, key) {
                                                     return (
@@ -198,6 +199,7 @@ class PageGhotiAddtask extends React.Component<IProps, IState> {
     }
 
     protected getUserByVendor(vendor:string){
+        this.setState({vendor:vendor})
         let name = vendor.replace(" ","%20")
         $.ajax({
             url: 'https://rpnserver.appspot.com/findUsersByCompany?company='+name,
@@ -248,6 +250,7 @@ class PageGhotiAddtask extends React.Component<IProps, IState> {
                 keycode: $('#lockboxnumber').val(),
                 client: this.state.client,
                 Username: name,
+                Vendor: this.state.vendor
                 //stage:$('#stage').val()
             }),
             success: function (data) {

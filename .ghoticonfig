@@ -42,7 +42,8 @@
     "printTask",
     "clientEdit",
     "vendorEdit",
-    "checklist"
+    "checklist",
+    "printText"
   ],
   "funcs": [],
   "lambdas": [],
