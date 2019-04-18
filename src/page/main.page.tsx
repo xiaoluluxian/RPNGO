@@ -134,7 +134,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                 success: (function (result) {
                     console.log(result);
                     this.setState({ allTask: result });
-                    this.setState({ currtaskLeng: result.length })
+                    this.setState({ currtaskLeng: result?result.length:0 })
                     this.reload += 1;
                     this.setState({ Loading: this.reload })
                 }).bind(this),
@@ -438,15 +438,15 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                     <div className="card-header py-3">
                         <select style={{ width: "200px", float:"left" }} id='setStage' className="form-control" onChange={e => this.showVendorTasks(e.target.value)}>
                             <option value="-1">SelectVendor</option>
-                            {this.state.vendors.map(function (item, index) {
+                            {this.state.vendors?this.state.vendors.map(function (item, index) {
                                 return (<option key={index} value={item.Company}>{item.Company}</option>)
-                            }.bind(this))}
+                            }.bind(this)):void 0}
                         </select>
                         <select style={{ width: "200px", float:"left", marginLeft:"10px" }} id='setStage' className="form-control" onChange={e => this.showClientTasks(e.target.value)}>
                             <option value="-1">SelectClient</option>
-                            {this.state.clients.map(function (item, index) {
+                            {this.state.clients?this.state.clients.map(function (item, index) {
                                 return (<option key={index} value={item.Company}>{item.Company}</option>)
-                            }.bind(this))}
+                            }.bind(this)):void 0}
                         </select>
                         <select style={{ width: "200px", float:"left", marginLeft:"10px" }} id='setStage' className="form-control" onChange={e => this.showStageTasks(e.target.value)}>
                             <option value="-1">SelectStage</option>
