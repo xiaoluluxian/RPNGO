@@ -132,7 +132,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                 data: JSON.stringify({
                 }),
                 success: (function (result) {
-                    console.log(result);
+                    // console.log(result);
                     this.setState({ allTask: result });
                     this.setState({ currtaskLeng: result?result.length:0 })
                     this.reload += 1;
@@ -201,7 +201,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
 
     public render() {
         this.height = window.innerHeight
-        this.height = this.height * 0.65
+        this.height = this.height * 0.63
         // console.log(localStorage.getItem("Authority"))
         if (localStorage.getItem("Authority") === '5' || localStorage.getItem("Authority") === '4') {
             if (this.reload == 4) {
@@ -378,7 +378,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
             data: JSON.stringify({
             }),
             success: (function (result) {
-                console.log(result)
+                // console.log(result)
                 this.setState({
                     currStage:"1",
                     data:result
@@ -681,14 +681,14 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                         }}
                             onClick={function () { this.props.history.push("/userProfile") }.bind(this)}>
                             <span style={{
-                                color: "#616161"
+                                color: "#616161",
+                                float:"right"
                             }} className="mr-2 d-none d-lg-inline text-gray-600">{localStorage.getItem("currUser")}</span>
                             {/* <img style={{
                                 width: "20%"
                             }} className="img-profile rounded-circle" src={logo} /> */}
                         </button>
                     </div>
-
                 </div>
             </div>
         )
@@ -710,7 +710,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                 }),
                 success: (function (result) {
                     if (result) {
-                        console.log(result)
+                        // console.log(result)
                         this.setState({ data: result });
                     }
                     else {
@@ -765,7 +765,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                 data: JSON.stringify({
                 }),
                 success: (function (result) {
-                    console.log(result);
+                    // console.log(result);
                 }).bind(this),
             })
         }

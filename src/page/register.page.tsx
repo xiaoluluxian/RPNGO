@@ -185,7 +185,7 @@ class PageGhotiRegister extends React.Component<IProps, IState> {
                                 <label className="control-label col-md-4  requiredField">Company<span className="asteriskField"></span> </label>
                                 <div className="controls col-md-10 ">
                                     <select className="form-control mb-2 mr-sm-2 mb-sm-0" id='user_company'>
-                                        <option>Choose Company</option>
+                                        <option value="">Choose Company</option>
                                         {this.state.currCompany.map(function (company, index) {
                                             return(
                                                 <option key={index} value={company.Company}>{company.Company}</option>
@@ -640,55 +640,68 @@ class PageGhotiRegister extends React.Component<IProps, IState> {
     }
     protected submitTask() {
         if (this.state.currStage === '0') {
-            $.ajax({
-                url: 'https://rpntechserver.appspot.com/register',
-                //url: 'http://localhost:8080/login',
-                method: 'POST',
-                datatype: "json",
-                headers: {
-                    Authorization: "Bearer " + localStorage.getItem('Token'),
-                },
-                data: JSON.stringify({
-                    username: $('#username').val(),
-                    password: $('#password').val(),
-                    authority: $('#authority').val(),
-                    firstname: $('#firstname').val(),
-                    lastname: $('#lastname').val(),
-                    email: $('#email').val(),
-                    phone: $('#phone').val(),
-                    abc_num: $('#background').val(),
-                    score: "0",
-                    company: $('#user_company').val(),
-                }),
-                success: function (data) {
-                    console.log(data);
-                    this.props.history.push('/main');
-                }.bind(this),
-            });
+            if(!$('#username').val()){
+                alert("Please enter username!!")
+            }
+            else if(!$('#password').val()){
+                alert("Please enter password!!")
+            }
+            else if(!$('#user_company').val()){
+                alert("Please select company!!")
+            }
+            else{
+                $.ajax({
+                    url: 'https://rpntechserver.appspot.com/register',
+                    //url: 'http://localhost:8080/login',
+                    method: 'POST',
+                    datatype: "json",
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem('Token'),
+                    },
+                    data: JSON.stringify({
+                        username: $('#username').val(),
+                        password: $('#password').val(),
+                        authority: $('#authority').val(),
+                        firstname: $('#firstname').val(),
+                        lastname: $('#lastname').val(),
+                        email: $('#email').val(),
+                        phone: $('#phone').val(),
+                        abc_num: $('#background').val(),
+                        score: "0",
+                        company: $('#user_company').val(),
+                    }),
+                    success: function (data) {
+                        // console.log(data);
+                        this.props.history.push('/main');
+                    }.bind(this),
+                });
+            }
         }
         else if (this.state.currStage === '1') {
-            // console.log( $('#company').val(),
-            // $('#address').val(),
-            // $('#checklist').val(),);
-            $.ajax({
-                url: 'https://rpntechserver.appspot.com/createClient',
-                method: 'POST',
-                datatype: "json",
-                headers: {
-                    Authorization: "Bearer " + localStorage.getItem('Token'),
-                },
-                data: JSON.stringify({
-                    company: $('#client').val(),
-                    address: $('#clientaddress').val(),
-                    check_list: this.state.checklist,
-                    icon: this.state.clientIcon
-
-                }),
-                success: function (data) {
-                    console.log(data);
-                    this.props.history.push('/main');
-                }.bind(this),
-            });
+            if(!$('#client').val()){
+                alert("Please enter company name!!")
+            }
+            else{
+                $.ajax({
+                    url: 'https://rpntechserver.appspot.com/createClient',
+                    method: 'POST',
+                    datatype: "json",
+                    headers: {
+                        Authorization: "Bearer " + localStorage.getItem('Token'),
+                    },
+                    data: JSON.stringify({
+                        company: $('#client').val(),
+                        address: $('#clientaddress').val(),
+                        check_list: this.state.checklist,
+                        icon: this.state.clientIcon
+    
+                    }),
+                    success: function (data) {
+                        // console.log(data);
+                        this.props.history.push('/main');
+                    }.bind(this),
+                });
+            }
         }
         else {
             let PerformedServices = [];
@@ -719,7 +732,7 @@ class PageGhotiRegister extends React.Component<IProps, IState> {
                     StateCounty.push({ state: State, county: County })
                 }
             }
-            console.log(StateCounty);
+            // console.log(StateCounty);
             $.ajax({
                 url: 'https://rpntechserver.appspot.com/addVendor',
                 method: 'POST',
@@ -751,7 +764,7 @@ class PageGhotiRegister extends React.Component<IProps, IState> {
                     Score: "0"
                 }),
                 success: function (data) {
-                    console.log(data);
+                    // console.log(data);
                     this.props.history.push('/main');
                 }.bind(this),
             });

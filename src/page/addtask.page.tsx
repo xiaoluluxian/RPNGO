@@ -253,9 +253,11 @@ class PageGhotiAddtask extends React.Component<IProps, IState> {
                 Vendor: this.state.vendor
                 //stage:$('#stage').val()
             }),
-            success: function (data) {
-                //console.log(data);
-                this.props.history.push('/main');
+            success: function (result) {
+                let id = JSON.parse(result).TaskID;
+                localStorage.setItem("currTask",id);
+                this.props.history.push('/edittask');
+                
 
             }.bind(this),
         });

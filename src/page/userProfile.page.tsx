@@ -8,6 +8,7 @@ import * as React from 'react';
 import * as Component from '../component/import';
 import * as Func from '../func/import';
 import * as Lambda from '../lambda/import';
+import * as $ from 'jquery';
 
 import Config from '../config/config';
 
@@ -22,17 +23,96 @@ export interface IState {
 class PageGhotiUserProfile extends React.Component<IProps, IState> {
     public constructor(props) {
         super(props);
-        this.pushPage = this.pushPage.bind(this)
+        this.pushPage = this.pushPage.bind(this);
+        this.changePassword = this.changePassword.bind(this);
     }
 
     public render() {
         return (<div className="page">
-            <Component.leftBar page="userProfile" pushPage={this.pushPage.bind(this)}/>
-            <Component.topBar page="userProfile" pushPage={this.pushPage.bind(this)}/>
-            <div>userProfile</div>
+            <Component.leftBar page="userProfile" pushPage={this.pushPage.bind(this)} />
+            <Component.topBar page="userProfile" pushPage={this.pushPage.bind(this)} />
+            <div className="content" style={{ display: "fixed" }}>
+                <div style={{
+                    color: "#283747",
+                    fontWeight: "bold",
+                    fontSize: "22px",
+                    marginLeft: "15px",
+                    marginTop: "5px"
+                }}>Change Password</div>
+                <div className="mainTable">
+                    <div className="card shadow mb-4">
+                        <div className="card-header py-3">
+
+                        </div>
+                        <div className="card-body py-3">
+                            <div id="div_id_propertyaddress" className="form-group required">
+                                <label className="control-label col-md-4  requiredField"> Username<span className="asteriskField"></span> </label>
+                                <div className="controls col-md-10 ">
+                                    <input className="input-md  textinput textInput form-control" disabled value={localStorage.getItem("currUser")}id="username" name="username" placeholder="Username..." style={{ marginBottom: "5px" }} type="text" ></input>
+                                </div>
+                            </div>
+                            <div id="div_id_propertyaddress" className="form-group required">
+                                <label className="control-label col-md-4  requiredField"> Previous Password<span className="asteriskField"></span> </label>
+                                <div className="controls col-md-10 ">
+                                    <input className="input-md  textinput textInput form-control" id="PrevPass" style={{ marginBottom: "5px" }} type="text" ></input>
+                                </div>
+                            </div>
+                            <div id="div_id_propertyaddress" className="form-group required">
+                                <label className="control-label col-md-4  requiredField"> New Password<span className="asteriskField"></span> </label>
+                                <div className="controls col-md-10 ">
+                                    <input className="input-md  textinput textInput form-control" id="NewPass" style={{ marginBottom: "5px" }} type="text" ></input>
+                                </div>
+                            </div>
+                            <div id="div_id_propertyaddress" className="form-group required">
+                                <label className="control-label col-md-4  requiredField"> New Password Again<span className="asteriskField"></span> </label>
+                                <div className="controls col-md-10 ">
+                                    <input className="input-md  textinput textInput form-control" id="NewPassAgain" style={{ marginBottom: "5px" }} type="text" ></input>
+                                </div>
+                            </div>
+                        </div>
+                        <button id="submit" name="submit" style={{ marginLeft: "20px", marginBottom:"10px" }} className="btn btn-sm btn-primary col-md-10" onClick={this.changePassword} >Submit</button>
+
+                    </div>
+                </div>
+            </div>
         </div>);
     }
-    protected pushPage(page:String){
+
+    protected changePassword(){
+        let oldpass = $('#PrevPass').val()
+        let newpass = $('#NewPass').val()
+        let newpassagain = $('#NewPassAgain').val()
+        if(newpass!==newpassagain){
+            alert("Your Password entered are not same!!");
+        }
+        else if(oldpass===newpass){
+            alert("Please use a different password!!");
+        }
+        else{
+            var fd = new FormData();
+            fd.append("username",localStorage.getItem("currUser"));
+            fd.append("oldpass",oldpass);
+            fd.append("newpass",newpass);
+            $.ajax({
+                url: 'https://rpntechserver.appspot.com/changePassword',
+                //url: 'http://192.168.0.66:8080/addTaskToUserII?userToRemove='+this.state.oldUser+'&userToAdd='+$('#setUser').val()+'&task_id='+localStorage.getItem('currTask'),
+                method: 'POST',
+                dataType: 'json',
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem('Token'),
+                },
+                cache: false,
+                processData: false,
+                contentType: false,
+                data: fd,
+                success: function (data) {
+                    alert("Changed Successfully!")
+                    this.props.history.push("/main")
+                }.bind(this),
+            });
+        }  
+    }
+    protected pushPage(page: String) {
         this.props.history.push(page)
     }
 }

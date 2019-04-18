@@ -46,17 +46,19 @@ class ComponentGhotiTopBar extends React.Component<IProps, IState> {
                 </div>
                 <div className="profileBox">
                     <div style={{
-                        paddingTop:"5%"
+                        paddingTop:"5%",
+                        float: "right"
                     }}>
                         <button className="link" style={{
-                            width: "180px",
+                            // width: "180px",
                             float: "right",
                             backgroundColor: "Transparent",
                             border: "none",
                             outline: "none"
                         }}onClick={this.props.pushPage.bind(this,"/userProfile")}>
                             <span style={{
-                                color:"#616161"
+                                color:"#616161",
+                                float: "right"
                             }} className="mr-2 d-none d-lg-inline text-gray-600">{localStorage.getItem("currUser")}</span>
                             {/* <img style={{
                                 width: "20%"

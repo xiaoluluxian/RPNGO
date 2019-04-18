@@ -181,7 +181,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             }).bind(this),
             error: (function (jqXHR, textStatus, errorThrown) {
                 this.reload += 1;
-                console.log(this.reload)
+                // console.log(this.reload)
                 this.setState({ Loading: this.reload })
             }).bind(this),
         });
@@ -197,7 +197,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             data: JSON.stringify({
             }),
             success: (function (result) {
-                console.log(result);
+                // console.log(result);
                 this.setState({ allVendors: result });
             }).bind(this),
         });
@@ -217,7 +217,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             }).bind(this),
             error: (function (jqXHR, textStatus, errorThrown) {
                 this.reload += 1;
-                console.log(this.reload)
+                // console.log(this.reload)
                 this.setState({ Loading: this.reload })
 
             }).bind(this),
@@ -235,12 +235,12 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                 this.setState({ During: result });
                 this.reload += 1;
                 this.setState({ Loading: this.reload })
-                console.log(this.reload)
+                // console.log(this.reload)
 
             }).bind(this),
             error: (function (jqXHR, textStatus, errorThrown) {
                 this.reload += 1;
-                console.log(this.reload)
+                // console.log(this.reload)
                 this.setState({ Loading: this.reload })
             }).bind(this),
         });
@@ -257,12 +257,12 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                 this.setState({ After: result });
                 this.reload += 1;
                 this.setState({ Loading: this.reload })
-                console.log(this.reload)
+                // console.log(this.reload)
 
             }).bind(this),
             error: (function (jqXHR, textStatus, errorThrown) {
                 this.reload += 1;
-                console.log(this.reload)
+                // console.log(this.reload)
                 this.setState({ Loading: this.reload })
             }).bind(this),
         });
@@ -280,11 +280,11 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                 this.reload += 1;
                 this.setState({ alluser: result });
                 this.setState({ Loading: this.reload })
-                console.log(this.reload)
+                // console.log(this.reload)
             }).bind(this),
             error: (function (jqXHR, textStatus, errorThrown) {
                 this.reload += 1;
-                console.log(this.reload)
+                // console.log(this.reload)
                 this.setState({ Loading: this.reload })
             }).bind(this),
         });
@@ -301,7 +301,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                 this.setState({ versionArray: result })
             }).bind(this),
             error: (function (jqXHR, textStatus, errorThrown) {
-                console.log(errorThrown)
+                // console.log(errorThrown)
             }).bind(this),
         })
     }
@@ -972,7 +972,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                 //stage:$('#stage').val()
             }),
             success: function (data) {
-                console.log(data);
+                // console.log(data);
                 alert("Dupicate Successfully!")
                 window.location.reload()
 
@@ -1365,7 +1365,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                     <tr key={index}>
                                         <td>{value.Cate}</td>
                                         <td>{value.Item}</td>
-                                        <td>{value.description}<div>{value.Comments}</div></td>
+                                        <td>{value.description}<div>{value.description_cn}</div></td>
                                         <td>{value.UM}</td>
                                         <td>{value.Qty}</td>
                                         <td>{value.PPU}</td>
@@ -1555,7 +1555,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             },
             // data: test,
             success: function (data) {
-                console.log(data)
+                // console.log(data)
                 this.setState({ Markers: data.Markers })
                 // console.log(this.state.Markers);
                 PSV = new PhotoSphereViewer({
@@ -1612,7 +1612,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                         singleMarkID: createMar.id
                     })
                     this.setState({ Markers: tempMar });
-                    console.log(this.state.Markers);
+                    // console.log(this.state.Markers);
                 }.bind(this));
 
                 /**
@@ -1729,7 +1729,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
 
         // find every checked item
         pics.forEach(function (url) {
-            console.log(url);
+            // console.log(url);
             var filename = url.replace(/.*\//g, "") + ".jpg";
             zip.file(filename, urlToPromise(url), { binary: true });
         });
@@ -1975,7 +1975,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
 
 
         function urlToPromise(url) {
-            console.log(url)
+            // console.log(url)
             return new Promise(function (resolve, reject) {
                 JSZipUtils.getBinaryContent(url, function (err, data) {
                     if (err) {
@@ -2021,7 +2021,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             var urls = this.state.During;
             // find every checked item
             urls.forEach(function (url) {
-                console.log(url);
+                // console.log(url);
                 var filename = url.replace(/.*\//g, "") + ".jpg";
                 zip.file(filename, urlToPromise(url), { binary: true });
             });
@@ -2050,7 +2050,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             var urls = this.state.After;
             // find every checked item
             urls.forEach(function (url) {
-                console.log(url);
+                // console.log(url);
                 var filename = url.replace(/.*\//g, "") + ".jpg";
                 zip.file(filename, urlToPromise(url), { binary: true });
             });
