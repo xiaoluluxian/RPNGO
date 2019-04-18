@@ -553,7 +553,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                                         <th>Property Address</th>
                                         <th>Asset Number</th>
                                         <th>Due Date</th>
-                                        <th>CurrStage</th>
+                                        <th>Current Stage</th>
                                         <th>Status</th>
                                     </tr>
                                 </thead>

@@ -1842,9 +1842,14 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                         <div className="sidebar-body-action">
                             <div style={{ paddingTop: "5%" }}>
                                 <button className="btn btn-info" style={{
-                                    width: "100%",
+                                    width: "47%",
                                 }}onClick={this.changeChecklist}> CheckList</button>
+                                <button className="btn btn-primary" style={{
+                                    width: "47%",
+                                    float: "right"
+                                }} onClick={()=>this.setState({duplicateModal:true})}>Duplicate</button>
                             </div>
+                            
                         </div>
 
                         <div className="sidebar-body-action">
