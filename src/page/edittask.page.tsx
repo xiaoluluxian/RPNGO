@@ -1012,6 +1012,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
 
     protected getUserByVendor(vendor: string) {
         let name = vendor.replace(" ", "%20")
+        name = name.replace("&", "%26")
         $.ajax({
             url: 'https://rpntechserver.appspot.com/findUsersByCompany?company=' + name,
             method: 'GET',
