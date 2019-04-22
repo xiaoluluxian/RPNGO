@@ -59,7 +59,7 @@ class ComponentGhotiItemModal extends React.Component<IProps, IState> {
                     <div className="input-group-prepend input-group-sm" style={{ marginBottom: "0px" }}>
                         <span className="input-group-text" id="basic-addon1" style={{
                             color: "black",
-                            height: "29px"
+                            height: "31px"
                             // fontSize:'13px'
                         }}>Category</span>
                         <input type="text" className="form-control" placeholder="Category..." aria-label="Category" aria-describedby="basic-addon1"
@@ -78,7 +78,7 @@ class ComponentGhotiItemModal extends React.Component<IProps, IState> {
                     <div className="input-group-prepend input-group-sm" style={{ marginBottom: "0px" }}>
                         <span className="input-group-text" id="basic-addon1" style={{
                             color: "black",
-                            height: "29px"
+                            height: "31px"
                             // fontSize:'13px'
                         }}>Item</span>
                         <input type="number" className="form-control" placeholder="Item..." aria-label="Item" aria-describedby="basic-addon1"
@@ -156,7 +156,7 @@ class ComponentGhotiItemModal extends React.Component<IProps, IState> {
                     <div className="input-group-prepend input-group-sm" style={{ marginBottom: "0px" }}>
                         <span className="input-group-text" id="basic-addon1" style={{
                             color: "black",
-                            height: "29px"
+                            height: "31px"
                             // fontSize:'13px'
                         }}>QTY</span>
                         <input type="number" className="form-control" placeholder="Qty..." aria-label="Qty" aria-describedby="basic-addon1"
@@ -177,7 +177,7 @@ class ComponentGhotiItemModal extends React.Component<IProps, IState> {
                     <div className="input-group-prepend input-group-sm" style={{ marginBottom: "0px" }}>
                         <span className="input-group-text" id="basic-addon1" style={{
                             color: "black",
-                            height: "29px"
+                            height: "31px"
                             // fontSize:'13px'
                         }}>UM</span>
                         <input type="text" className="form-control" placeholder="UM..." aria-label="UM" aria-describedby="basic-addon1"
@@ -195,7 +195,7 @@ class ComponentGhotiItemModal extends React.Component<IProps, IState> {
                     <div className="input-group-prepend input-group-sm" style={{ marginBottom: "0px" }}>
                         <span className="input-group-text" id="basic-addon1" style={{
                             color: "black",
-                            height: "29px"
+                            height: "31px"
                             // fontSize:'13px'
                         }}>PPU</span>
                         <input type="number" className="form-control" placeholder="PPU..." aria-label="PPU" aria-describedby="basic-addon1"
@@ -216,7 +216,7 @@ class ComponentGhotiItemModal extends React.Component<IProps, IState> {
                     <div className="input-group-prepend input-group-sm" style={{ marginBottom: "0px" }}>
                         <span className="input-group-text" id="basic-addon1" style={{
                             color: "black",
-                            height: "29px"
+                            height: "31px"
                             // fontSize:'13px'
                         }}>SubPPU</span>
                         <input type="number" className="form-control" placeholder="PPU..." aria-label="PPU" aria-describedby="basic-addon1"
@@ -235,7 +235,7 @@ class ComponentGhotiItemModal extends React.Component<IProps, IState> {
                     <div className="input-group-prepend input-group-sm" style={{ marginBottom: "0px" }}>
                         <span className="input-group-text" id="basic-addon1" style={{
                             color: "black",
-                            height: "29px"
+                            height: "31px"
                             // fontSize:'13px'
                         }}>Cost</span>
                         <input type="number" className="form-control" placeholder="Cost..." aria-label="Cost" aria-describedby="basic-addon1"
@@ -249,7 +249,7 @@ class ComponentGhotiItemModal extends React.Component<IProps, IState> {
                     <div className="input-group-prepend input-group-sm" style={{ marginBottom: "0px" }}>
                         <span className="input-group-text" id="basic-addon1" style={{
                             color: "black",
-                            height: "29px"
+                            height: "31px"
                             // fontSize:'13px'
                         }}>SubCost</span>
                         <input type="number" className="form-control" placeholder="Cost..." aria-label="Cost" aria-describedby="basic-addon1"
@@ -263,7 +263,7 @@ class ComponentGhotiItemModal extends React.Component<IProps, IState> {
                     <div className="input-group-prepend input-group-sm" style={{ marginBottom: "0px" }}>
                         <span className="input-group-text" id="basic-addon1" style={{
                             color: "black",
-                            height: "29px"
+                            height: "31px"
                             // fontSize:'13px'
                         }}>Tax</span>
                         <input type="number" className="form-control" placeholder="Cost..." aria-label="Cost" aria-describedby="basic-addon1"
@@ -277,7 +277,7 @@ class ComponentGhotiItemModal extends React.Component<IProps, IState> {
                     <div className="input-group-prepend input-group-sm" style={{ marginBottom: "0px" }}>
                         <span className="input-group-text" id="basic-addon1" style={{
                             color: "black",
-                            height: "29px"
+                            height: "31px"
                             // fontSize:'13px'
                         }}>Total</span>
                         <input type="number" className="form-control" placeholder="Cost..." aria-label="Cost" aria-describedby="basic-addon1"
@@ -288,14 +288,15 @@ class ComponentGhotiItemModal extends React.Component<IProps, IState> {
                             disabled
                         ></input>
                     </div>
-                    <div className="card">
+
+                    <div style={{width:"30%", float:"left"}}className="card">
                         <div className="card-header">
                             <div className="input-group-prepend input-group-sm">
                                 <span className="input-group-text">Before</span>
                                 <div className="custom-file">
                                     <input type="file" className="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01" multiple
                                         onChange={(e) => { this.addBeforePicture(e.target.files, this.props.index, 0) }}></input>
-                                    <label className="custom-file-label" >Choose file</label>
+                                    <label className="custom-file-label" ></label>
                                 </div>
                             </div>
                         </div>
@@ -321,14 +322,15 @@ class ComponentGhotiItemModal extends React.Component<IProps, IState> {
                             }.bind(this))}
                         </div>
                     </div>
-                    <div className="card">
+
+                    <div className="card" style={{width:"30%", float:"left", marginLeft:"5%"}}>
                         <div className="card-header">
                             <div className="input-group-prepend input-group-sm">
                                 <span className="input-group-text">During</span>
                                 <div className="custom-file">
                                     <input type="file" className="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01" multiple
                                         onChange={(e) => { this.addDuringPicture(e.target.files, this.props.index, 0) }}></input>
-                                    <label className="custom-file-label" >Choose file</label>
+                                    <label className="custom-file-label" ></label>
                                 </div>
                             </div>
                         </div>
@@ -354,14 +356,15 @@ class ComponentGhotiItemModal extends React.Component<IProps, IState> {
                             }.bind(this))}
                         </div>
                     </div>
-                    <div className="card">
+
+                    <div className="card" style={{width:"30%", float:"left", marginLeft:"5%"}}>
                         <div className="card-header">
                             <div className="input-group-prepend input-group-sm">
                                 <span className="input-group-text">After</span>
                                 <div className="custom-file">
                                     <input type="file" className="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01" multiple
                                         onChange={(e) => { this.addAfterPicture(e.target.files, this.props.index, 0) }}></input>
-                                    <label className="custom-file-label" >Choose file</label>
+                                    <label className="custom-file-label" ></label>
                                 </div>
                             </div>
                         </div>
@@ -421,16 +424,16 @@ class ComponentGhotiItemModal extends React.Component<IProps, IState> {
                 },
                 data: formData,
                 success: function (result) {
-                    // console.log(result);
-                    let list = this.state.Item;
-                    list[index].After.push({
+                    console.log(result);
+                    let list = this.props.item;
+                    list[this.props.index].After.push({
                         Name: Files[temp].name,
                         Format: '',
-                        Cate: list[index].Cate,
-                        itemId: list[index].Item,
+                        Cate: list[this.props.index].Cate,
+                        itemId: list[this.props.index].Item,
                         Src: result
                     });
-                    this.setState({ Item: list });
+                    this.props.updateItemList(list);
                 }.bind(this),
             });
         }

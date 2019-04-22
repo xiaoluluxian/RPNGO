@@ -16,6 +16,7 @@ import PageGhotiClientEdit from './clientEdit.page';
 import PageGhotiVendorEdit from './vendorEdit.page';
 import PageGhotiChecklist from './checklist.page';
 import PageGhotiPrintText from './printText.page';
+import PageGhotiPrintSub from './printSub.page';
 export {
     PageGhotiLogin as login,
     PageGhotiMain as main,
@@ -29,4 +30,5 @@ export {
     PageGhotiVendorEdit as vendorEdit,
     PageGhotiChecklist as checklist,
     PageGhotiPrintText as printText,
+    PageGhotiPrintSub as printSub,
 };

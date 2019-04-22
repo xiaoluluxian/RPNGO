@@ -94,7 +94,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         Progress: "",
         Version: 0,
         VersionSize: 0,
-        Vendor:"",
+        Vendor: "",
         SharedID: "",
         // test: 'test',
         // x: "a",
@@ -103,6 +103,12 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         Markers: [],
         currImgID: "",
         currImgSrc: "",
+
+        ClientApproval: [],
+        SubWorkOrder: [],
+        SubInvoice: [],
+        Other: [],
+
 
 
         DupDescription: "",
@@ -163,7 +169,11 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                     VersionSize: result.VersionSize,
                     SharedID: result.SharedID,
                     DupDescription: result.Desc,
-                    Vendor: result.Vendor
+                    Vendor: result.Vendor,
+                    SubWorkOrder: result.sub_work_order_pdf,
+                    SubInvoice: result.SubInvoicePDF,
+                    ClientApproval: result.ClientApproPDF,
+                    Other: result.OtherPDF
                 })
                 // let temp = []
                 // for (let i = result.VersionSize; i > 0; i--) {
@@ -322,20 +332,24 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         this.addWHP = this.addWHP.bind(this);
         this.updateItemList = this.updateItemList.bind(this);
         this.pushPage = this.pushPage.bind(this)
-        this.changeChecklist = this.changeChecklist.bind(this)
+        this.changeChecklist = this.changeChecklist.bind(this);
+        this.uploadFile = this.uploadFile.bind(this)
 
         this.submit = this.submit.bind(this);
         this.submitStage = this.submitStage.bind(this);
         this.duplicateTask = this.duplicateTask.bind(this);
         this.getUserByVendor = this.getUserByVendor.bind(this);
+        this.downloadFiles = this.downloadFiles.bind(this)
     }
 
     public render() {
         this.height = window.innerHeight * 0.4;
         let taxTotal = 0;
         let TotalAmount = 0;
+        let SubTotal = 0;
         for (let i of this.state.Item) {
             TotalAmount += (i.Amount ? i.Amount : 0);
+            SubTotal += (i.SubCost ? i.SubCost : 0);
             taxTotal += (i.Tax ? i.Tax : 0);
         }
 
@@ -394,13 +408,13 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                             <div style={{ marginTop: "10px" }} className="input-group-prepend">
                                                 <span className="input-group-text">StartDate</span>
                                                 <div className="custom-file">
-                                                    <input type="date" value={this.state.StartDate[parseInt(this.state.Stage)-1]?this.state.StartDate[parseInt(this.state.Stage)-1]:void 0}className="form-control" id="stageStartDate"></input>
+                                                    <input type="date" value={this.state.StartDate[parseInt(this.state.Stage) - 1] ? this.state.StartDate[parseInt(this.state.Stage) - 1] : void 0} className="form-control" id="stageStartDate"></input>
                                                 </div>
                                             </div>
                                             <div style={{ marginTop: "10px" }} className="input-group-prepend">
                                                 <span className="input-group-text">DueDate</span>
                                                 <div className="custom-file">
-                                                    <input type="date" value={this.state.DueDate[parseInt(this.state.Stage)-1]?this.state.DueDate[parseInt(this.state.Stage)-1]:void 0}className="form-control" id="stageDueDate" ></input>
+                                                    <input type="date" value={this.state.DueDate[parseInt(this.state.Stage) - 1] ? this.state.DueDate[parseInt(this.state.Stage) - 1] : void 0} className="form-control" id="stageDueDate" ></input>
                                                 </div>
                                             </div>
                                             <button style={{
@@ -750,6 +764,121 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                                     }}
                                                 ></textarea>
                                             </div>
+                                            <div style={{}} className="card">
+                                                <div className="card-header">
+                                                    <div className="input-group-prepend input-group-sm">
+                                                        <button className="btn btn-info"
+                                                            onClick={() => {
+                                                                this.downloadFiles("client_appro_pdf")
+                                                            }}>Download</button>
+                                                        <div className="custom-file">
+                                                            <input type="file" className="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01" multiple
+                                                                onChange={(e) => this.uploadFile(e.target.files, "client_appro_pdf")}></input>
+                                                            <label className="custom-file-label" >Upload Client Approval File</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="card-body">
+                                                    {this.state.ClientApproval.map(function (pic, key) {
+                                                        return (
+                                                            <React.Fragment key={key}>
+                                                                <div className="col-auto">
+                                                                    <div className="input-group mb-2">
+
+                                                                        <input type="text" className="form-control" id="inlineFormInputGroup" value={pic.Filename} disabled></input>
+                                                                    </div>
+                                                                </div>
+                                                            </React.Fragment>
+                                                        )
+                                                    }.bind(this))}
+                                                </div>
+                                            </div>
+
+                                            <div style={{}} className="card">
+                                                <div className="card-header">
+                                                    <div className="input-group-prepend input-group-sm">
+                                                        <button className="btn btn-info"
+                                                            onClick={() => {
+                                                                this.downloadFiles("sub_work_order_pdf")
+                                                            }}>Download</button>
+                                                        <div className="custom-file">
+                                                            <input type="file" className="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01" multiple
+                                                                onChange={(e) => this.uploadFile(e.target.files, "sub_work_order_pdf")}></input>
+                                                            <label className="custom-file-label" >Upload Sub WorkOrder File</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="card-body">
+                                                    {this.state.SubWorkOrder.map(function (pic, key) {
+                                                        return (
+                                                            <React.Fragment key={key}>
+                                                                <div className="col-auto">
+                                                                    <div className="input-group mb-2">
+                                                                        <input type="text" className="form-control" id="inlineFormInputGroup" value={pic.Filename} disabled></input>
+                                                                    </div>
+                                                                </div>
+                                                            </React.Fragment>
+                                                        )
+                                                    }.bind(this))}
+                                                </div>
+                                            </div>
+                                            <div style={{}} className="card">
+                                                <div className="card-header">
+                                                    <div className="input-group-prepend input-group-sm">
+                                                        <button className="btn btn-info"
+                                                            onClick={() => {
+                                                                this.downloadFiles("sub_invoice_pdf")
+                                                            }}>Download</button>
+                                                        <div className="custom-file">
+                                                            <input type="file" className="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01" multiple
+                                                                onChange={(e) => this.uploadFile(e.target.files, "sub_invoice_pdf")}></input>
+                                                            <label className="custom-file-label" >Upload Sub Invoice</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="card-body">
+                                                    {this.state.SubInvoice.map(function (pic, key) {
+                                                        return (
+                                                            <React.Fragment key={key}>
+                                                                <div className="col-auto">
+                                                                    <div className="input-group mb-2">
+                                                                        <input type="text" className="form-control" id="inlineFormInputGroup" value={pic.Filename} disabled></input>
+                                                                    </div>
+                                                                </div>
+                                                            </React.Fragment>
+                                                        )
+                                                    }.bind(this))}
+                                                </div>
+                                            </div>
+                                            <div style={{}} className="card">
+                                                <div className="card-header">
+                                                    <div className="input-group-prepend input-group-sm">
+                                                        <button className="btn btn-info"
+                                                            onClick={() => {
+                                                                this.downloadFiles("other_pdf")
+                                                            }}>Download</button>
+                                                        <div className="custom-file">
+                                                            <input type="file" className="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01" multiple
+                                                                onChange={(e) => this.uploadFile(e.target.files, "other_pdf")}></input>
+                                                            <label className="custom-file-label" >Upload Other File</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="card-body">
+                                                    {this.state.Other.map(function (pic, key) {
+                                                        return (
+                                                            <React.Fragment key={key}>
+                                                                <div className="col-auto">
+                                                                    <div className="input-group mb-2">
+
+                                                                        <input type="text" className="form-control" id="inlineFormInputGroup" value={pic.Filename} disabled></input>
+                                                                    </div>
+                                                                </div>
+                                                            </React.Fragment>
+                                                        )
+                                                    }.bind(this))}
+                                                </div>
+                                            </div>
                                         </ModalBody>
                                     </Modal>
                                     <div className="card-header py-3">
@@ -767,6 +896,18 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                                 className={"btn btn-primary btn-sm"}
                                                 onClick={() => this.setState({ generalModal: true })}
                                                 title="edit">Edit</button>
+                                            {this.state.Stage === "3" ? <button style={{
+                                                marginTop: '3px',
+                                                marginLeft: '5px',
+                                                fontSize: '14px',
+
+                                                height: '29px',
+                                                // backgroundColor: this.state.Item[index].pano === "true" ? 'lightblue' : 'red'
+                                            }}
+                                                className={"btn btn-primary btn-sm"}
+                                                onClick={() => this.props.history.push("/printSub")}
+                                                title="edit">PrintSub</button> : void 0}
+
                                         </div>
                                     </div>
                                     <div className="card-body">
@@ -822,6 +963,9 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                                     <tr>
                                                         <th>Total Amount</th><td>${TotalAmount}</td>
                                                     </tr>
+                                                    <tr>
+                                                        <th>Sub Amount</th><td>${SubTotal}</td>
+                                                    </tr>
                                                 </tbody>
 
                                             </table>
@@ -841,8 +985,8 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                         onClick={() => {
                                             let list = this.state.Item;
                                             list.push(this.initItem(list.length + 1));
-                                            for(let i=0;i<list.length;i++){
-                                                list[i].Item=i+1;
+                                            for (let i = 0; i < list.length; i++) {
+                                                list[i].Item = i + 1;
                                             }
                                             this.setState({ Item: list });
                                         }}>AddItem</button>
@@ -937,6 +1081,164 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                     </div>
                 </div>
             </React.Fragment>);
+        }
+
+    }
+
+    protected downloadFiles(type: string){
+        function urlToPromise(url) {
+            // console.log(url)
+            return new Promise(function (resolve, reject) {
+                JSZipUtils.getBinaryContent(url, function (err, data) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(data);
+                    }
+                });
+            });
+        }
+        
+        var zip = new JSZip();
+        
+
+        // find every checked item
+        
+        if(type==="client_appro_pdf"){
+            
+            this.state.ClientApproval.forEach(function (url) {
+                console.log(url);
+                
+                // filename = filename.replace("+","%20")
+                zip.file(url.Filename, urlToPromise(url.Src), { binary: true });
+            });
+            var add = this.state.Address
+            // when everything has been downloaded, we can trigger the dl
+            zip.generateAsync({ type: "blob" }, function updateCallback(metadata) {
+                var msg = "progression : " + metadata.percent.toFixed(2) + " %";
+                if (metadata.currentFile) {
+                    msg += ", current file = " + metadata.currentFile;
+                } 
+            })
+                .then(function callback(blob) {
+                    FileSaver.saveAs(blob, add + "_" + "ClientApproval"+ ".zip");
+                }, function (e) {
+                   
+                });
+    
+            return false;
+        }
+        else if(type==="sub_work_order_pdf"){
+            
+            this.state.SubWorkOrder.forEach(function (url) {
+                // console.log(url);
+                
+                // filename = filename.replace("+","%20")
+                zip.file(url.Filename, urlToPromise(url.Src), { binary: true });
+            });
+            var add = this.state.Address
+            // when everything has been downloaded, we can trigger the dl
+            zip.generateAsync({ type: "blob" }, function updateCallback(metadata) {
+                var msg = "progression : " + metadata.percent.toFixed(2) + " %";
+                if (metadata.currentFile) {
+                    msg += ", current file = " + metadata.currentFile;
+                } 
+            })
+                .then(function callback(blob) {
+                    FileSaver.saveAs(blob, add + "_" + "SubWorkOrder"+ ".zip");
+                }, function (e) {
+                   
+                });
+    
+            return false;
+        }
+        else if(type==="sub_invoice_pdf"){
+            
+            this.state.SubInvoice.forEach(function (url) {
+                
+                zip.file(url.Filename, urlToPromise(url.Src), { binary: true });
+            });
+            var add = this.state.Address
+            // when everything has been downloaded, we can trigger the dl
+            zip.generateAsync({ type: "blob" }, function updateCallback(metadata) {
+                var msg = "progression : " + metadata.percent.toFixed(2) + " %";
+                if (metadata.currentFile) {
+                    msg += ", current file = " + metadata.currentFile;
+                } 
+            })
+                .then(function callback(blob) {
+                    FileSaver.saveAs(blob, add + "_" + "SubInvoice"+ ".zip");
+                }, function (e) {
+                   
+                });
+    
+            return false;
+        }
+        else{
+            
+            this.state.Other.forEach(function (url) {
+                zip.file(url.Filename, urlToPromise(url.Src), { binary: true });
+            });
+            var add = this.state.Address
+            // when everything has been downloaded, we can trigger the dl
+            zip.generateAsync({ type: "blob" }, function updateCallback(metadata) {
+                var msg = "progression : " + metadata.percent.toFixed(2) + " %";
+                if (metadata.currentFile) {
+                    msg += ", current file = " + metadata.currentFile;
+                } 
+            })
+                .then(function callback(blob) {
+                    FileSaver.saveAs(blob, add + "_" + "Other"+ ".zip");
+                }, function (e) {
+                   
+                });
+    
+            return false;
+        }
+        
+    }
+
+    protected uploadFile(files: FileList, type: string) {
+        for (let i = 0; i < files.length; i++) {
+            var fd = new FormData();
+            fd.append("doc", files[i]);
+            fd.append("task_id", localStorage.getItem("currTask"))
+            fd.append("file_class", type)
+            $.ajax({
+                url: 'https://rpntechserver.appspot.com/uploadDocToTask',
+                method: 'POST',
+                datatype: "json",
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem('Token'),
+                },
+                cache: false,
+                processData: false,
+                contentType: false,
+                data: fd,
+                success: function (data) {
+                    console.log(data);
+                    if (type === "client_appro_pdf") {
+                        let temp = this.state.ClientApproval
+                        temp.push(data);
+                        this.setState({ ClientApproval: temp })
+                    }
+                    else if (type === "sub_work_order_pdf") {
+                        let temp = this.state.SubWorkOrder
+                        temp.push(data);
+                        this.setState({ SubWorkOrder: temp })
+                    }
+                    else if (type === "sub_invoice_pdf") {
+                        let temp = this.state.SubInvoice
+                        temp.push(data);
+                        this.setState({ SubInvoice: temp })
+                    }
+                    else {
+                        let temp = this.state.Other
+                        temp.push(data);
+                        this.setState({ Other: temp })
+                    }
+                }.bind(this),
+            });
         }
 
     }
@@ -1074,6 +1376,11 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                 Progress: this.state.Progress,
                 VersionSize: this.state.VersionSize,
                 Vendor: this.state.Vendor,
+                ClientApproPDF: this.state.ClientApproval,
+                OtherPDF: this.state.Other,
+                SubInvoicePDF: this.state.SubInvoice,
+                sub_work_order_pdf: this.state.SubWorkOrder
+
             }),
             success: function (data) {
                 var fd = new FormData();
@@ -1202,8 +1509,8 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                         onClick={() => {
                             let list = this.state.Item;
                             list.splice(index, 0, this.initItem(index + 1));
-                            for(let i=0;i<list.length;i++){
-                                list[i].Item=i+1;
+                            for (let i = 0; i < list.length; i++) {
+                                list[i].Item = i + 1;
                             }
                             this.setState({ Item: list });
                         }}>AddItem</button>
@@ -1237,8 +1544,8 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                 className="btn btn-danger btn-sm" onClick={() => {
                                     let list = this.state.Item;
                                     list.splice(index, 1);
-                                    for(let i=0;i<list.length;i++){
-                                        list[i].Item=i+1;
+                                    for (let i = 0; i < list.length; i++) {
+                                        list[i].Item = i + 1;
                                     }
                                     this.setState({ Item: list });
                                 }} title="delete">Delete</button>
@@ -1350,14 +1657,15 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                             <table style={{ width: "100%" }}>
                                 <thead>
                                     <tr key={index}>
-                                        <th>Category</th>
-                                        <th>Item</th>
-                                        <th>Description</th>
+                                        <th style={{ width: "10%" }}>Category</th>
+                                        <th style={{ width: "4%" }}>Item</th>
+                                        <th style={{ width: "50%" }}>Description</th>
                                         <th>UM</th>
                                         <th>QTY</th>
                                         <th>PPU</th>
                                         <th>Tax</th>
-                                        <th>Amount</th>
+                                        <th style={{ width: "8%" }}>Amount</th>
+                                        <th style={{ width: "8%" }}>SubAmount</th>
                                         {/* <th>Process</th>
                                     <th>Status</th> */}
                                     </tr>
@@ -1372,15 +1680,16 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                         <td>{value.PPU}</td>
                                         <td>{value.Tax}</td>
                                         <td>{value.Amount}</td>
+                                        <td>{value.SubCost}</td>
                                         {/* <td>{this.showProcess(value.Process)}</td>
                                         <td>{this.showStatus(value.Status)}</td> */}
                                     </tr>
-                                    <tr><th style={{ textAlign: "center", borderBottom: "#FFFFFF", borderTop: "#FFFFFF" }} colSpan={8}>Before </th></tr>
-                                    <tr><td style={{ borderBottom: "#FFFFFF", borderTop: "#FFFFFF" }} colSpan={8}>{this.mapPicture(value.Before, value.description, value.Comments)}</td></tr>
-                                    <tr><th style={{ textAlign: "center", borderBottom: "#FFFFFF" }} colSpan={8}> During </th></tr>
-                                    <tr><td style={{ borderBottom: "#FFFFFF", borderTop: "#FFFFFF" }} colSpan={8}>{this.mapPicture(value.During, value.description, value.Comments)}</td></tr>
-                                    <tr><th style={{ textAlign: "center", borderBottom: "#FFFFFF" }} colSpan={8}> After </th></tr>
-                                    <tr><td style={{ borderTop: "#FFFFFF" }} colSpan={8}>{this.mapPicture(value.After, value.description, value.Comments)}</td></tr>
+                                    <tr><th style={{ textAlign: "center", borderBottom: "#FFFFFF", borderTop: "#FFFFFF" }} colSpan={9}>Before </th></tr>
+                                    <tr><td style={{ borderBottom: "#FFFFFF", borderTop: "#FFFFFF" }} colSpan={9}>{this.mapPicture(value.Before, value.description, value.Comments)}</td></tr>
+                                    <tr><th style={{ textAlign: "center", borderBottom: "#FFFFFF" }} colSpan={9}> During </th></tr>
+                                    <tr><td style={{ borderBottom: "#FFFFFF", borderTop: "#FFFFFF" }} colSpan={9}>{this.mapPicture(value.During, value.description, value.Comments)}</td></tr>
+                                    <tr><th style={{ textAlign: "center", borderBottom: "#FFFFFF" }} colSpan={9}> After </th></tr>
+                                    <tr><td style={{ borderTop: "#FFFFFF" }} colSpan={9}>{this.mapPicture(value.After, value.description, value.Comments)}</td></tr>
                                     {/* <tr><td style={{ borderLeftColor: "#FFFFFF", borderBottomColor: "#FFFFFF" }}>&nbsp;</td><th style={{textAlign:"center",borderBottom:"#FFFFFF", borderTop:"#FFFFFF"}}colSpan={6}>Before </th></tr>
                                     <tr><td style={{ borderLeftColor: "#FFFFFF", borderBottomColor: "#FFFFFF" }}>&nbsp;</td><td style={{borderBottom:"#FFFFFF", borderTop:"#FFFFFF"}} colSpan={6}>{this.mapPicture(value.Before, value.description, value.Comments)}</td></tr>
                                     <tr><td style={{ borderLeftColor: "#FFFFFF", borderBottomColor: "#FFFFFF" }}>&nbsp;</td><th style={{textAlign:"center",borderBottom:"#FFFFFF"}} colSpan={6}> During </th></tr>
@@ -1843,43 +2152,46 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                         <div className="sidebar-body-action">
                             <div style={{ paddingTop: "5%" }}>
                                 <button className="btn btn-info" style={{
-                                    width: "47%",
-                                }}onClick={this.changeChecklist}> CheckList</button>
+                                    float: "left",
+                                    width: "46%",
+                                }} onClick={this.changeChecklist}> CheckList</button>
                                 <button className="btn btn-primary" style={{
-                                    width: "47%",
+                                    width: "46%",
                                     float: "right"
-                                }} onClick={()=>this.setState({duplicateModal:true})}>Duplicate</button>
+                                }} onClick={() => this.setState({ duplicateModal: true })}>Duplicate</button>
                             </div>
-                            
+
                         </div>
 
                         <div className="sidebar-body-action">
                             <div style={{ paddingTop: "5%" }}>
                                 <button className="btn btn-primary" style={{
-                                    width: "47%",
+                                    float: "left",
+                                    width: "46%",
                                 }} onClick={() => this.props.history.push("/printTask")}>PhotoPDF</button>
                                 <button className="btn btn-primary" style={{
-                                    width: "47%",
+                                    width: "46%",
                                     float: "right"
                                 }} onClick={() => this.props.history.push("/printText")}>TextPDF</button>
 
                             </div>
 
                         </div>
-                        <select style={{ marginTop: "10px" }} id='setStage' className="form-control" onChange={e=>this.VRMCheckList(e.target.value)}>
+                        <select style={{ marginTop: "10px" }} id='setStage' className="form-control" onChange={e => this.VRMCheckList(e.target.value)}>
                             <option value="-1">VRM</option>
                             <option value='0'>InitialService</option>
                             <option value='1'>Bi-Weekly</option>
                             <option value='2'>Winterization</option>
                         </select>
-                        
+
                         <div className="sidebar-body-action">
                             <div style={{ paddingTop: "5%" }}>
                                 <button className="btn btn-primary" style={{
-                                    width: "47%",
+                                    float: "left",
+                                    width: "46%",
                                 }} onClick={this.addWHP}>AddWHP</button>
                                 <button className="btn btn-primary" style={{
-                                    width: "47%",
+                                    width: "46%",
                                     float: "right",
                                     // marginLeft:"5px"
                                 }}>DelMark</button>
@@ -1894,9 +2206,9 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                     DownloadPics
                                 </DropdownToggle>
                                 <DropdownMenu>
-                                    <button onClick={this.downloadPics.bind(this,"Before")}className="btn btn-secondary" style={{ width: "100%", margin: "auto", border: "none", borderBottom: "1px solid #E5E5E5", borderTop: "1px solid #E5E5E5" }}>Before</button>
-                                    <button onClick={this.downloadPics.bind(this,"During")}className="btn btn-secondary" style={{ width: "100%", margin: "auto", border: "none", borderBottom: "1px solid #E5E5E5" }}>During</button>
-                                    <button onClick={this.downloadPics.bind(this,"After")}className="btn btn-secondary" style={{ width: "100%", margin: "auto", border: "none", borderBottom: "1px solid #E5E5E5" }}>After</button>
+                                    <button onClick={this.downloadPics.bind(this, "Before")} className="btn btn-secondary" style={{ width: "100%", margin: "auto", border: "none", borderBottom: "1px solid #E5E5E5", borderTop: "1px solid #E5E5E5" }}>Before</button>
+                                    <button onClick={this.downloadPics.bind(this, "During")} className="btn btn-secondary" style={{ width: "100%", margin: "auto", border: "none", borderBottom: "1px solid #E5E5E5" }}>During</button>
+                                    <button onClick={this.downloadPics.bind(this, "After")} className="btn btn-secondary" style={{ width: "100%", margin: "auto", border: "none", borderBottom: "1px solid #E5E5E5" }}>After</button>
                                 </DropdownMenu>
                             </Dropdown>
                         </div>
@@ -1922,33 +2234,33 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         )
     }
 
-    protected VRMCheckList(stage){
-        if(stage==='0'){
+    protected VRMCheckList(stage) {
+        if (stage === '0') {
             let list = this.state.Item;
-            for(let i=0;i<VRM.InitialService.length;i++){
+            for (let i = 0; i < VRM.InitialService.length; i++) {
                 list.push(VRM.InitialService[i]);
             }
-            this.setState({Item:list})
+            this.setState({ Item: list })
         }
-        else if(stage==='1'){
+        else if (stage === '1') {
             let list = this.state.Item;
-            for(let i=0;i<VRM.BiWeekly.length;i++){
+            for (let i = 0; i < VRM.BiWeekly.length; i++) {
                 list.push(VRM.BiWeekly[i]);
             }
-            this.setState({Item:list})
+            this.setState({ Item: list })
         }
-        else if (stage==='2'){
+        else if (stage === '2') {
             let list = this.state.Item;
-            for(let i=0;i<VRM.Winterization.length;i++){
+            for (let i = 0; i < VRM.Winterization.length; i++) {
                 list.push(VRM.Winterization[i]);
             }
-            this.setState({Item:list})
+            this.setState({ Item: list })
         }
-        else{
+        else {
 
         }
     }
-    protected changeChecklist(){
+    protected changeChecklist() {
         this.props.history.push("/checklist");
     }
 
@@ -2021,7 +2333,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
 
             return false;
         }
-        else if(type==='During'){
+        else if (type === 'During') {
             resetMessage();
             var zip = new JSZip();
             var urls = this.state.During;
@@ -2050,7 +2362,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
 
             return false;
         }
-        else if(type==='After'){
+        else if (type === 'After') {
             resetMessage();
             var zip = new JSZip();
             var urls = this.state.After;
@@ -2079,7 +2391,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
 
             return false;
         }
-        else{
+        else {
 
         }
 
@@ -2213,7 +2525,11 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                         Progress: this.state.Progress,
                         VersionSize: this.state.VersionSize,
                         TotalCost: TotalAmount.toString(),
-                        Vendor:this.state.Vendor
+                        Vendor: this.state.Vendor,
+                        ClientApproPDF: this.state.ClientApproval,
+                        OtherPDF: this.state.Other,
+                        SubInvoicePDF: this.state.SubInvoice,
+                        sub_work_order_pdf: this.state.SubWorkOrder
                     }),
                     success: function (data) {
                         alert("Submit Successfully!")
@@ -2263,7 +2579,11 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                         Progress: this.state.Progress,
                         VersionSize: this.state.VersionSize,
                         TotalCost: TotalAmount.toString(),
-                        Vendor: this.state.Vendor
+                        Vendor: this.state.Vendor,
+                        ClientApproPDF: this.state.ClientApproval,
+                        OtherPDF: this.state.Other,
+                        SubInvoicePDF: this.state.SubInvoice,
+                        sub_work_order_pdf: this.state.SubWorkOrder
                     }),
                     success: function (data) {
                         alert("Submit Successfully!")

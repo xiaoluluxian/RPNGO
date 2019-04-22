@@ -43,7 +43,8 @@
     "clientEdit",
     "vendorEdit",
     "checklist",
-    "printText"
+    "printText",
+    "printSub"
   ],
   "funcs": [],
   "lambdas": [],

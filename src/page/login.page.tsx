@@ -44,11 +44,15 @@ class PageGhotiLogin extends React.Component<IProps, IState> {
                                         </div>
                                         <div className="form-group">
                                             <label className="text-uppercase">Password</label>
-                                            <input type="password" id="PW" className="form-control" placeholder="" />
-
+                                            <input type="password" id="PW" className="form-control"
+                                                onKeyUp={
+                                                    event => {
+                                                        if (event.key === 'Enter') {
+                                                            this.login()
+                                                        }
+                                                    }
+                                                } placeholder="" />
                                         </div>
-
-
                                         <button type="button" className="btn btn-login float-right" onClick={this.login}>LogIn</button>
                                         <div style={{
                                             width: "50%",
