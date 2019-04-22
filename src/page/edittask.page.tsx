@@ -779,7 +779,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                                     </div>
                                                 </div>
                                                 <div className="card-body">
-                                                    {this.state.ClientApproval.map(function (pic, key) {
+                                                    {this.state.ClientApproval?this.state.ClientApproval.map(function (pic, key) {
                                                         return (
                                                             <React.Fragment key={key}>
                                                                 <div className="col-auto">
@@ -790,7 +790,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                                                 </div>
                                                             </React.Fragment>
                                                         )
-                                                    }.bind(this))}
+                                                    }.bind(this)): void 0}
                                                 </div>
                                             </div>
 
@@ -809,7 +809,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                                     </div>
                                                 </div>
                                                 <div className="card-body">
-                                                    {this.state.SubWorkOrder.map(function (pic, key) {
+                                                    {this.state.SubWorkOrder?this.state.SubWorkOrder.map(function (pic, key) {
                                                         return (
                                                             <React.Fragment key={key}>
                                                                 <div className="col-auto">
@@ -819,7 +819,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                                                 </div>
                                                             </React.Fragment>
                                                         )
-                                                    }.bind(this))}
+                                                    }.bind(this)): void 0}
                                                 </div>
                                             </div>
                                             <div style={{}} className="card">
@@ -837,7 +837,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                                     </div>
                                                 </div>
                                                 <div className="card-body">
-                                                    {this.state.SubInvoice.map(function (pic, key) {
+                                                    {this.state.SubInvoice?this.state.SubInvoice.map(function (pic, key) {
                                                         return (
                                                             <React.Fragment key={key}>
                                                                 <div className="col-auto">
@@ -847,7 +847,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                                                 </div>
                                                             </React.Fragment>
                                                         )
-                                                    }.bind(this))}
+                                                    }.bind(this)):void 0}
                                                 </div>
                                             </div>
                                             <div style={{}} className="card">
@@ -865,7 +865,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                                     </div>
                                                 </div>
                                                 <div className="card-body">
-                                                    {this.state.Other.map(function (pic, key) {
+                                                    {this.state.Other? this.state.Other.map(function (pic, key) {
                                                         return (
                                                             <React.Fragment key={key}>
                                                                 <div className="col-auto">
@@ -876,7 +876,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                                                 </div>
                                                             </React.Fragment>
                                                         )
-                                                    }.bind(this))}
+                                                    }.bind(this)): void 0}
                                                 </div>
                                             </div>
                                         </ModalBody>
