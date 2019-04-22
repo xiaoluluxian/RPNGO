@@ -779,18 +779,31 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                                     </div>
                                                 </div>
                                                 <div className="card-body">
-                                                    {this.state.ClientApproval?this.state.ClientApproval.map(function (pic, key) {
+                                                    {this.state.ClientApproval ? this.state.ClientApproval.map(function (pic, key) {
                                                         return (
                                                             <React.Fragment key={key}>
                                                                 <div className="col-auto">
                                                                     <div className="input-group mb-2">
-
+                                                                    {localStorage.getItem("Authority")==="5"?<div className="input-group-prepend">
+                                                                            <button className="btn btn-danger"
+                                                                                onClick={() => {
+                                                                                    let list = this.state.ClientApproval;
+                                                                                    list.splice(key, 1);
+                                                                                    this.setState({ ClientApproval: list });
+                                                                                }}>Del:{key + 1}</button>
+                                                                        </div>: void 0}
+                                                                        <div className="input-group-prepend">
+                                                                            <button className="btn btn-info"
+                                                                                onClick={() => {
+                                                                                    this.downloadSingleFile(this.state.ClientApproval[key])
+                                                                                }}>Download:{key + 1}</button>
+                                                                        </div>
                                                                         <input type="text" className="form-control" id="inlineFormInputGroup" value={pic.Filename} disabled></input>
                                                                     </div>
                                                                 </div>
                                                             </React.Fragment>
                                                         )
-                                                    }.bind(this)): void 0}
+                                                    }.bind(this)) : void 0}
                                                 </div>
                                             </div>
 
@@ -809,17 +822,31 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                                     </div>
                                                 </div>
                                                 <div className="card-body">
-                                                    {this.state.SubWorkOrder?this.state.SubWorkOrder.map(function (pic, key) {
+                                                    {this.state.SubWorkOrder ? this.state.SubWorkOrder.map(function (pic, key) {
                                                         return (
                                                             <React.Fragment key={key}>
                                                                 <div className="col-auto">
                                                                     <div className="input-group mb-2">
+                                                                    {localStorage.getItem("Authority")==="5"?<div className="input-group-prepend">
+                                                                            <button className="btn btn-danger"
+                                                                                onClick={() => {
+                                                                                    let list = this.state.SubWorkOrder;
+                                                                                    list.splice(key, 1);
+                                                                                    this.setState({ SubWorkOrder: list });
+                                                                                }}>Del:{key + 1}</button>
+                                                                        </div>: void 0}
+                                                                        <div className="input-group-prepend">
+                                                                            <button className="btn btn-info"
+                                                                                onClick={() => {
+                                                                                    this.downloadSingleFile(this.state.SubWorkOrder[key])
+                                                                                }}>Download:{key + 1}</button>
+                                                                        </div>
                                                                         <input type="text" className="form-control" id="inlineFormInputGroup" value={pic.Filename} disabled></input>
                                                                     </div>
                                                                 </div>
                                                             </React.Fragment>
                                                         )
-                                                    }.bind(this)): void 0}
+                                                    }.bind(this)) : void 0}
                                                 </div>
                                             </div>
                                             <div style={{}} className="card">
@@ -837,17 +864,31 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                                     </div>
                                                 </div>
                                                 <div className="card-body">
-                                                    {this.state.SubInvoice?this.state.SubInvoice.map(function (pic, key) {
+                                                    {this.state.SubInvoice ? this.state.SubInvoice.map(function (pic, key) {
                                                         return (
                                                             <React.Fragment key={key}>
                                                                 <div className="col-auto">
                                                                     <div className="input-group mb-2">
+                                                                    {localStorage.getItem("Authority")==="5"?<div className="input-group-prepend">
+                                                                            <button className="btn btn-danger"
+                                                                                onClick={() => {
+                                                                                    let list = this.state.SubInvoice;
+                                                                                    list.splice(key, 1);
+                                                                                    this.setState({ SubInvoice: list });
+                                                                                }}>Del:{key + 1}</button>
+                                                                        </div>: void 0}
+                                                                        <div className="input-group-prepend">
+                                                                            <button className="btn btn-info"
+                                                                                onClick={() => {
+                                                                                    this.downloadSingleFile(this.state.SubInvoice[key])
+                                                                                }}>Download:{key + 1}</button>
+                                                                        </div>
                                                                         <input type="text" className="form-control" id="inlineFormInputGroup" value={pic.Filename} disabled></input>
                                                                     </div>
                                                                 </div>
                                                             </React.Fragment>
                                                         )
-                                                    }.bind(this)):void 0}
+                                                    }.bind(this)) : void 0}
                                                 </div>
                                             </div>
                                             <div style={{}} className="card">
@@ -865,18 +906,31 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                                     </div>
                                                 </div>
                                                 <div className="card-body">
-                                                    {this.state.Other? this.state.Other.map(function (pic, key) {
+                                                    {this.state.Other ? this.state.Other.map(function (pic, key) {
                                                         return (
                                                             <React.Fragment key={key}>
                                                                 <div className="col-auto">
                                                                     <div className="input-group mb-2">
-
+                                                                    {localStorage.getItem("Authority")==="5"?<div className="input-group-prepend">
+                                                                            <button className="btn btn-danger"
+                                                                                onClick={() => {
+                                                                                    let list = this.state.Other;
+                                                                                    list.splice(key, 1);
+                                                                                    this.setState({ Other: list });
+                                                                                }}>Del:{key + 1}</button>
+                                                                        </div>: void 0}
+                                                                        <div className="input-group-prepend">
+                                                                            <button className="btn btn-info"
+                                                                                onClick={() => {
+                                                                                    this.downloadSingleFile(this.state.Other[key])
+                                                                                }}>Download:{key + 1}</button>
+                                                                        </div>
                                                                         <input type="text" className="form-control" id="inlineFormInputGroup" value={pic.Filename} disabled></input>
                                                                     </div>
                                                                 </div>
                                                             </React.Fragment>
                                                         )
-                                                    }.bind(this)): void 0}
+                                                    }.bind(this)) : void 0}
                                                 </div>
                                             </div>
                                         </ModalBody>
@@ -1085,7 +1139,11 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
 
     }
 
-    protected downloadFiles(type: string){
+    protected downloadSingleFile(file:any){
+        FileSaver.saveAs(file.Src,file.Filename)
+    }
+
+    protected downloadFiles(type: string) {
         function urlToPromise(url) {
             // console.log(url)
             return new Promise(function (resolve, reject) {
@@ -1098,17 +1156,17 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                 });
             });
         }
-        
+
         var zip = new JSZip();
-        
+
 
         // find every checked item
-        
-        if(type==="client_appro_pdf"){
-            
+
+        if (type === "client_appro_pdf") {
+
             this.state.ClientApproval.forEach(function (url) {
                 console.log(url);
-                
+
                 // filename = filename.replace("+","%20")
                 zip.file(url.Filename, urlToPromise(url.Src), { binary: true });
             });
@@ -1118,21 +1176,21 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                 var msg = "progression : " + metadata.percent.toFixed(2) + " %";
                 if (metadata.currentFile) {
                     msg += ", current file = " + metadata.currentFile;
-                } 
+                }
             })
                 .then(function callback(blob) {
-                    FileSaver.saveAs(blob, add + "_" + "ClientApproval"+ ".zip");
+                    FileSaver.saveAs(blob, add + "_" + "ClientApproval" + ".zip");
                 }, function (e) {
-                   
+
                 });
-    
+
             return false;
         }
-        else if(type==="sub_work_order_pdf"){
-            
+        else if (type === "sub_work_order_pdf") {
+
             this.state.SubWorkOrder.forEach(function (url) {
                 // console.log(url);
-                
+
                 // filename = filename.replace("+","%20")
                 zip.file(url.Filename, urlToPromise(url.Src), { binary: true });
             });
@@ -1142,20 +1200,20 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                 var msg = "progression : " + metadata.percent.toFixed(2) + " %";
                 if (metadata.currentFile) {
                     msg += ", current file = " + metadata.currentFile;
-                } 
+                }
             })
                 .then(function callback(blob) {
-                    FileSaver.saveAs(blob, add + "_" + "SubWorkOrder"+ ".zip");
+                    FileSaver.saveAs(blob, add + "_" + "SubWorkOrder" + ".zip");
                 }, function (e) {
-                   
+
                 });
-    
+
             return false;
         }
-        else if(type==="sub_invoice_pdf"){
-            
+        else if (type === "sub_invoice_pdf") {
+
             this.state.SubInvoice.forEach(function (url) {
-                
+
                 zip.file(url.Filename, urlToPromise(url.Src), { binary: true });
             });
             var add = this.state.Address
@@ -1164,18 +1222,18 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                 var msg = "progression : " + metadata.percent.toFixed(2) + " %";
                 if (metadata.currentFile) {
                     msg += ", current file = " + metadata.currentFile;
-                } 
+                }
             })
                 .then(function callback(blob) {
-                    FileSaver.saveAs(blob, add + "_" + "SubInvoice"+ ".zip");
+                    FileSaver.saveAs(blob, add + "_" + "SubInvoice" + ".zip");
                 }, function (e) {
-                   
+
                 });
-    
+
             return false;
         }
-        else{
-            
+        else {
+
             this.state.Other.forEach(function (url) {
                 zip.file(url.Filename, urlToPromise(url.Src), { binary: true });
             });
@@ -1185,17 +1243,17 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                 var msg = "progression : " + metadata.percent.toFixed(2) + " %";
                 if (metadata.currentFile) {
                     msg += ", current file = " + metadata.currentFile;
-                } 
+                }
             })
                 .then(function callback(blob) {
-                    FileSaver.saveAs(blob, add + "_" + "Other"+ ".zip");
+                    FileSaver.saveAs(blob, add + "_" + "Other" + ".zip");
                 }, function (e) {
-                   
+
                 });
-    
+
             return false;
         }
-        
+
     }
 
     protected uploadFile(files: FileList, type: string) {
