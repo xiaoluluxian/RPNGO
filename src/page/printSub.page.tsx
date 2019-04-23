@@ -213,7 +213,7 @@ class PageGhotiPrintSub extends React.Component<IProps, IState> {
                         marginTop: "20px"
                     }}>
                         <tr><td style={{ width: "25%" }}>Property Address</td> <td>{this.state.Address}</td></tr>
-                        <tr><td style={{ width: "25%" }}>City/County/State/Zip Code: </td><td>{this.state.City}</td></tr>
+                        <tr><td style={{ width: "25%" }}>State/County/City/Zip Code </td><td>{this.state.City}</td></tr>
                         <tr><td style={{ width: "25%" }}>KeyCode/LockBoxNum</td><td>{this.state.LBNum}</td></tr>
                         <tr><td style={{ width: "25%" }}>Start Date</td><td>{this.state.StartDate[parseInt(this.state.Stage)]}</td></tr>
                         <tr><td style={{ width: "25%" }}>Due Date</td><td>{this.state.DueDate[parseInt(this.state.Stage)]}</td></tr>

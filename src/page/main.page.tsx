@@ -432,7 +432,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
 
     protected showTable() {
 
-        if (localStorage.getItem("Authority") === '3' || localStorage.getItem("Authority") === '4' || localStorage.getItem("Authority") === '5') {
+        if (localStorage.getItem("Authority") === '4' || localStorage.getItem("Authority") === '5') {
             return (<React.Fragment>
                 <div className="card shadow mb-4">
                     <div className="card-header py-3">
@@ -497,12 +497,8 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                                                         fontSize: "13px"
                                                         // marginTop: '5px'
                                                     }} title="edit" className="btn btn-primary btn-sm" onClick={this.editTask.bind(this, item)}><ins>Edit</ins></button>
-                                                    {/* {localStorage.getItem("Authority") === '2' ? <button style={{
-                                                        marginRight: '5px',
-                                                        fontSize: "13px"
-                                                        // marginTop: '5px'
-                                                    }} title="setTask" className="btn btn-info btn-sm" onClick={this.setTask.bind(this, item)}><ins>SetTask</ins></button> : void 0} */}
-                                                    {/* <button title="deltask" onClick={this.delTask.bind(this, item)}>Del</button> */}
+                                                    
+                                                    {/* <button className="btn btn-danger btn-sm" title="deltask" onClick={this.delTask.bind(this, item)}>Del</button> */}
                                                 </td>
                                                 <td>
                                                     {this.showLogo(item)}
@@ -527,6 +523,99 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                     </div>
                 </div>
             </React.Fragment>)
+        }
+        else if(localStorage.getItem("Authority")==='3'){
+            return(
+                <React.Fragment>
+                <div className="card shadow mb-4">
+                    <div className="card-header py-3">
+                        <select style={{ width: "200px", float:"left" }} id='setStage' className="form-control" onChange={e => this.showVendorTasks(e.target.value)}>
+                            <option value="-1">SelectVendor</option>
+                            {this.state.vendors?this.state.vendors.map(function (item, index) {
+                                return (<option key={index} value={item.Company}>{item.Company}</option>)
+                            }.bind(this)):void 0}
+                        </select>
+                        <select style={{ width: "200px", float:"left", marginLeft:"10px" }} id='setStage' className="form-control" onChange={e => this.showClientTasks(e.target.value)}>
+                            <option value="-1">SelectClient</option>
+                            {this.state.clients?this.state.clients.map(function (item, index) {
+                                return (<option key={index} value={item.Company}>{item.Company}</option>)
+                            }.bind(this)):void 0}
+                        </select>
+                        <select style={{ width: "200px", float:"left", marginLeft:"10px" }} id='setStage' className="form-control" onChange={e => this.showStageTasks(e.target.value)}>
+                            <option value="-1">SelectStage</option>
+                            <option value='0'>Initial</option>
+                            <option value='1'>Bid</option>
+                            <option value='2'>Client Approval</option>
+                            <option value='3'>Work Order</option>
+                            <option value='4'>Quality Assurance</option>
+                            <option value='5'>Invoice</option>
+                            <option value='6'>Archived</option>
+                        </select>
+                    </div>
+                    <div style={{}} className="card-body">
+                        {this.pageSizeComponent()}
+                        <div style={{
+                            overflowY: "auto",
+                            height: this.height,
+                            boxSizing: "border-box"
+
+                        }} className="table-responsive">
+
+                            <table className="tasktable" style={{
+                                fontSize: "13px"
+                            }}><thead style={{
+                                // display:"block"
+                            }}>
+
+                                    <tr><th>Action</th>
+                                        <th>Property Address</th>
+                                        <th>Asset Number</th>
+                                        <th>Due Date</th>
+                                        <th>User</th>
+                                        <th>CurrStage</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody style={{
+
+                                }}>
+                                    {this.state.data ? this.state.data.map(function (item, key) {
+                                        let temp = '#a' + key;
+                                        let temp2 = 'a' + key;
+                                        return (
+                                            <tr style={{ height: "5px" }} key={key}>
+                                                <td style={{ height: "5px" }}>
+                                                    <button style={{
+                                                        marginRight: '5px',
+                                                        fontSize: "13px"
+                                                        // marginTop: '5px'
+                                                    }} title="edit" className="btn btn-primary btn-sm" onClick={this.editTask.bind(this, item)}><ins>Edit</ins></button>
+                                                    
+                                                </td>
+                                                <td>
+                                                    {this.showLogo(item)}
+                                                    {item.Address}</td>
+                                                <td>{item.asset_num}</td>
+                                                <td>{item.DueDate ? item.DueDate[parseInt(item.Stage)] : void 0}</td>
+                                                <td>
+                                                    <Component.ListGroupCollapse key={key} Username={item.Username} />
+                                                </td>
+                                                {/* <td><a data-toggle="collapse" href={temp}>Show User</a><div id={temp2} className="panel-collapse collapse">{this.showUsername(item.Username)}</div></td> */}
+                                                {/* <td><button className="link collapsible">{this.clickShowUser}Show User</button><div id="content" style={{display: "none"}}>{this.showUsername(item.Username)}</div></td> */}
+                                                <td>{this.showStage(item.Stage)}</td>
+                                                <td>{this.showStatus(item)}</td>
+
+                                            </tr>
+                                        )
+                                    }.bind(this)) : void 0}
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </React.Fragment>
+            )
         }
         else if (localStorage.getItem("Authority") === '0'||localStorage.getItem("Authority") === '2') {
             return (<React.Fragment>
@@ -605,6 +694,10 @@ class PageGhotiMain extends React.Component<IProps, IState> {
         else {
             return (<div>No Permission</div>)
         }
+    }
+
+    protected delTask(){
+
     }
 
     protected showLogo(item) {

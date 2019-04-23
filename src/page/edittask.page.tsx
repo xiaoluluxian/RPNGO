@@ -784,14 +784,14 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                                             <React.Fragment key={key}>
                                                                 <div className="col-auto">
                                                                     <div className="input-group mb-2">
-                                                                    {localStorage.getItem("Authority")==="5"?<div className="input-group-prepend">
+                                                                        {localStorage.getItem("Authority") === "5" ? <div className="input-group-prepend">
                                                                             <button className="btn btn-danger"
                                                                                 onClick={() => {
                                                                                     let list = this.state.ClientApproval;
                                                                                     list.splice(key, 1);
                                                                                     this.setState({ ClientApproval: list });
                                                                                 }}>Del:{key + 1}</button>
-                                                                        </div>: void 0}
+                                                                        </div> : void 0}
                                                                         <div className="input-group-prepend">
                                                                             <button className="btn btn-info"
                                                                                 onClick={() => {
@@ -827,14 +827,14 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                                             <React.Fragment key={key}>
                                                                 <div className="col-auto">
                                                                     <div className="input-group mb-2">
-                                                                    {localStorage.getItem("Authority")==="5"?<div className="input-group-prepend">
+                                                                        {localStorage.getItem("Authority") === "5" ? <div className="input-group-prepend">
                                                                             <button className="btn btn-danger"
                                                                                 onClick={() => {
                                                                                     let list = this.state.SubWorkOrder;
                                                                                     list.splice(key, 1);
                                                                                     this.setState({ SubWorkOrder: list });
                                                                                 }}>Del:{key + 1}</button>
-                                                                        </div>: void 0}
+                                                                        </div> : void 0}
                                                                         <div className="input-group-prepend">
                                                                             <button className="btn btn-info"
                                                                                 onClick={() => {
@@ -869,14 +869,14 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                                             <React.Fragment key={key}>
                                                                 <div className="col-auto">
                                                                     <div className="input-group mb-2">
-                                                                    {localStorage.getItem("Authority")==="5"?<div className="input-group-prepend">
+                                                                        {localStorage.getItem("Authority") === "5" ? <div className="input-group-prepend">
                                                                             <button className="btn btn-danger"
                                                                                 onClick={() => {
                                                                                     let list = this.state.SubInvoice;
                                                                                     list.splice(key, 1);
                                                                                     this.setState({ SubInvoice: list });
                                                                                 }}>Del:{key + 1}</button>
-                                                                        </div>: void 0}
+                                                                        </div> : void 0}
                                                                         <div className="input-group-prepend">
                                                                             <button className="btn btn-info"
                                                                                 onClick={() => {
@@ -911,14 +911,14 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                                             <React.Fragment key={key}>
                                                                 <div className="col-auto">
                                                                     <div className="input-group mb-2">
-                                                                    {localStorage.getItem("Authority")==="5"?<div className="input-group-prepend">
+                                                                        {localStorage.getItem("Authority") === "5" ? <div className="input-group-prepend">
                                                                             <button className="btn btn-danger"
                                                                                 onClick={() => {
                                                                                     let list = this.state.Other;
                                                                                     list.splice(key, 1);
                                                                                     this.setState({ Other: list });
                                                                                 }}>Del:{key + 1}</button>
-                                                                        </div>: void 0}
+                                                                        </div> : void 0}
                                                                         <div className="input-group-prepend">
                                                                             <button className="btn btn-info"
                                                                                 onClick={() => {
@@ -1139,8 +1139,8 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
 
     }
 
-    protected downloadSingleFile(file:any){
-        FileSaver.saveAs(file.Src,file.Filename)
+    protected downloadSingleFile(file: any) {
+        FileSaver.saveAs(file.Src, file.Filename)
     }
 
     protected downloadFiles(type: string) {
@@ -1766,9 +1766,10 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
 
 
     protected mapPicture(picture: any[], desc: string, descCN: string) {
-        if (localStorage.getItem("Authority") === '0') {
-            return (
-                picture.map(function (item, key) {
+
+        return (
+            picture.map(function (item, key) {
+                if (item.Type === 'video') {
                     return (
                         <div key={key} style={{
                             // position: 'flex',
@@ -1778,26 +1779,20 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                             display: "inline-block"
                         }}>
                             <div>
-                                <img style={{
+                                <video style={{
                                     width: '80%',
                                     height: 'auto',
                                     padding: '3px'
                                 }}
-                                    src={item.Src}
-                                    onClick={this.convert360.bind(this, item)}
-                                />
-                                <div style={{ width: "97%" }}>{key + 1}.{desc}</div>
+                                controls><source src={item.Src} />
+                                </video>
+                                <div style={{ width: "90%" }}>{key + 1}.{desc}</div>
                             </div>
 
                         </div>
                     )
-                }.bind(this))
-            )
-        }
-        else {
-
-            return (
-                picture.map(function (item, key) {
+                }
+                else {
                     if (item.ImageID) {
                         return (
                             <div key={key} style={{
@@ -1816,7 +1811,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                         src={item.Src}
                                         onClick={this.convert360.bind(this, item)}
                                     />
-                                    <div style={{ width: "97%" }}>{key + 1}.{desc}{descCN ? "/" + descCN : ""}</div>
+                                    <div style={{ width: "97%" }}>{key + 1}.{desc}</div>
                                 </div>
 
                             </div>
@@ -1840,16 +1835,17 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                         src={item.Src}
 
                                     />
-                                    <div style={{ width: "90%" }}>{key + 1}.{desc}{descCN ? "/" + descCN : ""}</div>
+                                    <div style={{ width: "90%" }}>{key + 1}.{desc}</div>
                                 </div>
 
                             </div>
                         )
                     }
 
-                }.bind(this))
-            )
-        }
+                }
+            }.bind(this))
+        )
+
     }
 
     protected submit360() {
@@ -2165,7 +2161,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
     }
     protected showLeftBar(TotalAmount: any) {
         return (
-            <div style={{ position: "fixed" }} className="wrapper">
+            <div style={{  minHeight:"800px", display:"flex",overflow:"auto" }} className="wrapper">
                 <div className="sidebar">
                     <div className="sidebar-header">
                         <button style={{
@@ -2188,7 +2184,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                         <div style={{
                             borderBottom: "1px solid #E5E5E5"
                         }} className="sidebar-body-action">
-                            <div style={{ paddingTop: "5%" }}>
+                            <div style={{ paddingTop: "3%" }}>
                                 <button className="link" style={{
                                     width: "100%",
                                     backgroundColor: "Transparent",
@@ -2201,19 +2197,19 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                             </div>
                         </div>
                         <div className="sidebar-body-action">
-                            <div style={{ paddingTop: "5%" }}>
-                                <button className="btn btn-primary" style={{
+                            <div style={{ paddingTop: "3%" }}>
+                                <button className="btn btn-sm btn-primary" style={{
                                     width: "100%",
                                 }} onClick={this.submit.bind(this, TotalAmount)}>Submit</button>
                             </div>
                         </div>
                         <div className="sidebar-body-action">
-                            <div style={{ paddingTop: "5%" }}>
-                                <button className="btn btn-info" style={{
+                            <div style={{ paddingTop: "3%" }}>
+                                <button className="btn btn-sm btn-info" style={{
                                     float: "left",
                                     width: "46%",
                                 }} onClick={this.changeChecklist}> CheckList</button>
-                                <button className="btn btn-primary" style={{
+                                <button className="btn btn-sm btn-primary" style={{
                                     width: "46%",
                                     float: "right"
                                 }} onClick={() => this.setState({ duplicateModal: true })}>Duplicate</button>
@@ -2222,20 +2218,18 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                         </div>
 
                         <div className="sidebar-body-action">
-                            <div style={{ paddingTop: "5%" }}>
-                                <button className="btn btn-primary" style={{
+                            <div style={{ paddingTop: "3%" }}>
+                                <button className="btn btn-sm btn-primary" style={{
                                     float: "left",
                                     width: "46%",
                                 }} onClick={() => this.props.history.push("/printTask")}>PhotoPDF</button>
-                                <button className="btn btn-primary" style={{
+                                <button className="btn btn-sm btn-primary" style={{
                                     width: "46%",
                                     float: "right"
                                 }} onClick={() => this.props.history.push("/printText")}>TextPDF</button>
-
                             </div>
-
                         </div>
-                        <select style={{ marginTop: "10px" }} id='setStage' className="form-control" onChange={e => this.VRMCheckList(e.target.value)}>
+                        <select style={{ height: "4%", padding: "5px", marginBottom: "5px" }} id='setStage' className="form-control" onChange={e => this.VRMCheckList(e.target.value)}>
                             <option value="-1">VRM</option>
                             <option value='0'>InitialService</option>
                             <option value='1'>Bi-Weekly</option>
@@ -2243,12 +2237,12 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                         </select>
 
                         <div className="sidebar-body-action">
-                            <div style={{ paddingTop: "5%" }}>
-                                <button className="btn btn-primary" style={{
+                            <div style={{ paddingTop: "3%" }}>
+                                <button className="btn btn-sm btn-primary" style={{
                                     float: "left",
                                     width: "46%",
                                 }} onClick={this.addWHP}>AddWHP</button>
-                                <button className="btn btn-primary" style={{
+                                <button className="btn btn-sm btn-primary" style={{
                                     width: "46%",
                                     float: "right",
                                     // marginLeft:"5px"
@@ -2259,7 +2253,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                         <div style={{
                             // borderBottom: "1px solid #E5E5E5"
                         }} className="sidebar-body-action">
-                            <Dropdown style={{ paddingTop: "5%" }} isOpen={this.state.pictureDDropdown} toggle={function () { this.setState({ pictureDDropdown: !this.state.pictureDDropdown }) }.bind(this)}>
+                            <Dropdown style={{ paddingTop: "3%" }} isOpen={this.state.pictureDDropdown} toggle={function () { this.setState({ pictureDDropdown: !this.state.pictureDDropdown }) }.bind(this)}>
                                 <DropdownToggle style={{ width: "100%" }} caret>
                                     DownloadPics
                                 </DropdownToggle>

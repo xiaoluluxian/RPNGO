@@ -428,10 +428,11 @@ class ComponentGhotiItemModal extends React.Component<IProps, IState> {
                     let list = this.props.item;
                     list[this.props.index].After.push({
                         Name: Files[temp].name,
-                        Format: '',
+                        Format: result.Format,
                         Cate: list[this.props.index].Cate,
                         itemId: list[this.props.index].Item,
-                        Src: result
+                        Src: result.Src,
+                        Type: result.Type
                     });
                     this.props.updateItemList(list);
                 }.bind(this),
@@ -458,10 +459,11 @@ class ComponentGhotiItemModal extends React.Component<IProps, IState> {
                     let list = this.props.item;
                     list[this.props.index].After.push({
                         Name: Files[temp].name,
-                        Format: '',
+                        Format: result.Format,
                         Cate: list[this.props.index].Cate,
                         itemId: list[this.props.index].Item,
-                        Src: result
+                        Src: result.Src,
+                        Type: result.Type
                     });
                     this.props.updateItemList(list);
                     this.addAfterPicture(Files, index, temp + 1);
@@ -490,14 +492,15 @@ class ComponentGhotiItemModal extends React.Component<IProps, IState> {
                 },
                 data: formData,
                 success: function (result) {
-                    // console.log(result);
+                    console.log(result);
                     let list = this.props.item;
                     list[this.props.index].During.push({
                         Name: Files[temp].name,
-                        Format: '',
+                        Format: result.Format,
                         Cate: list[this.props.index].Cate,
                         itemId: list[this.props.index].Item,
-                        Src: result
+                        Src: result.Src,
+                        Type: result.Type
                     });
                     this.props.updateItemList(list)
                 }.bind(this),
@@ -524,10 +527,11 @@ class ComponentGhotiItemModal extends React.Component<IProps, IState> {
                     let list = this.props.item;
                     list[this.props.index].During.push({
                         Name: Files[temp].name,
-                        Format: '',
+                        Format: result.Format,
                         Cate: list[this.props.index].Cate,
                         itemId: list[this.props.index].Item,
-                        Src: result
+                        Src: result.Src,
+                        Type: result.Type
                     });
                     this.props.updateItemList(list)
                     this.addDuringPicture(Files, index, temp + 1);
@@ -564,10 +568,11 @@ class ComponentGhotiItemModal extends React.Component<IProps, IState> {
                     let list = this.props.item;
                     list[this.props.index].Before.push({
                         Name: Files[temp].name,
-                        Format: '',
+                        Format: result.Format,
                         Cate: list[this.props.index].Cate,
                         itemId: list[this.props.index].Item,
-                        Src: result,
+                        Src: result.Src,
+                        Type: result.Type
                     });
                     this.props.updateItemList(list)
                 }.bind(this),
@@ -594,10 +599,11 @@ class ComponentGhotiItemModal extends React.Component<IProps, IState> {
                     let list = this.props.item;
                     list[this.props.index].Before.push({
                         Name: Files[temp].name,
-                        Format: '',
+                        Format: result.Format,
                         Cate: list[this.props.index].Cate,
                         itemId: list[this.props.index].Item,
-                        Src: result
+                        Src: result.Src,
+                        Type: result.Type
                     });
                     this.props.updateItemList(list)
                     this.addBeforePicture(Files, index, temp + 1);
