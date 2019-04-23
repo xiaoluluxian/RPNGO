@@ -538,9 +538,6 @@ class ComponentGhotiItemModal extends React.Component<IProps, IState> {
                 }.bind(this),
             });
         }
-
-
-
     }
 
 

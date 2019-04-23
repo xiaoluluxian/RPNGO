@@ -960,7 +960,18 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                             }}
                                                 className={"btn btn-primary btn-sm"}
                                                 onClick={() => this.props.history.push("/printSub")}
-                                                title="edit">PrintSub</button> : void 0}
+                                                title="edit">PrintSubPhoto</button> : void 0}
+                                            {this.state.Stage === "3" ? <button style={{
+                                                marginTop: '3px',
+                                                marginLeft: '5px',
+                                                fontSize: '14px',
+
+                                                height: '29px',
+                                                // backgroundColor: this.state.Item[index].pano === "true" ? 'lightblue' : 'red'
+                                            }}
+                                                className={"btn btn-primary btn-sm"}
+                                                onClick={() => this.props.history.push("/printSubText")}
+                                                title="edit">PrintSubText</button> : void 0}
 
                                         </div>
                                     </div>
@@ -1360,7 +1371,8 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             completeness: "0",
             SubCost: 0,
             SubPPU: 0,
-
+            measure:"",
+            pano:"false",
             Before: []
         }
         list.push(WHP);
@@ -1541,7 +1553,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             Cost: 0,
             SubCost: 0,
             SubPPU: 0,
-            Pano: "",
+            pano: "false",
             description_cn: "",
             measure: "",
             completeness: "0"
@@ -1743,11 +1755,11 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                         <td>{this.showStatus(value.Status)}</td> */}
                                     </tr>
                                     <tr><th style={{ textAlign: "center", borderBottom: "#FFFFFF", borderTop: "#FFFFFF" }} colSpan={9}>Before </th></tr>
-                                    <tr><td style={{ borderBottom: "#FFFFFF", borderTop: "#FFFFFF" }} colSpan={9}>{this.mapPicture(value.Before, value.description, value.Comments)}</td></tr>
+                                    <tr><td style={{ borderBottom: "#FFFFFF", borderTop: "#FFFFFF" }} colSpan={9}>{this.mapPicture(value.Before, value.description, value.Comments,value.pano)}</td></tr>
                                     <tr><th style={{ textAlign: "center", borderBottom: "#FFFFFF" }} colSpan={9}> During </th></tr>
-                                    <tr><td style={{ borderBottom: "#FFFFFF", borderTop: "#FFFFFF" }} colSpan={9}>{this.mapPicture(value.During, value.description, value.Comments)}</td></tr>
+                                    <tr><td style={{ borderBottom: "#FFFFFF", borderTop: "#FFFFFF" }} colSpan={9}>{this.mapPicture(value.During, value.description, value.Comments,value.pano)}</td></tr>
                                     <tr><th style={{ textAlign: "center", borderBottom: "#FFFFFF" }} colSpan={9}> After </th></tr>
-                                    <tr><td style={{ borderTop: "#FFFFFF" }} colSpan={9}>{this.mapPicture(value.After, value.description, value.Comments)}</td></tr>
+                                    <tr><td style={{ borderTop: "#FFFFFF" }} colSpan={9}>{this.mapPicture(value.After, value.description, value.Comments,value.pano)}</td></tr>
                                     {/* <tr><td style={{ borderLeftColor: "#FFFFFF", borderBottomColor: "#FFFFFF" }}>&nbsp;</td><th style={{textAlign:"center",borderBottom:"#FFFFFF", borderTop:"#FFFFFF"}}colSpan={6}>Before </th></tr>
                                     <tr><td style={{ borderLeftColor: "#FFFFFF", borderBottomColor: "#FFFFFF" }}>&nbsp;</td><td style={{borderBottom:"#FFFFFF", borderTop:"#FFFFFF"}} colSpan={6}>{this.mapPicture(value.Before, value.description, value.Comments)}</td></tr>
                                     <tr><td style={{ borderLeftColor: "#FFFFFF", borderBottomColor: "#FFFFFF" }}>&nbsp;</td><th style={{textAlign:"center",borderBottom:"#FFFFFF"}} colSpan={6}> During </th></tr>
@@ -1765,7 +1777,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
 
 
 
-    protected mapPicture(picture: any[], desc: string, descCN: string) {
+    protected mapPicture(picture: any[], desc: string, descCN: string,pano:string) {
 
         return (
             picture.map(function (item, key) {
@@ -1784,7 +1796,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                     height: 'auto',
                                     padding: '3px'
                                 }}
-                                controls><source src={item.Src} />
+                                    controls><source src={item.Src} />
                                 </video>
                                 <div style={{ width: "90%" }}>{key + 1}.{desc}</div>
                             </div>
@@ -1793,7 +1805,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                     )
                 }
                 else {
-                    if (item.ImageID) {
+                    if (pano==="true") {
                         return (
                             <div key={key} style={{
                                 // position: 'flex',
@@ -2161,7 +2173,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
     }
     protected showLeftBar(TotalAmount: any) {
         return (
-            <div style={{  minHeight:"800px", display:"flex",overflow:"auto" }} className="wrapper">
+            <div style={{ minHeight: "800px", display: "flex", overflow: "auto" }} className="wrapper">
                 <div className="sidebar">
                     <div className="sidebar-header">
                         <button style={{
