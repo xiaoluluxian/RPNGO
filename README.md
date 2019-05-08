@@ -28,3 +28,7 @@ npm run hint
 
 > Created with [Ghoti-CLI](https://github.com/WMXPY/Ghoti-CLI/) 4.1.6
 
+
+### 2.0.0
+1. The new version init to new branch in rpn-it github project.
+2. Todo: The issues on github.
