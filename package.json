@@ -51,8 +51,10 @@
         "d.js": "^0.7.5",
         "dot": "^1.1.2",
         "file-saver": "^2.0.1",
+        "fs": "0.0.1-security",
         "immutable": "^3.8.2",
         "jquery": "^3.3.1",
+        "js-xlsx": "^0.8.22",
         "jszip": "^3.2.1",
         "jszip-utils": "0.0.2",
         "photo-sphere-viewer": "^3.5.1",
@@ -64,6 +66,7 @@
         "react-router-dom": "^5.0.0",
         "reactstrap": "^7.1.0",
         "three": "^0.103.0",
-        "uevent": "^2.0.0"
+        "uevent": "^2.0.0",
+        "xlsx": "^0.14.3"
     }
 }

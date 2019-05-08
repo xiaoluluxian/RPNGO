@@ -45,7 +45,8 @@
     "checklist",
     "printText",
     "printSub",
-    "printSubText"
+    "printSubText",
+    "develop"
   ],
   "funcs": [],
   "lambdas": [],

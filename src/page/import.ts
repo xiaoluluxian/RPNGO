@@ -18,6 +18,7 @@ import PageGhotiChecklist from './checklist.page';
 import PageGhotiPrintText from './printText.page';
 import PageGhotiPrintSub from './printSub.page';
 import PageGhotiPrintSubText from './printSubText.page';
+import PageGhotiDevelop from './develop.page';
 export {
     PageGhotiLogin as login,
     PageGhotiMain as main,
@@ -33,4 +34,5 @@ export {
     PageGhotiPrintText as printText,
     PageGhotiPrintSub as printSub,
     PageGhotiPrintSubText as printSubText,
+    PageGhotiDevelop as develop,
 };

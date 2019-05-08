@@ -23,12 +23,12 @@ export interface IState {
 class ComponentGhotiLeftBar extends React.Component<IProps, IState> {
     public constructor(props) {
         super(props);
-  
+
     }
 
     public render() {
-        if(localStorage.getItem("Authority")==='5'){
-            if (this.props.page === "main"||"register"||"userProfile"||"generalProfile") {
+        if (localStorage.getItem("Authority") === '5') {
+            if (this.props.page === "main" || "register" || "userProfile" || "generalProfile") {
                 return (
                     <div className="wrapper">
                         <div className="sidebar">
@@ -49,7 +49,7 @@ class ComponentGhotiLeftBar extends React.Component<IProps, IState> {
                                 </button>
                             </div>
                             <div className="sidebar-body">
-    
+
                                 <div style={{
                                     borderBottom: "1px solid #E5E5E5"
                                 }} className="sidebar-body-action">
@@ -59,7 +59,7 @@ class ComponentGhotiLeftBar extends React.Component<IProps, IState> {
                                             backgroundColor: "Transparent",
                                             border: "none",
                                             outline: "none"
-                                        }} onClick={this.props.pushPage.bind(this,"/main")}>
+                                        }} onClick={this.props.pushPage.bind(this, "/main")}>
                                             <div className="body-icon"><i style={{ color: "#616161" }} className="fas fa-tasks"></i></div>
                                             <div className="body-text">Dashboard</div>
                                         </button>
@@ -72,14 +72,14 @@ class ComponentGhotiLeftBar extends React.Component<IProps, IState> {
                                             backgroundColor: "Transparent",
                                             border: "none",
                                             outline: "none"
-                                        }}onClick={this.props.pushPage.bind(this,"/addtask")}>
+                                        }} onClick={this.props.pushPage.bind(this, "/addtask")}>
                                             <div className="body-icon"><i style={{ color: "#FF882C" }} className="fas fa-plus"></i></div>
                                             <div className="body-text">Add Task</div>
                                         </button>
                                     </div>
                                 </div>
                                 <div style={{
-                                   
+
                                 }} className="sidebar-body-action">
                                     <div style={{ paddingTop: "5%" }}>
                                         <button className="link" style={{
@@ -87,7 +87,7 @@ class ComponentGhotiLeftBar extends React.Component<IProps, IState> {
                                             backgroundColor: "Transparent",
                                             border: "none",
                                             outline: "none"
-                                        }}onClick={this.props.pushPage.bind(this,"/register")}>
+                                        }} onClick={this.props.pushPage.bind(this, "/register")}>
                                             <div className="body-icon"><i style={{ color: "#AFA35F" }} className="fas fa-user-plus"></i></div>
                                             <div className="body-text">Register</div>
                                         </button>
@@ -102,16 +102,31 @@ class ComponentGhotiLeftBar extends React.Component<IProps, IState> {
                                             backgroundColor: "Transparent",
                                             border: "none",
                                             outline: "none"
-                                        }}onClick={this.props.pushPage.bind(this,"/generalProfile")}>
+                                        }} onClick={this.props.pushPage.bind(this, "/generalProfile")}>
                                             <div className="body-icon"><i style={{ color: "#4B47FF" }} className="fas fa-address-card"></i></div>
                                             <div className="body-text">Profile</div>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div style={{
+
+                                }} className="sidebar-body-action">
+                                    <div style={{ paddingTop: "5%" }}>
+                                        <button className="link" style={{
+                                            width: "100%",
+                                            backgroundColor: "Transparent",
+                                            border: "none",
+                                            outline: "none"
+                                        }} onClick={this.props.pushPage.bind(this, "/develop")}>
+                                            <div className="body-icon"><i style={{ color: "#AFA35F" }} className="fab fa-alipay"></i></div>
+                                            <div className="body-text">Develop</div>
                                         </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-    
+
                 )
             }
             else {
@@ -120,7 +135,7 @@ class ComponentGhotiLeftBar extends React.Component<IProps, IState> {
                 )
             }
         }
-        else if(localStorage.getItem("Authority")==='3'||localStorage.getItem("Authority")==='4'){
+        else if (localStorage.getItem("Authority") === '3' || localStorage.getItem("Authority") === '4') {
             return (
                 <div className="wrapper">
                     <div className="sidebar">
@@ -151,7 +166,7 @@ class ComponentGhotiLeftBar extends React.Component<IProps, IState> {
                                         backgroundColor: "Transparent",
                                         border: "none",
                                         outline: "none"
-                                    }} onClick={this.props.pushPage.bind(this,"/main")}>
+                                    }} onClick={this.props.pushPage.bind(this, "/main")}>
                                         <div className="body-icon"><i style={{ color: "#616161" }} className="fas fa-tasks"></i></div>
                                         <div className="body-text">Dashboard</div>
                                     </button>
@@ -164,14 +179,14 @@ class ComponentGhotiLeftBar extends React.Component<IProps, IState> {
                                         backgroundColor: "Transparent",
                                         border: "none",
                                         outline: "none"
-                                    }}onClick={this.props.pushPage.bind(this,"/addtask")}>
+                                    }} onClick={this.props.pushPage.bind(this, "/addtask")}>
                                         <div className="body-icon"><i style={{ color: "#FF882C" }} className="fas fa-plus"></i></div>
                                         <div className="body-text">Add Task</div>
                                     </button>
                                 </div>
                             </div>
                             <div style={{
-                               
+
                             }} className="sidebar-body-action">
                                 <div style={{ paddingTop: "5%" }}>
                                     <button className="link" style={{
@@ -179,18 +194,19 @@ class ComponentGhotiLeftBar extends React.Component<IProps, IState> {
                                         backgroundColor: "Transparent",
                                         border: "none",
                                         outline: "none"
-                                    }}onClick={this.props.pushPage.bind(this,"/register")}>
+                                    }} onClick={this.props.pushPage.bind(this, "/register")}>
                                         <div className="body-icon"><i style={{ color: "#AFA35F" }} className="fas fa-user-plus"></i></div>
                                         <div className="body-text">Register</div>
                                     </button>
                                 </div>
-                            </div> 
+                            </div>
+
                         </div>
                     </div>
                 </div>
             )
         }
-        else{
+        else {
             return (
                 <div className="wrapper">
                     <div className="sidebar">
@@ -221,18 +237,18 @@ class ComponentGhotiLeftBar extends React.Component<IProps, IState> {
                                         backgroundColor: "Transparent",
                                         border: "none",
                                         outline: "none"
-                                    }} onClick={this.props.pushPage.bind(this,"/main")}>
+                                    }} onClick={this.props.pushPage.bind(this, "/main")}>
                                         <div className="body-icon"><i style={{ color: "#616161" }} className="fas fa-tasks"></i></div>
                                         <div className="body-text">Dashboard</div>
                                     </button>
                                 </div>
-                            </div> 
+                            </div>
                         </div>
                     </div>
                 </div>
             )
         }
-    } 
+    }
 }
 
 export default ComponentGhotiLeftBar;

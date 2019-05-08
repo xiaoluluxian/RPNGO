@@ -31,6 +31,8 @@ let config = {
     resolve: {
         extensions: [".ts", ".tsx", ".js", ".json", ".css", ".sass"]
     },
+    node: { fs: 'empty' },
+    
     module: {
         rules: [{
                 test: /\.tsx?$/,
