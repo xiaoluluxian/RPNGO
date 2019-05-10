@@ -108,6 +108,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         SubWorkOrder: [],
         SubInvoice: [],
         Other: [],
+        InitialImage:[],
 
 
 
@@ -173,7 +174,8 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                     SubWorkOrder: result.sub_work_order_pdf,
                     SubInvoice: result.SubInvoicePDF,
                     ClientApproval: result.ClientApproPDF,
-                    Other: result.OtherPDF
+                    Other: result.OtherPDF,
+                    InitialImage: result.InitialImage
                 })
                 // let temp = []
                 // for (let i = result.VersionSize; i > 0; i--) {
@@ -219,7 +221,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             method: 'GET',
             datatype: "json",
             success: (function (result) {
-                // console.log(JSON.stringify(result));
+                console.log(result);
                 this.setState({ Before: result });
                 this.reload += 1;
                 this.setState({ Loading: this.reload })
@@ -1449,7 +1451,8 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                 ClientApproPDF: this.state.ClientApproval,
                 OtherPDF: this.state.Other,
                 SubInvoicePDF: this.state.SubInvoice,
-                sub_work_order_pdf: this.state.SubWorkOrder
+                sub_work_order_pdf: this.state.SubWorkOrder,
+                InitialImage: this.state.InitialImage
 
             }),
             success: function (data) {
@@ -2273,6 +2276,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                     <button onClick={this.downloadPics.bind(this, "Before")} className="btn btn-secondary" style={{ width: "100%", margin: "auto", border: "none", borderBottom: "1px solid #E5E5E5", borderTop: "1px solid #E5E5E5" }}>Before</button>
                                     <button onClick={this.downloadPics.bind(this, "During")} className="btn btn-secondary" style={{ width: "100%", margin: "auto", border: "none", borderBottom: "1px solid #E5E5E5" }}>During</button>
                                     <button onClick={this.downloadPics.bind(this, "After")} className="btn btn-secondary" style={{ width: "100%", margin: "auto", border: "none", borderBottom: "1px solid #E5E5E5" }}>After</button>
+                                    <button onClick={this.downloadPics.bind(this, "Initial")} className="btn btn-secondary" style={{ width: "100%", margin: "auto", border: "none", borderBottom: "1px solid #E5E5E5" }}>Initial</button>
                                 </DropdownMenu>
                             </Dropdown>
                         </div>
@@ -2455,7 +2459,37 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
 
             return false;
         }
-        else {
+        else if(type === 'Initial') {
+            resetMessage();
+            var zip = new JSZip();
+            var urls = this.state.InitialImage;
+            console.log(urls)
+            // find every checked item
+            urls.forEach(function (url) {
+                // console.log(url);
+                var filename = url.Src.replace(/.*\//g, "") + ".jpg";
+                zip.file(filename, urlToPromise(url.Src), { binary: true });
+            });
+            var add = this.state.Address
+            // when everything has been downloaded, we can trigger the dl
+            zip.generateAsync({ type: "blob" }, function updateCallback(metadata) {
+                var msg = "progression : " + metadata.percent.toFixed(2) + " %";
+                if (metadata.currentFile) {
+                    msg += ", current file = " + metadata.currentFile;
+                }
+                showMessage(msg);
+            })
+                .then(function callback(blob) {
+
+                    FileSaver.saveAs(blob, add + "-Initial.zip");
+                    showMessage("done !");
+                }, function (e) {
+                    showError(e);
+                });
+
+            return false;
+        }
+        else{
 
         }
 
@@ -2593,7 +2627,8 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                         ClientApproPDF: this.state.ClientApproval,
                         OtherPDF: this.state.Other,
                         SubInvoicePDF: this.state.SubInvoice,
-                        sub_work_order_pdf: this.state.SubWorkOrder
+                        sub_work_order_pdf: this.state.SubWorkOrder,
+                        InitialImage:this.state.InitialImage
                     }),
                     success: function (data) {
                         alert("Submit Successfully!")
@@ -2647,7 +2682,8 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                         ClientApproPDF: this.state.ClientApproval,
                         OtherPDF: this.state.Other,
                         SubInvoicePDF: this.state.SubInvoice,
-                        sub_work_order_pdf: this.state.SubWorkOrder
+                        sub_work_order_pdf: this.state.SubWorkOrder,
+                        InitialImage: this.state.InitialImage
                     }),
                     success: function (data) {
                         alert("Submit Successfully!")

@@ -32,3 +32,7 @@ npm run hint
 ### 2.0.0
 1. The new version init to new branch in rpn-it github project.
 2. Todo: The issues on github.
+
+### 2.0.1
+1. Test google map, react-google-map, react geosuggest in zhifubao.
+2. Users able to download pictures uploaded in initial(0) stage.

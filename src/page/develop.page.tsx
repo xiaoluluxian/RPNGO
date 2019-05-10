@@ -9,6 +9,9 @@ import * as Component from '../component/import';
 import * as Func from '../func/import';
 import * as Lambda from '../lambda/import';
 import * as XLSX from 'js-xlsx'
+import Geosuggest from 'react-geosuggest'
+import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps"
+// import {} from 'googlemaps';
 import * as $ from "jquery";
 
 import Config from '../config/config';
@@ -20,16 +23,76 @@ export interface IProps {
 export interface IState {
 
 }
+declare const google: any;
+
+
 
 class PageGhotiDevelop extends React.Component<IProps, IState> {
+    MyMapComponent = withGoogleMap(props=>(
+        <GoogleMap
+            defaultZoom={5}
+            defaultCenter={{ lat: 38.8780025, lng: -93.09770200000003 }}
+            onClick={this.addMarker}
+        >
+        {this.state.Marker?this.state.Marker.map(function(marker, index){
+            return(<Marker onDblClick={this.deleteMarker.bind(this,index)} key={index} position={{lat:marker.lat,lng:marker.lng}}/>)
+        }.bind(this)):void 0}
+        </GoogleMap>
+    ))
+    state={
+        Marker:[]
+    }
     public constructor(props) {
         super(props);
+        this.onSuggestSelect = this.onSuggestSelect.bind(this);
+        this.deleteMarker = this.deleteMarker.bind(this);
+        this.addMarker = this.addMarker.bind(this);
     }
 
     public render() {
         return (<React.Fragment>
             <input onChange={e => this.uploadFile(e.target.files)} type="file"></input>
+            <div>
+                <this.MyMapComponent 
+                    containerElement={<div style={{height:"700px"}}/>}
+                    mapElement={<div style={{height:"100%"}}/>}
+                />
+            </div>
+            <div>
+                <Geosuggest
+                    onSuggestSelect={this.onSuggestSelect}
+                    location={null}
+                />
+            </div>
         </React.Fragment>);
+    }
+
+    protected addMarker(info){
+        console.log(info.latLng)
+        var temp = this.state.Marker;
+        temp.push({
+            lat:info.qa.y,
+            lng:info.qa.x
+        })
+        console.log(temp)
+        this.setState({Marker:temp})
+    }
+
+    protected deleteMarker(index:number){
+        
+        var temp = this.state.Marker;
+        temp.splice(index,1);
+        console.log(temp)
+        this.setState({Marker:temp})
+    }
+
+    protected onSuggestSelect(place: any) {
+        var temp = this.state.Marker
+        temp.push({
+            lat:place.location.lat,
+            lng:place.location.lng
+        })
+        this.setState({Marker:temp})
     }
 
     protected uploadFile(file: FileList) {
@@ -37,7 +100,7 @@ class PageGhotiDevelop extends React.Component<IProps, IState> {
 
         var reader = new FileReader();
         var name = f.name;
-        reader.onload = function (e:any) {
+        reader.onload = function (e: any) {
             var data = e.target.result;
 
             var workbook = XLSX.read(data, { type: 'binary' });
@@ -48,7 +111,7 @@ class PageGhotiDevelop extends React.Component<IProps, IState> {
         };
         reader.readAsBinaryString(f);
     }
-    
+
 
 }
 
