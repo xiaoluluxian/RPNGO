@@ -7,6 +7,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const BUILD_DIR = path.resolve(__dirname, '..', 'dist');
 const APP_DIR = path.resolve(__dirname, '..', 'src');
@@ -59,6 +60,7 @@ let config = {
         ]
     },
     plugins: [
+        // new BundleAnalyzerPlugin(),
         new HtmlWebpackPlugin({
             title: 'RPN GO',
             template: PUBLIC_DIR

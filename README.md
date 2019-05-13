@@ -36,3 +36,7 @@ npm run hint
 ### 2.0.1
 1. Test google map, react-google-map, react geosuggest in zhifubao.
 2. Users able to download pictures uploaded in initial(0) stage.
+
+### 2.0.2
+1. Fix click map to add Marker in zhifubao.
+
