@@ -40,3 +40,6 @@ npm run hint
 ### 2.0.2
 1. Fix click map to add Marker in zhifubao.
 
+### 2.0.3
+1. Fix upload icon for client and vendor bug.
+

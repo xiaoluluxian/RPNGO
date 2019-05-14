@@ -523,11 +523,12 @@ class PageGhotiRegister extends React.Component<IProps, IState> {
             },
             data: formData,
             success: function (result) {
+                console.log(result)
                 if (this.state.currStage === "1") {
-                    this.setState({ clientIcon: result });
+                    this.setState({ clientIcon: result.Src });
                 }
                 else {
-                    this.setState({ vendorIcon: result });
+                    this.setState({ vendorIcon: result.Src });
                 }
 
             }.bind(this),
