@@ -178,7 +178,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                     ClientApproval: result.ClientApproPDF,
                     Other: result.OtherPDF,
                     InitialImage: result.InitialImage,
-                    ExpenseList: result.ExpenseList
+                    ExpenseList: result.ExpenseList?result.ExpenseList:[]
                 })
                 // let temp = []
                 // for (let i = result.VersionSize; i > 0; i--) {

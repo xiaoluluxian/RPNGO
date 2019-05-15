@@ -49,3 +49,6 @@ npm run hint
 
 ### 2.0.5
 1. Fix ExpenseList is null problem
+
+### 2.0.6
+1. Fix ExpenseList null cannot add problem
