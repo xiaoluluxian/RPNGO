@@ -47,3 +47,5 @@ npm run hint
 1. Add expense for each task, users are able to edit the information by click Expense button.
 2. Calculate the total expense and profit for each task
 
+### 2.0.5
+1. Fix ExpenseList is null problem

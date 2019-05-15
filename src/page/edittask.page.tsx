@@ -224,7 +224,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             method: 'GET',
             datatype: "json",
             success: (function (result) {
-                console.log(result);
+                // console.log(result);
                 this.setState({ Before: result });
                 this.reload += 1;
                 this.setState({ Loading: this.reload })
@@ -353,9 +353,12 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         let TotalAmount = 0;
         let SubTotal = 0;
         let Expense = 0;
-        for(let i of this.state.ExpenseList){
-            Expense += (i.Amount?i.Amount:0)
+        if(this.state.ExpenseList){
+            for(let i of this.state.ExpenseList){
+                Expense += (i.Amount?i.Amount:0)
+            }
         }
+        
         for (let i of this.state.Item) {
             TotalAmount += (i.Amount ? i.Amount : 0);
             SubTotal += (i.SubCost ? i.SubCost : 0);
@@ -948,7 +951,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                     <Modal isOpen={this.state.expenseModal} toggle={e => { this.setState({ expenseModal: false }) }} size="lg">
                                         <ModalHeader toggle={e => { this.setState({ expenseModal: false }) }}>Expense</ModalHeader>
                                         <ModalBody>
-                                            {this.state.ExpenseList.map(function (each, index) {
+                                            {this.state.ExpenseList?this.state.ExpenseList.map(function (each, index) {
                                                 return (
                                                     <div key={index} className="card shadow mb-4">
 
@@ -1059,7 +1062,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                                         </div>
                                                     </div>
                                                 )
-                                            }.bind(this))}
+                                            }.bind(this)):void 0}
                                             <div className="insert">
                                                 <button className="btn btn-primary btn-sm" style={{
                                                     marginLeft: '10px',
