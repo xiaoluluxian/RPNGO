@@ -56,6 +56,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         changeStageModal: false,
         duplicateModal: false,
         generalModal: false,
+        expenseModal: false,
         versionArray: [],
         //page:null,
         Address: '',
@@ -108,7 +109,8 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         SubWorkOrder: [],
         SubInvoice: [],
         Other: [],
-        InitialImage:[],
+        InitialImage: [],
+        ExpenseList: [],
 
 
 
@@ -175,7 +177,8 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                     SubInvoice: result.SubInvoicePDF,
                     ClientApproval: result.ClientApproPDF,
                     Other: result.OtherPDF,
-                    InitialImage: result.InitialImage
+                    InitialImage: result.InitialImage,
+                    ExpenseList: result.ExpenseList
                 })
                 // let temp = []
                 // for (let i = result.VersionSize; i > 0; i--) {
@@ -349,6 +352,10 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         let taxTotal = 0;
         let TotalAmount = 0;
         let SubTotal = 0;
+        let Expense = 0;
+        for(let i of this.state.ExpenseList){
+            Expense += (i.Amount?i.Amount:0)
+        }
         for (let i of this.state.Item) {
             TotalAmount += (i.Amount ? i.Amount : 0);
             SubTotal += (i.SubCost ? i.SubCost : 0);
@@ -937,6 +944,139 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                             </div>
                                         </ModalBody>
                                     </Modal>
+
+                                    <Modal isOpen={this.state.expenseModal} toggle={e => { this.setState({ expenseModal: false }) }} size="lg">
+                                        <ModalHeader toggle={e => { this.setState({ expenseModal: false }) }}>Expense</ModalHeader>
+                                        <ModalBody>
+                                            {this.state.ExpenseList.map(function (each, index) {
+                                                return (
+                                                    <div key={index} className="card shadow mb-4">
+
+                                                        <div className="card-header">
+                                                            <button style={{
+
+
+                                                                fontSize: '14px',
+                                                                // width:"65px",
+                                                                height: '29px',
+                                                                // backgroundColor: this.state.Item[index].pano === "true" ? 'lightblue' : 'red'
+                                                            }}
+                                                                className={"btn btn-danger btn-sm"}
+                                                                onClick={() => {
+                                                                    let list = this.state.ExpenseList;
+                                                                    list.splice(index, 1);
+                                                                    this.setState({ ExpenseList: list });
+                                                                }}
+                                                                title="edit">Delete-{index + 1}</button>
+                                                        </div>
+                                                        <div className="card-body">
+                                                            <table>
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Card</th>
+                                                                        <th>TransactionDate</th>
+                                                                        <th>PostDate</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td><input style={{ border: "transparent" }} onChange={
+                                                                            e => {
+                                                                                var list = this.state.ExpenseList
+                                                                                list[index].Card = e.target.value
+                                                                                this.setState({ ExpenseList: list })
+                                                                            }}
+                                                                            value={each.Card}></input></td>
+                                                                        <td><input type="date" style={{ border: "transparent" }} onChange={
+                                                                            e => {
+                                                                                var list = this.state.ExpenseList
+                                                                                list[index].trans_date = e.target.value
+                                                                                this.setState({ ExpenseList: list })
+                                                                            }} value={each.trans_date}></input></td>
+                                                                        <td><input type="date" style={{ border: "transparent" }} onChange={
+                                                                            e => {
+                                                                                var list = this.state.ExpenseList
+                                                                                list[index].post_date = e.target.value
+                                                                                this.setState({ ExpenseList: list })
+                                                                            }} value={each.post_date}></input></td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                            <table style={{ marginTop: "10px" }}>
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Category</th>
+                                                                        <th>Type</th>
+                                                                        <th>Amount</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td><input style={{ border: "transparent" }} onChange={
+                                                                            e => {
+                                                                                var list = this.state.ExpenseList
+                                                                                list[index].category = e.target.value
+                                                                                this.setState({ ExpenseList: list })
+                                                                            }} value={each.category}></input></td>
+                                                                        <td><input style={{ border: "transparent" }} onChange={
+                                                                            e => {
+                                                                                var list = this.state.ExpenseList
+                                                                                list[index].type = e.target.value
+                                                                                this.setState({ ExpenseList: list })
+                                                                            }} value={each.type}></input></td>
+                                                                        <td><input type="number" style={{ border: "transparent" }} onChange={
+                                                                            e => {
+                                                                                var list = this.state.ExpenseList
+                                                                                list[index].Amount = parseFloat(e.target.value) ? parseFloat(e.target.value) : void 0
+                                                                                this.setState({ ExpenseList: list })
+                                                                            }} value={each.Amount}></input></td>
+                                                                    </tr>
+
+                                                                </tbody>
+                                                            </table>
+                                                            <table style={{ marginTop: "10px" }}>
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Description</th>
+                                                                        <th>Memo</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr><td><textarea style={{ border: "transparent", width: "300px" }} onChange={
+                                                                        e => {
+                                                                            var list = this.state.ExpenseList
+                                                                            list[index].description = e.target.value
+                                                                            this.setState({ ExpenseList: list })
+                                                                        }} value={each.description}></textarea></td>
+                                                                        <td><textarea style={{ border: "transparent", width: "300px" }} onChange={
+                                                                            e => {
+                                                                                var list = this.state.ExpenseList
+                                                                                list[index].Memo = e.target.value
+                                                                                this.setState({ ExpenseList: list })
+                                                                            }} value={each.Memo}></textarea></td></tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                )
+                                            }.bind(this))}
+                                            <div className="insert">
+                                                <button className="btn btn-primary btn-sm" style={{
+                                                    marginLeft: '10px',
+                                                    marginBottom: "2%",
+                                                    width: '98%',
+                                                    height: '4%',
+                                                    fontSize: '14px',
+                                                }}
+                                                    onClick={() => {
+                                                        let list = this.state.ExpenseList;
+                                                        list.push(this.initExpense());
+                                                        console.log(list)
+                                                        this.setState({ ExpenseList: list });
+                                                    }}>AddExpense</button>
+                                            </div>
+                                        </ModalBody>
+                                    </Modal>
                                     <div className="card-header py-3">
                                         <div
                                             className="left">
@@ -952,6 +1092,17 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                                 className={"btn btn-primary btn-sm"}
                                                 onClick={() => this.setState({ generalModal: true })}
                                                 title="edit">Edit</button>
+                                            <button style={{
+                                                marginTop: '3px',
+                                                marginLeft: '5px',
+                                                fontSize: '14px',
+                                                // width: '65px',
+                                                height: '29px',
+                                                // backgroundColor: this.state.Item[index].pano === "true" ? 'lightblue' : 'red'
+                                            }}
+                                                className={"btn btn-primary btn-sm"}
+                                                onClick={() => this.setState({ expenseModal: true })}
+                                                title="edit">Expense</button>
                                             {this.state.Stage === "3" ? <button style={{
                                                 marginTop: '3px',
                                                 marginLeft: '5px',
@@ -1032,6 +1183,12 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                                     </tr>
                                                     <tr>
                                                         <th>Sub Amount</th><td>${SubTotal}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>TotalExpense</th><td>${Expense}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Profit</th><td>${TotalAmount-SubTotal-Expense}</td>
                                                     </tr>
                                                 </tbody>
 
@@ -1150,6 +1307,19 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             </React.Fragment>);
         }
 
+    }
+
+    protected initExpense() {
+        return {
+            Card: "",
+            trans_date: "",
+            post_datee: "",
+            description: "",
+            category: "",
+            type: "",
+            Amount: 0,
+            Memo: ""
+        }
     }
 
     protected downloadSingleFile(file: any) {
@@ -1373,8 +1543,8 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             completeness: "0",
             SubCost: 0,
             SubPPU: 0,
-            measure:"",
-            pano:"false",
+            measure: "",
+            pano: "false",
             Before: []
         }
         list.push(WHP);
@@ -1452,7 +1622,8 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                 OtherPDF: this.state.Other,
                 SubInvoicePDF: this.state.SubInvoice,
                 sub_work_order_pdf: this.state.SubWorkOrder,
-                InitialImage: this.state.InitialImage
+                InitialImage: this.state.InitialImage,
+                ExpenseList: this.state.ExpenseList
 
             }),
             success: function (data) {
@@ -1758,11 +1929,11 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                         <td>{this.showStatus(value.Status)}</td> */}
                                     </tr>
                                     <tr><th style={{ textAlign: "center", borderBottom: "#FFFFFF", borderTop: "#FFFFFF" }} colSpan={9}>Before </th></tr>
-                                    <tr><td style={{ borderBottom: "#FFFFFF", borderTop: "#FFFFFF" }} colSpan={9}>{this.mapPicture(value.Before, value.description, value.Comments,value.pano)}</td></tr>
+                                    <tr><td style={{ borderBottom: "#FFFFFF", borderTop: "#FFFFFF" }} colSpan={9}>{this.mapPicture(value.Before, value.description, value.Comments, value.pano)}</td></tr>
                                     <tr><th style={{ textAlign: "center", borderBottom: "#FFFFFF" }} colSpan={9}> During </th></tr>
-                                    <tr><td style={{ borderBottom: "#FFFFFF", borderTop: "#FFFFFF" }} colSpan={9}>{this.mapPicture(value.During, value.description, value.Comments,value.pano)}</td></tr>
+                                    <tr><td style={{ borderBottom: "#FFFFFF", borderTop: "#FFFFFF" }} colSpan={9}>{this.mapPicture(value.During, value.description, value.Comments, value.pano)}</td></tr>
                                     <tr><th style={{ textAlign: "center", borderBottom: "#FFFFFF" }} colSpan={9}> After </th></tr>
-                                    <tr><td style={{ borderTop: "#FFFFFF" }} colSpan={9}>{this.mapPicture(value.After, value.description, value.Comments,value.pano)}</td></tr>
+                                    <tr><td style={{ borderTop: "#FFFFFF" }} colSpan={9}>{this.mapPicture(value.After, value.description, value.Comments, value.pano)}</td></tr>
                                     {/* <tr><td style={{ borderLeftColor: "#FFFFFF", borderBottomColor: "#FFFFFF" }}>&nbsp;</td><th style={{textAlign:"center",borderBottom:"#FFFFFF", borderTop:"#FFFFFF"}}colSpan={6}>Before </th></tr>
                                     <tr><td style={{ borderLeftColor: "#FFFFFF", borderBottomColor: "#FFFFFF" }}>&nbsp;</td><td style={{borderBottom:"#FFFFFF", borderTop:"#FFFFFF"}} colSpan={6}>{this.mapPicture(value.Before, value.description, value.Comments)}</td></tr>
                                     <tr><td style={{ borderLeftColor: "#FFFFFF", borderBottomColor: "#FFFFFF" }}>&nbsp;</td><th style={{textAlign:"center",borderBottom:"#FFFFFF"}} colSpan={6}> During </th></tr>
@@ -1780,7 +1951,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
 
 
 
-    protected mapPicture(picture: any[], desc: string, descCN: string,pano:string) {
+    protected mapPicture(picture: any[], desc: string, descCN: string, pano: string) {
 
         return (
             picture.map(function (item, key) {
@@ -1808,7 +1979,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                     )
                 }
                 else {
-                    if (pano==="true") {
+                    if (pano === "true") {
                         return (
                             <div key={key} style={{
                                 // position: 'flex',
@@ -2459,7 +2630,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
 
             return false;
         }
-        else if(type === 'Initial') {
+        else if (type === 'Initial') {
             resetMessage();
             var zip = new JSZip();
             var urls = this.state.InitialImage;
@@ -2489,7 +2660,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
 
             return false;
         }
-        else{
+        else {
 
         }
 
@@ -2628,7 +2799,8 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                         OtherPDF: this.state.Other,
                         SubInvoicePDF: this.state.SubInvoice,
                         sub_work_order_pdf: this.state.SubWorkOrder,
-                        InitialImage:this.state.InitialImage
+                        InitialImage: this.state.InitialImage,
+                        ExpenseList: this.state.ExpenseList
                     }),
                     success: function (data) {
                         alert("Submit Successfully!")
@@ -2683,7 +2855,8 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                         OtherPDF: this.state.Other,
                         SubInvoicePDF: this.state.SubInvoice,
                         sub_work_order_pdf: this.state.SubWorkOrder,
-                        InitialImage: this.state.InitialImage
+                        InitialImage: this.state.InitialImage,
+                        ExpenseList: this.state.ExpenseList
                     }),
                     success: function (data) {
                         alert("Submit Successfully!")

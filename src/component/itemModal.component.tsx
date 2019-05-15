@@ -47,7 +47,6 @@ class ComponentGhotiItemModal extends React.Component<IProps, IState> {
                 fontSize: '14px',
                 width: '65px',
                 height: '29px',
-                // backgroundColor: this.state.Item[index].pano === "true" ? 'lightblue' : 'red'
             }}
                 className={"btn btn-primary btn-sm"}
                 onClick={this.changeShow}

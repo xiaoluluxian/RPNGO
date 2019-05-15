@@ -43,3 +43,7 @@ npm run hint
 ### 2.0.3
 1. Fix upload icon for client and vendor bug.
 
+### 2.0.4
+1. Add expense for each task, users are able to edit the information by click Expense button.
+2. Calculate the total expense and profit for each task
+
