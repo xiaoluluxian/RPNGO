@@ -11,11 +11,15 @@ import * as Lambda from '../lambda/import';
 
 import Geosuggest from 'react-geosuggest'
 import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps"
-import {MarkerWithLabel} from "react-google-maps/lib/components/addons/MarkerWithLabel"
+import { MarkerWithLabel } from "react-google-maps/lib/components/addons/MarkerWithLabel"
 // import {} from 'googlemaps';
 import * as $ from "jquery";
 
 import Config from '../config/config';
+import {ColoradoJson} from "../config/ColoradoJson"
+
+import USA from "@svg-maps/usa";
+import { SVGMap } from "react-svg-map";
 
 export interface IProps {
 
@@ -25,36 +29,49 @@ export interface IState {
 
 }
 declare const google: any;
-
+console.log(ColoradoJson)
+console.log(USA)
 
 
 class PageGhotiDevelop extends React.Component<IProps, IState> {
-    MyMapComponent = withGoogleMap(props => (
-        <GoogleMap
-            defaultZoom={5}
-            defaultCenter={{ lat: 38.8780025, lng: -93.09770200000003 }}
-            onClick={this.addMarker}
-        >
-            {this.state.Marker ? this.state.Marker.map(function (marker, index) {
-                return (<Marker onDblClick={this.deleteMarker.bind(this, index)} key={index} position={{ lat: marker.lat, lng: marker.lng }} />)
-            }.bind(this)) : void 0}
-        </GoogleMap>
-    ))
+    // MyMapComponent = withGoogleMap(props => (
+    //     <GoogleMap
+    //         defaultZoom={5}
+    //         defaultCenter={{ lat: 38.8780025, lng: -93.09770200000003 }}
+    //         onClick={this.addMarker}
+    //     >
+    //         {this.state.Marker ? this.state.Marker.map(function (marker, index) {
+    //             return (<Marker onDblClick={this.deleteMarker.bind(this, index)} key={index} position={{ lat: marker.lat, lng: marker.lng }} />)
+    //         }.bind(this)) : void 0}
+    //     </GoogleMap>
+    // ))
     state = {
-        Marker: []
+        Marker: [],
+        tooltipStyle: {
+            display: "none",
+        },
+        pointedLocation: "",
+        currMap:USA
     }
+
+
     public constructor(props) {
         super(props);
+
+        // console.log(this.state)
         this.onSuggestSelect = this.onSuggestSelect.bind(this);
         this.deleteMarker = this.deleteMarker.bind(this);
         this.addMarker = this.addMarker.bind(this);
+        this.handleLocationMouseMove = this.handleLocationMouseMove.bind(this)
+        this.handleLocationMouseOver = this.handleLocationMouseOver.bind(this)
+        this.handleLocationClick = this.handleLocationClick.bind(this)
     }
 
     public render() {
         return (<React.Fragment>
             {/* {console.log([1,2,3])} */}
             {/* <input onChange={e => this.uploadFile(e.target.files)} type="file"></input> */}
-            <div>
+            {/* <div>
                 <this.MyMapComponent
                     containerElement={<div style={{ height: "700px" }} />}
                     mapElement={<div style={{ height: "100%" }} />}
@@ -65,9 +82,35 @@ class PageGhotiDevelop extends React.Component<IProps, IState> {
                     onSuggestSelect={this.onSuggestSelect}
                     location={null}
                 />
+            </div> */}
+            <div style={{width:"50%"}}>
+                <SVGMap
+                    map={this.state.currMap}
+                    onLocationMouseMove={this.handleLocationMouseMove}
+                    onLocationMouseOver={this.handleLocationMouseOver}
+                    onLocationClick={this.handleLocationClick}
+                />
             </div>
-
         </React.Fragment>);
+    }
+
+    protected handleLocationMouseMove(event) {
+        const tooltipStyle = {
+            display: 'block',
+            top: event.clientY + 10,
+            left: event.clientX - 100
+        };
+        this.setState({ tooltipStyle: tooltipStyle });
+    }
+
+    protected handleLocationClick(event){
+        this.setState({currMap:ColoradoJson})
+    }
+
+    protected handleLocationMouseOver(event) {
+        const pointedLocation = event.target.attributes.name.value;
+        // console.log(pointedLocation)
+        this.setState({ pointedLocation: pointedLocation });
     }
 
 

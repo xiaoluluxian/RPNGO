@@ -52,3 +52,7 @@ npm run hint
 
 ### 2.0.6
 1. Fix ExpenseList null cannot add problem
+
+### 2.0.7
+1. Test implement svg map.
+2. Click USA map to redirect to state-county map
