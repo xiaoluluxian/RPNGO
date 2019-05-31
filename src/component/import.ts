@@ -8,9 +8,11 @@ import ComponentGhotiLeftBar from './leftBar.component';
 import ComponentGhotiTopBar from './topBar.component';
 import ComponentGhotiListGroupCollapse from './ListGroupCollapse.component';
 import ComponentGhotiItemModal from './itemModal.component';
+import ComponentGhotiSVGMap from './SVGMap.component';
 export {
     ComponentGhotiLeftBar as leftBar,
     ComponentGhotiTopBar as topBar,
     ComponentGhotiListGroupCollapse as ListGroupCollapse,
     ComponentGhotiItemModal as itemModal,
+    ComponentGhotiSVGMap as SVGMap,
 };

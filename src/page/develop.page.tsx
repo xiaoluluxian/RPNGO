@@ -29,8 +29,8 @@ export interface IState {
 
 }
 declare const google: any;
-console.log(ColoradoJson)
-console.log(USA)
+// console.log(ColoradoJson)
+// console.log(USA)
 
 
 class PageGhotiDevelop extends React.Component<IProps, IState> {
@@ -84,15 +84,23 @@ class PageGhotiDevelop extends React.Component<IProps, IState> {
                 />
             </div> */}
             <div style={{width:"50%"}}>
-                <SVGMap
+                {/* <SVGMap
                     map={this.state.currMap}
                     onLocationMouseMove={this.handleLocationMouseMove}
                     onLocationMouseOver={this.handleLocationMouseOver}
                     onLocationClick={this.handleLocationClick}
+                /> */}
+                <Component.SVGMap
+                    
+                    map={ColoradoJson}
+                    onLocationClick={this.handleLocationClick}
+                    onLocationMouseOver={this.handleLocationMouseOver}
                 />
             </div>
         </React.Fragment>);
     }
+
+    
 
     protected handleLocationMouseMove(event) {
         const tooltipStyle = {
@@ -104,13 +112,14 @@ class PageGhotiDevelop extends React.Component<IProps, IState> {
     }
 
     protected handleLocationClick(event){
-        this.setState({currMap:ColoradoJson})
+        // this.setState({currMap:ColoradoJson})
+        console.log(event.target.attributes)
     }
 
     protected handleLocationMouseOver(event) {
-        const pointedLocation = event.target.attributes.name.value;
-        // console.log(pointedLocation)
-        this.setState({ pointedLocation: pointedLocation });
+        // const pointedLocation = event.target.attributes.name.value;
+        // console.log(event)
+        // this.setState({ pointedLocation: pointedLocation });
     }
 
 

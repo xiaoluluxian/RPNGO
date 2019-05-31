@@ -29,7 +29,8 @@
     "leftBar",
     "topBar",
     "ListGroupCollapse",
-    "itemModal"
+    "itemModal",
+    "SVGMap"
   ],
   "pages": [
     "login",
