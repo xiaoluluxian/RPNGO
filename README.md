@@ -59,3 +59,6 @@ npm run hint
 
 ### 2.0.8
 1. Build SVG map component demo
+
+### 2.0.9
+1. Add location in general user profile

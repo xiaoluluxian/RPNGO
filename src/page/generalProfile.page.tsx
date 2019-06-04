@@ -38,6 +38,7 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
         TaskIds: [],
         UserCompany: "",
         UserScore: "",
+        Location:[],
 
         Client: "",
         ClientAddress: "",
@@ -225,7 +226,8 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
                     this.setState({ TaskIds: result.TaskIds });
                     this.setState({
                         UserCompany: result.company,
-                        UserScore: result.score
+                        UserScore: result.score,
+                        Location: result.locations
                     })
                 }).bind(this),
             })
@@ -368,7 +370,7 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
             return (
                 <React.Fragment>
 
-                    <div id="signupbox" style={{ marginTop: "15px" }} className="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+                    <div id="signupbox" style={{ marginTop: "15px",float:"left" }} className="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
                         <div className="panel panel-info">
                             <form className="form-horizontal" method="post">
                                 <div id="div_id_propertyaddress" className="form-group required">
@@ -435,6 +437,14 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
 
                             </form>
                             <button id="submit" type="submit" name="submit" style={{ marginBottom: "10px" }} className="btn btn-primary  col-md-8" onClick={this.submit} value="submit">Submit</button>
+                        </div> </div>
+                        <div id="signupbox" style={{ marginTop: "15px",float:"right" }} className="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+                        <div className="panel panel-info">
+                            {this.state.Location?this.state.Location.map(function(value,index){
+                                return(
+                                    <li>{index+1}:{value}</li>
+                                )
+                            }.bind(this)):void 0}
                         </div> </div>
                 </React.Fragment>
             )
@@ -830,6 +840,7 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
                     TaskIds: this.state.TaskIds,
                     company: this.state.UserCompany,
                     score: this.state.UserScore,
+                    locations: this.state.Location
                 }),
                 success: (function (result) {
                     this.props.history.push("/main");
