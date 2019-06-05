@@ -440,9 +440,13 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
                         </div> </div>
                         <div id="signupbox" style={{ marginTop: "15px",float:"right" }} className="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
                         <div className="panel panel-info">
+                            <label>Location:</label>
                             {this.state.Location?this.state.Location.map(function(value,index){
+                                let temp = value.split(" ");
+                                console.log(temp.indexOf("enter"))
+                                console.log(value.split(" "))
                                 return(
-                                    <li>{index+1}:{value}</li>
+                                    <li>{value}</li>
                                 )
                             }.bind(this)):void 0}
                         </div> </div>

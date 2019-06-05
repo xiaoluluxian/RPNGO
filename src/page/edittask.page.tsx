@@ -57,6 +57,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         duplicateModal: false,
         generalModal: false,
         expenseModal: false,
+        locationModal: false,
         versionArray: [],
         //page:null,
         Address: '',
@@ -104,6 +105,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         Markers: [],
         currImgID: "",
         currImgSrc: "",
+        currLocation: [],
 
         ClientApproval: [],
         SubWorkOrder: [],
@@ -178,7 +180,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                     ClientApproval: result.ClientApproPDF,
                     Other: result.OtherPDF,
                     InitialImage: result.InitialImage,
-                    ExpenseList: result.ExpenseList?result.ExpenseList:[]
+                    ExpenseList: result.ExpenseList ? result.ExpenseList : []
                 })
                 // let temp = []
                 // for (let i = result.VersionSize; i > 0; i--) {
@@ -353,12 +355,12 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
         let TotalAmount = 0;
         let SubTotal = 0;
         let Expense = 0;
-        if(this.state.ExpenseList){
-            for(let i of this.state.ExpenseList){
-                Expense += (i.Amount?i.Amount:0)
+        if (this.state.ExpenseList) {
+            for (let i of this.state.ExpenseList) {
+                Expense += (i.Amount ? i.Amount : 0)
             }
         }
-        
+
         for (let i of this.state.Item) {
             TotalAmount += (i.Amount ? i.Amount : 0);
             SubTotal += (i.SubCost ? i.SubCost : 0);
@@ -951,7 +953,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                     <Modal isOpen={this.state.expenseModal} toggle={e => { this.setState({ expenseModal: false }) }} size="lg">
                                         <ModalHeader toggle={e => { this.setState({ expenseModal: false }) }}>Expense</ModalHeader>
                                         <ModalBody>
-                                            {this.state.ExpenseList?this.state.ExpenseList.map(function (each, index) {
+                                            {this.state.ExpenseList ? this.state.ExpenseList.map(function (each, index) {
                                                 return (
                                                     <div key={index} className="card shadow mb-4">
 
@@ -1062,7 +1064,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                                         </div>
                                                     </div>
                                                 )
-                                            }.bind(this)):void 0}
+                                            }.bind(this)) : void 0}
                                             <div className="insert">
                                                 <button className="btn btn-primary btn-sm" style={{
                                                     marginLeft: '10px',
@@ -1078,6 +1080,18 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                                         this.setState({ ExpenseList: list });
                                                     }}>AddExpense</button>
                                             </div>
+                                        </ModalBody>
+                                    </Modal>
+                                    <Modal isOpen={this.state.locationModal} toggle={e => { this.setState({ locationModal: false }) }} size="lg">
+                                        <ModalHeader toggle={e => { this.setState({ locationModal: false }) }}>
+                                            {this.state.Username[parseInt(this.state.Stage)]}'s Location Record
+                                        </ModalHeader>
+                                        <ModalBody>
+                                            {this.state.currLocation ? this.state.currLocation.map(function (item, index) {
+                                                return (
+                                                    <li key={index}>{item}</li>
+                                                )
+                                            }) : <div>No Record Location</div>}
                                         </ModalBody>
                                     </Modal>
                                     <div className="card-header py-3">
@@ -1106,6 +1120,17 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                                 className={"btn btn-primary btn-sm"}
                                                 onClick={() => this.setState({ expenseModal: true })}
                                                 title="edit">Expense</button>
+                                            <button style={{
+                                                marginTop: '3px',
+                                                marginLeft: '5px',
+                                                fontSize: '14px',
+                                                // width: '65px',
+                                                height: '29px',
+                                                // backgroundColor: this.state.Item[index].pano === "true" ? 'lightblue' : 'red'
+                                            }}
+                                                className={"btn btn-primary btn-sm"}
+                                                onClick={() => this.findLocation()}
+                                                title="edit">Location</button>
                                             {this.state.Stage === "3" ? <button style={{
                                                 marginTop: '3px',
                                                 marginLeft: '5px',
@@ -1191,7 +1216,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                                                         <th>TotalExpense</th><td>${Expense}</td>
                                                     </tr>
                                                     <tr>
-                                                        <th>Profit</th><td>${TotalAmount-SubTotal-Expense}</td>
+                                                        <th>Profit</th><td>${TotalAmount - SubTotal - Expense}</td>
                                                     </tr>
                                                 </tbody>
 
@@ -1309,6 +1334,44 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
                 </div>
             </React.Fragment>);
         }
+
+    }
+
+    protected findLocation() {
+        $.ajax({
+            url: 'https://rpntechserver.appspot.com/findLocationsByUserName?username=' + this.state.Username[parseInt(this.state.Stage)],
+            method: 'GET',
+            datatype: "json",
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem('Token'),
+            },
+            success: function (data) {
+                if (data) {
+                    let address = this.state.Address.split(" ")[0]
+                    let location = []
+                    for (let i = 0; i < data.length; i++) {
+                        if (data[i].includes(address)) {
+                            let temp = data[i].split(" ")
+                            let index = temp.indexOf("enter")
+                            let str = ""
+                            for (let j = index; j < temp.length; j++) {
+                                str += temp[j] + " "
+                            }
+                            location.push(str)
+                        }
+
+                    }
+                    this.setState({
+                        locationModal: true,
+                        currLocation: location
+                    })
+                }
+                else{
+                    window.alert("No Location Record")
+                }
+
+            }.bind(this)
+        })
 
     }
 

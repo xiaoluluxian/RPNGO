@@ -62,3 +62,7 @@ npm run hint
 
 ### 2.0.9
 1. Add location in general user profile
+
+### 2.1.0
+1. Add Location to task
+2. Add Location to user profile
