@@ -140,7 +140,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             }),
             success: (function (result) {
                 console.log(result);
-                this.setState({ City: result.City })
+                this.setState({ City: result.City });
                 this.setState({ Address: result.Address });
                 this.setState({ Area: result.Area });
                 this.setState({ BillTo: result.BillTo });

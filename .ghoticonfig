@@ -47,7 +47,8 @@
     "printText",
     "printSub",
     "printSubText",
-    "develop"
+    "develop",
+    "orderTask"
   ],
   "funcs": [],
   "lambdas": [],

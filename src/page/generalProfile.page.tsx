@@ -442,9 +442,6 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
                         <div className="panel panel-info">
                             <label>Location:</label>
                             {this.state.Location?this.state.Location.map(function(value,index){
-                                let temp = value.split(" ");
-                                console.log(temp.indexOf("enter"))
-                                console.log(value.split(" "))
                                 return(
                                     <li>{value}</li>
                                 )

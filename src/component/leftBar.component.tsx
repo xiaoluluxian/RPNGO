@@ -78,6 +78,19 @@ class ComponentGhotiLeftBar extends React.Component<IProps, IState> {
                                         </button>
                                     </div>
                                 </div>
+                                <div className="sidebar-body-action">
+                                    <div style={{ paddingTop: "5%" }}>
+                                        <button className="link" style={{
+                                            width: "100%",
+                                            backgroundColor: "Transparent",
+                                            border: "none",
+                                            outline: "none"
+                                        }} onClick={this.props.pushPage.bind(this, "/ordertask")}>
+                                            <div className="body-icon"><i style={{ color: "#A1A1BA" }} className="fas fa-sort"></i></div>
+                                            <div className="body-text">Order Task</div>
+                                        </button>
+                                    </div>
+                                </div>
                                 <div style={{
 
                                 }} className="sidebar-body-action">
@@ -185,6 +198,19 @@ class ComponentGhotiLeftBar extends React.Component<IProps, IState> {
                                     </button>
                                 </div>
                             </div>
+                            <div className="sidebar-body-action">
+                                    <div style={{ paddingTop: "5%" }}>
+                                        <button className="link" style={{
+                                            width: "100%",
+                                            backgroundColor: "Transparent",
+                                            border: "none",
+                                            outline: "none"
+                                        }} onClick={this.props.pushPage.bind(this, "/ordertask")}>
+                                            <div className="body-icon"><i style={{ color: "#A1A1BA" }} className="fas fa-sort"></i></div>
+                                            <div className="body-text">Order Task</div>
+                                        </button>
+                                    </div>
+                                </div>
                             <div style={{
 
                             }} className="sidebar-body-action">

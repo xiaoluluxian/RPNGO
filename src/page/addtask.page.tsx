@@ -184,7 +184,6 @@ class PageGhotiAddtask extends React.Component<IProps, IState> {
                                                 }.bind(this)) : <div></div>}
                                             </select>
                                         </div>
-                                        
                                     </div>
 
                                 </form>

@@ -471,7 +471,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                             <table className="tasktable" style={{
                                 fontSize: "13px"
                             }}><thead style={{
-                                // display:"block"
+                                // position:"absolute"
                             }}>
 
                                     <tr><th>Action</th>
@@ -564,7 +564,6 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                             <table className="tasktable" style={{
                                 fontSize: "13px"
                             }}><thead style={{
-                                // display:"block"
                             }}>
 
                                     <tr><th>Action</th>
@@ -635,7 +634,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                             <table className="tasktable" style={{
                                 fontSize: "13px"
                             }}><thead style={{
-                                // display:"block"
+                                // position:"absolute"
                             }}>
 
                                     <tr><th>Action</th>

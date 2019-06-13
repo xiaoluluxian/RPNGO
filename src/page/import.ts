@@ -19,6 +19,7 @@ import PageGhotiPrintText from './printText.page';
 import PageGhotiPrintSub from './printSub.page';
 import PageGhotiPrintSubText from './printSubText.page';
 import PageGhotiDevelop from './develop.page';
+import PageGhotiOrderTask from './orderTask.page';
 export {
     PageGhotiLogin as login,
     PageGhotiMain as main,
@@ -35,4 +36,5 @@ export {
     PageGhotiPrintSub as printSub,
     PageGhotiPrintSubText as printSubText,
     PageGhotiDevelop as develop,
+    PageGhotiOrderTask as orderTask,
 };

@@ -37,8 +37,9 @@ class Hello extends React.Component<{}, {}> {
                 <Route path="/clientEdit" component={Page.clientEdit} />
                 <Route path="/vendorEdit" component={Page.vendorEdit} />
                 <Route path="/printSubText" component={Page.printSubText} />
+                <Route path="/orderTask" component={Page.orderTask} />
                 <Route path="/develop" component={Page.develop} />
-                <Route path="/photo" component={(props)=><div>{console.log(props)}{props.match.params.name}</div>}/>
+                <Route path="/photo" component={(props) => <div>{console.log(props)}{props.match.params.name}</div>}/>
             </React.Fragment>
         );
     }

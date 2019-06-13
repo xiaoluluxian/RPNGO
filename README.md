@@ -66,3 +66,6 @@ npm run hint
 ### 2.1.0
 1. Add Location to task
 2. Add Location to user profile
+
+### 2.1.1
+1. Order Tasks for each user
