@@ -315,6 +315,7 @@ class PageGhotiEdittask extends React.Component<IProps, IState> {
             data: JSON.stringify({
             }),
             success: (function (result) {
+                console.log(result)
                 this.setState({ versionArray: result })
             }).bind(this),
             error: (function (jqXHR, textStatus, errorThrown) {

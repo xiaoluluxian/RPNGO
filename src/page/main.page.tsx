@@ -107,7 +107,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                 }).bind(this),
             });
             $.ajax({
-                url: 'https://rpntechserver.appspot.com/findLatestTasksByStage?stage=running&paging=true&page_index=0&page_size=25',
+                url: 'https://rpntechserver.appspot.com/findLatestTasksByStage?stage=running',
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem('Token'),
                 },
@@ -134,7 +134,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                 success: (function (result) {
                     // console.log(result);
                     this.setState({ allTask: result });
-                    this.setState({ currtaskLeng: result?result.length:0 })
+                    this.setState({ currtaskLeng: result ? result.length : 0 })
                     this.reload += 1;
                     this.setState({ Loading: this.reload })
                 }).bind(this),
@@ -167,7 +167,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                 }),
                 success: (function (result) {
                     this.setState({
-                        data:result
+                        data: result
                     })
                 }).bind(this),
             })
@@ -352,16 +352,16 @@ class PageGhotiMain extends React.Component<IProps, IState> {
         localStorage.setItem("currStage", item.Stage);
         localStorage.setItem("currSharedID", item.SharedID)
         //console.log(item.TaskID);
-        if(localStorage.getItem("Authority")==='0'){
+        if (localStorage.getItem("Authority") === '0') {
             this.props.history.push('/clientEdit');
         }
-        else if(localStorage.getItem("Authority")==='1'||localStorage.getItem("Authority")==='2'){
+        else if (localStorage.getItem("Authority") === '1' || localStorage.getItem("Authority") === '2') {
             this.props.history.push('/vendorEdit');
         }
-        else{
+        else {
             this.props.history.push('/edittask');
         }
-        
+
     }
 
     protected setTask(item) {
@@ -369,7 +369,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
     }
     protected showVendorTasks(vendor: any) {
         $.ajax({
-            url: "https://rpntechserver.appspot.com/findTasksByVendorWithPaging?vendor=" + vendor + "&page_index=" + "0" + "&page_size=" + this.state.currPageSize,
+            url: "https://rpntechserver.appspot.com/findTasksByVendorWithPaging?vendor=" + vendor,
             headers: {
                 Authorization: "Bearer " + localStorage.getItem('Token'),
             },
@@ -380,16 +380,16 @@ class PageGhotiMain extends React.Component<IProps, IState> {
             success: (function (result) {
                 // console.log(result)
                 this.setState({
-                    currStage:"1",
-                    data:result
+                    currStage: "1",
+                    data: result
                 })
             }).bind(this),
         })
     }
 
-    protected showClientTasks(client: any){
+    protected showClientTasks(client: any) {
         $.ajax({
-            url: "https://rpntechserver.appspot.com/findTasksByClientWithPaging?client=" + client + "&page_index=" + "0" + "&page_size=" + this.state.currPageSize,
+            url: "https://rpntechserver.appspot.com/findTasksByClientWithPaging?client=" + client,
             headers: {
                 Authorization: "Bearer " + localStorage.getItem('Token'),
             },
@@ -399,20 +399,20 @@ class PageGhotiMain extends React.Component<IProps, IState> {
             }),
             success: (function (result) {
                 this.setState({
-                    currStage:"2",
-                    data:result
+                    currStage: "2",
+                    data: result
                 })
             }).bind(this),
         })
     }
 
-    protected showStageTasks(stage:any){
-        if(stage==='-1'){
+    protected showStageTasks(stage: any) {
+        if (stage === '-1') {
 
         }
-        else{
+        else {
             $.ajax({
-                url: 'https://rpntechserver.appspot.com/findLatestTasksByStage?stage='+ stage+'&paging=true&page_index=0&page_size=25',
+                url: 'https://rpntechserver.appspot.com/findLatestTasksByStage?stage=' + stage,
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem('Token'),
                 },
@@ -422,8 +422,8 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                 }),
                 success: (function (result) {
                     this.setState({
-                        currStage:"0",
-                        data:result
+                        currStage: "0",
+                        data: result
                     })
                 }).bind(this),
             });
@@ -436,19 +436,19 @@ class PageGhotiMain extends React.Component<IProps, IState> {
             return (<React.Fragment>
                 <div className="card shadow mb-4">
                     <div className="card-header py-3">
-                        <select style={{ width: "200px", float:"left" }} id='setStage' className="form-control" onChange={e => this.showVendorTasks(e.target.value)}>
+                        <select style={{ width: "200px", float: "left" }} id='setStage' className="form-control" onChange={e => this.showVendorTasks(e.target.value)}>
                             <option value="-1">SelectVendor</option>
-                            {this.state.vendors?this.state.vendors.map(function (item, index) {
+                            {this.state.vendors ? this.state.vendors.map(function (item, index) {
                                 return (<option key={index} value={item.Company}>{item.Company}</option>)
-                            }.bind(this)):void 0}
+                            }.bind(this)) : void 0}
                         </select>
-                        <select style={{ width: "200px", float:"left", marginLeft:"10px" }} id='setStage' className="form-control" onChange={e => this.showClientTasks(e.target.value)}>
+                        <select style={{ width: "200px", float: "left", marginLeft: "10px" }} id='setStage' className="form-control" onChange={e => this.showClientTasks(e.target.value)}>
                             <option value="-1">SelectClient</option>
-                            {this.state.clients?this.state.clients.map(function (item, index) {
+                            {this.state.clients ? this.state.clients.map(function (item, index) {
                                 return (<option key={index} value={item.Company}>{item.Company}</option>)
-                            }.bind(this)):void 0}
+                            }.bind(this)) : void 0}
                         </select>
-                        <select style={{ width: "200px", float:"left", marginLeft:"10px" }} id='setStage' className="form-control" onChange={e => this.showStageTasks(e.target.value)}>
+                        <select style={{ width: "200px", float: "left", marginLeft: "10px" }} id='setStage' className="form-control" onChange={e => this.showStageTasks(e.target.value)}>
                             <option value="-1">SelectStage</option>
                             <option value='0'>Initial</option>
                             <option value='1'>Bid</option>
@@ -460,7 +460,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                         </select>
                     </div>
                     <div style={{}} className="card-body">
-                        {this.pageSizeComponent()}
+                        {/* {this.pageSizeComponent()} */}
                         <div style={{
                             overflowY: "auto",
                             height: this.height,
@@ -497,7 +497,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                                                         fontSize: "13px"
                                                         // marginTop: '5px'
                                                     }} title="edit" className="btn btn-primary btn-sm" onClick={this.editTask.bind(this, item)}><ins>Edit</ins></button>
-                                                    
+
                                                     {/* <button className="btn btn-danger btn-sm" title="deltask" onClick={this.delTask.bind(this, item)}>Del</button> */}
                                                 </td>
                                                 <td>
@@ -524,99 +524,99 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                 </div>
             </React.Fragment>)
         }
-        else if(localStorage.getItem("Authority")==='3'){
-            return(
+        else if (localStorage.getItem("Authority") === '3') {
+            return (
                 <React.Fragment>
-                <div className="card shadow mb-4">
-                    <div className="card-header py-3">
-                        <select style={{ width: "200px", float:"left" }} id='setStage' className="form-control" onChange={e => this.showVendorTasks(e.target.value)}>
-                            <option value="-1">SelectVendor</option>
-                            {this.state.vendors?this.state.vendors.map(function (item, index) {
-                                return (<option key={index} value={item.Company}>{item.Company}</option>)
-                            }.bind(this)):void 0}
-                        </select>
-                        <select style={{ width: "200px", float:"left", marginLeft:"10px" }} id='setStage' className="form-control" onChange={e => this.showClientTasks(e.target.value)}>
-                            <option value="-1">SelectClient</option>
-                            {this.state.clients?this.state.clients.map(function (item, index) {
-                                return (<option key={index} value={item.Company}>{item.Company}</option>)
-                            }.bind(this)):void 0}
-                        </select>
-                        <select style={{ width: "200px", float:"left", marginLeft:"10px" }} id='setStage' className="form-control" onChange={e => this.showStageTasks(e.target.value)}>
-                            <option value="-1">SelectStage</option>
-                            <option value='0'>Initial</option>
-                            <option value='1'>Bid</option>
-                            <option value='2'>Client Approval</option>
-                            <option value='3'>Work Order</option>
-                            <option value='4'>Quality Assurance</option>
-                            <option value='5'>Invoice</option>
-                            <option value='6'>Archived</option>
-                        </select>
-                    </div>
-                    <div style={{}} className="card-body">
-                        {this.pageSizeComponent()}
-                        <div style={{
-                            overflowY: "auto",
-                            height: this.height,
-                            boxSizing: "border-box"
+                    <div className="card shadow mb-4">
+                        <div className="card-header py-3">
+                            <select style={{ width: "200px", float: "left" }} id='setStage' className="form-control" onChange={e => this.showVendorTasks(e.target.value)}>
+                                <option value="-1">SelectVendor</option>
+                                {this.state.vendors ? this.state.vendors.map(function (item, index) {
+                                    return (<option key={index} value={item.Company}>{item.Company}</option>)
+                                }.bind(this)) : void 0}
+                            </select>
+                            <select style={{ width: "200px", float: "left", marginLeft: "10px" }} id='setStage' className="form-control" onChange={e => this.showClientTasks(e.target.value)}>
+                                <option value="-1">SelectClient</option>
+                                {this.state.clients ? this.state.clients.map(function (item, index) {
+                                    return (<option key={index} value={item.Company}>{item.Company}</option>)
+                                }.bind(this)) : void 0}
+                            </select>
+                            <select style={{ width: "200px", float: "left", marginLeft: "10px" }} id='setStage' className="form-control" onChange={e => this.showStageTasks(e.target.value)}>
+                                <option value="-1">SelectStage</option>
+                                <option value='0'>Initial</option>
+                                <option value='1'>Bid</option>
+                                <option value='2'>Client Approval</option>
+                                <option value='3'>Work Order</option>
+                                <option value='4'>Quality Assurance</option>
+                                <option value='5'>Invoice</option>
+                                <option value='6'>Archived</option>
+                            </select>
+                        </div>
+                        <div style={{}} className="card-body">
+                            {/* {this.pageSizeComponent()} */}
+                            <div style={{
+                                overflowY: "auto",
+                                height: this.height,
+                                boxSizing: "border-box"
 
-                        }} className="table-responsive">
+                            }} className="table-responsive">
 
-                            <table className="tasktable" style={{
-                                fontSize: "13px"
-                            }}><thead style={{
-                            }}>
-
-                                    <tr><th>Action</th>
-                                        <th>Property Address</th>
-                                        <th>Asset Number</th>
-                                        <th>Due Date</th>
-                                        <th>User</th>
-                                        <th>CurrStage</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody style={{
-
+                                <table className="tasktable" style={{
+                                    fontSize: "13px"
+                                }}><thead style={{
                                 }}>
-                                    {this.state.data ? this.state.data.map(function (item, key) {
-                                        let temp = '#a' + key;
-                                        let temp2 = 'a' + key;
-                                        return (
-                                            <tr style={{ height: "5px" }} key={key}>
-                                                <td style={{ height: "5px" }}>
-                                                    <button style={{
-                                                        marginRight: '5px',
-                                                        fontSize: "13px"
-                                                        // marginTop: '5px'
-                                                    }} title="edit" className="btn btn-primary btn-sm" onClick={this.editTask.bind(this, item)}><ins>Edit</ins></button>
-                                                    
-                                                </td>
-                                                <td>
-                                                    {this.showLogo(item)}
-                                                    {item.Address}</td>
-                                                <td>{item.asset_num}</td>
-                                                <td>{item.DueDate ? item.DueDate[parseInt(item.Stage)] : void 0}</td>
-                                                <td>
-                                                    <Component.ListGroupCollapse key={key} Username={item.Username} />
-                                                </td>
-                                                {/* <td><a data-toggle="collapse" href={temp}>Show User</a><div id={temp2} className="panel-collapse collapse">{this.showUsername(item.Username)}</div></td> */}
-                                                {/* <td><button className="link collapsible">{this.clickShowUser}Show User</button><div id="content" style={{display: "none"}}>{this.showUsername(item.Username)}</div></td> */}
-                                                <td>{this.showStage(item.Stage)}</td>
-                                                <td>{this.showStatus(item)}</td>
 
-                                            </tr>
-                                        )
-                                    }.bind(this)) : void 0}
-                                </tbody>
-                            </table>
+                                        <tr><th>Action</th>
+                                            <th>Property Address</th>
+                                            <th>Asset Number</th>
+                                            <th>Due Date</th>
+                                            <th>User</th>
+                                            <th>CurrStage</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody style={{
 
+                                    }}>
+                                        {this.state.data ? this.state.data.map(function (item, key) {
+                                            let temp = '#a' + key;
+                                            let temp2 = 'a' + key;
+                                            return (
+                                                <tr style={{ height: "5px" }} key={key}>
+                                                    <td style={{ height: "5px" }}>
+                                                        <button style={{
+                                                            marginRight: '5px',
+                                                            fontSize: "13px"
+                                                            // marginTop: '5px'
+                                                        }} title="edit" className="btn btn-primary btn-sm" onClick={this.editTask.bind(this, item)}><ins>Edit</ins></button>
+
+                                                    </td>
+                                                    <td>
+                                                        {this.showLogo(item)}
+                                                        {item.Address}</td>
+                                                    <td>{item.asset_num}</td>
+                                                    <td>{item.DueDate ? item.DueDate[parseInt(item.Stage)] : void 0}</td>
+                                                    <td>
+                                                        <Component.ListGroupCollapse key={key} Username={item.Username} />
+                                                    </td>
+                                                    {/* <td><a data-toggle="collapse" href={temp}>Show User</a><div id={temp2} className="panel-collapse collapse">{this.showUsername(item.Username)}</div></td> */}
+                                                    {/* <td><button className="link collapsible">{this.clickShowUser}Show User</button><div id="content" style={{display: "none"}}>{this.showUsername(item.Username)}</div></td> */}
+                                                    <td>{this.showStage(item.Stage)}</td>
+                                                    <td>{this.showStatus(item)}</td>
+
+                                                </tr>
+                                            )
+                                        }.bind(this)) : void 0}
+                                    </tbody>
+                                </table>
+
+                            </div>
                         </div>
                     </div>
-                </div>
-            </React.Fragment>
+                </React.Fragment>
             )
         }
-        else if (localStorage.getItem("Authority") === '0'||localStorage.getItem("Authority") === '2') {
+        else if (localStorage.getItem("Authority") === '0' || localStorage.getItem("Authority") === '2') {
             return (<React.Fragment>
                 <div className="card shadow mb-4">
                     <div className="card-header py-3">
@@ -695,7 +695,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
         }
     }
 
-    protected delTask(){
+    protected delTask() {
 
     }
 
@@ -774,7 +774,7 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                             onClick={function () { this.props.history.push("/userProfile") }.bind(this)}>
                             <span style={{
                                 color: "#616161",
-                                float:"right"
+                                float: "right"
                             }} className="mr-2 d-none d-lg-inline text-gray-600">{localStorage.getItem("currUser")}</span>
                             {/* <img style={{
                                 width: "20%"
@@ -816,13 +816,13 @@ class PageGhotiMain extends React.Component<IProps, IState> {
     }
 
     protected pushPage(page: String) {
-        if(page==="/main"){
+        if (page === "/main") {
             window.location.reload()
         }
-        else{
+        else {
             this.props.history.push(page)
         }
-        
+
     }
 
     protected changePageSize(size: String) {
