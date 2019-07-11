@@ -27,11 +27,11 @@ class PageGhotiAddtask extends React.Component<IProps, IState> {
     height: number = 0
     state = {
         alluser: [],
-        allVendors:[],
+        allVendors: [],
         username: "",
         clients: [],
         client: "",
-        vendor:"",
+        vendor: "",
     };
 
     public constructor(props) {
@@ -91,7 +91,7 @@ class PageGhotiAddtask extends React.Component<IProps, IState> {
                         <div className="card-header py-3">
 
                         </div>
-                        <div style={{height: this.height, overflow: "auto"}}className="card-body py-3">
+                        <div style={{ height: this.height, overflow: "auto" }} className="card-body py-3">
                             <div className="panel panel-info">
                                 <form className="form-horizontal" method="post">
                                     <div id="div_id_propertyaddress" className="form-group required">
@@ -118,7 +118,7 @@ class PageGhotiAddtask extends React.Component<IProps, IState> {
                                             <input className="input-md  textinput textInput form-control" id="duedate" name="duedate" placeholder="Due Date" style={{ marginBottom: "5px" }} type="date" ></input>
                                         </div>
                                     </div>
-                                    <div className="form-row" style={{marginLeft:"10px"}}>
+                                    <div className="form-row" style={{ marginLeft: "10px" }}>
                                         <div className="form-group col-md-2">
                                             <label >State</label>
                                             <input type="text" className="form-control" id="state" />
@@ -149,7 +149,7 @@ class PageGhotiAddtask extends React.Component<IProps, IState> {
                                             <input className="input-md  textinput textInput form-control" id="lockboxnumber" name="lockboxnumber" placeholder="Lock Box Number" style={{ marginBottom: "5px" }} type="text" ></input>
                                         </div>
                                     </div>
-                                    <div className="form-row" style={{marginLeft:"10px"}}>
+                                    <div className="form-row" style={{ marginLeft: "10px" }}>
                                         <div className="form-group col-md-2">
                                             <label>Client</label>
                                             <select className="form-control" id='client' onChange={e => { this.setState({ client: e.target.value }) }}>
@@ -175,7 +175,7 @@ class PageGhotiAddtask extends React.Component<IProps, IState> {
                                         </div>
                                         <div className="form-group col-md-2">
                                             <label>Vendor User</label>
-                                            <select className="form-control" id='client' onChange={e => { this.setState({username:e.target.value})}}>
+                                            <select className="form-control" id='client' onChange={e => { this.setState({ username: e.target.value }) }}>
                                                 <option>Choose User</option>
                                                 {this.state.alluser ? this.state.alluser.map(function (item, key) {
                                                     return (
@@ -197,20 +197,20 @@ class PageGhotiAddtask extends React.Component<IProps, IState> {
         </div>);
     }
 
-    protected getUserByVendor(vendor:string){
-        this.setState({vendor:vendor})
-        let name = vendor.replace(" ","%20")
+    protected getUserByVendor(vendor: string) {
+        this.setState({ vendor: vendor })
+        let name = vendor.replace(" ", "%20")
         $.ajax({
-            url: 'https://rpntechserver.appspot.com/findUsersByCompany?company='+name,
+            url: 'https://rpntechserver.appspot.com/findUsersByCompany?company=' + name,
             method: 'GET',
             datatype: "json",
             headers: {
                 Authorization: "Bearer " + localStorage.getItem('Token'),
             },
-            
+
             success: function (data) {
                 console.log(data);
-                this.setState({alluser:data})
+                this.setState({ alluser: data })
 
             }.bind(this),
         });
@@ -224,42 +224,54 @@ class PageGhotiAddtask extends React.Component<IProps, IState> {
         let name = [];
         name.push(this.state.username);
         let StartDate = new Array(7);
-        StartDate[0]=$('#startdate').val();
+        StartDate[0] = $('#startdate').val();
         let DueDate = new Array(7);
-        DueDate[0]=$('#duedate').val();
-        let citylist=$('#state').val()+"/"+$('#county').val()+"/"+$('#city').val()+"/"+$('#zipcode').val();
+        DueDate[0] = $('#duedate').val();
+        let citylist = $('#state').val() + "/" + $('#county').val() + "/" + $('#city').val() + "/" + $('#zipcode').val();
         let CompletionDate = new Array(7);
-        
+        console.log({
+            asset_num: $('#assetnum').val(),
+            StartDate: StartDate,
+            DueDate: DueDate,
+            CompletionDate: CompletionDate,
+            City: citylist,
+            Address: $('#propaddr').val(),
+            Desc: $('#description').val(),
+            keycode: $('#lockboxnumber').val(),
+            client: this.state.client,
+            Username: name,
+            Vendor: this.state.vendor
+        })
 
-        $.ajax({
-            url: 'https://rpntechserver.appspot.com/initTask',
-            method: 'POST',
-            datatype: "json",
-            headers: {
-                Authorization: "Bearer " + localStorage.getItem('Token'),
-            },
-            data: JSON.stringify({
-                asset_num: $('#assetnum').val(),
-                StartDate: StartDate,
-                DueDate: DueDate,
-                CompletionDate: CompletionDate,
-                City: citylist,
-                Address: $('#propaddr').val(),
-                Desc: $('#description').val(),
-                keycode: $('#lockboxnumber').val(),
-                client: this.state.client,
-                Username: name,
-                Vendor: this.state.vendor
-                //stage:$('#stage').val()
-            }),
-            success: function (result) {
-                let id = JSON.parse(result).TaskID;
-                localStorage.setItem("currTask",id);
-                this.props.history.push('/edittask');
-                
+        // $.ajax({
+        //     url: 'https://rpntechserver.appspot.com/initTask',
+        //     method: 'POST',
+        //     datatype: "json",
+        //     headers: {
+        //         Authorization: "Bearer " + localStorage.getItem('Token'),
+        //     },
+        //     data: JSON.stringify({
+        //         asset_num: $('#assetnum').val(),
+        //         StartDate: StartDate,
+        //         DueDate: DueDate,
+        //         CompletionDate: CompletionDate,
+        //         City: citylist,
+        //         Address: $('#propaddr').val(),
+        //         Desc: $('#description').val(),
+        //         keycode: $('#lockboxnumber').val(),
+        //         client: this.state.client,
+        //         Username: name,
+        //         Vendor: this.state.vendor
+        //         //stage:$('#stage').val()
+        //     }),
+        //     success: function (result) {
+        //         let id = JSON.parse(result).TaskID;
+        //         localStorage.setItem("currTask",id);
+        //         this.props.history.push('/edittask');
 
-            }.bind(this),
-        });
+
+        //     }.bind(this),
+        // });
     }
 }
 

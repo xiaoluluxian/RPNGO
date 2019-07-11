@@ -38,7 +38,7 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
         TaskIds: [],
         UserCompany: "",
         UserScore: "",
-        Location:[],
+        Location: [],
 
         Client: "",
         ClientAddress: "",
@@ -46,7 +46,7 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
         ClientIcon: "",
         ClientID: "",
 
-        VendorID:"",
+        VendorID: "",
         VendorABC: "",
         VendorAddress: "",
         BusinessLic: "",
@@ -80,6 +80,8 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
         this.showList = this.showList.bind(this);
         this.changeStage = this.changeStage.bind(this);
         this.submit = this.submit.bind(this);
+        this.addCategory = this.addCategory.bind(this);
+        this.mapCategory = this.mapCategory.bind(this);
     }
 
     public render() {
@@ -293,7 +295,7 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
                         WCInsurance: result.WCInsurance,
                         WCIEDate: result.WCInsuranceExpireDate,
                         VendorScore: result.Score,
-                        VendorID:result.ID
+                        VendorID: result.ID
                     })
 
                 }).bind(this),
@@ -370,7 +372,7 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
             return (
                 <React.Fragment>
 
-                    <div id="signupbox" style={{ marginTop: "15px",float:"left" }} className="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+                    <div id="signupbox" style={{ marginTop: "15px", float: "left" }} className="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
                         <div className="panel panel-info">
                             <form className="form-horizontal" method="post">
                                 <div id="div_id_propertyaddress" className="form-group required">
@@ -438,14 +440,14 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
                             </form>
                             <button id="submit" type="submit" name="submit" style={{ marginBottom: "10px" }} className="btn btn-primary  col-md-8" onClick={this.submit} value="submit">Submit</button>
                         </div> </div>
-                        <div id="signupbox" style={{ marginTop: "15px",float:"right" }} className="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+                    <div id="signupbox" style={{ marginTop: "15px", float: "right" }} className="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
                         <div className="panel panel-info">
                             <label>Location:</label>
-                            {this.state.Location?this.state.Location.map(function(value,index){
-                                return(
+                            {this.state.Location ? this.state.Location.map(function (value, index) {
+                                return (
                                     <li>{value}</li>
                                 )
-                            }.bind(this)):void 0}
+                            }.bind(this)) : void 0}
                         </div> </div>
                 </React.Fragment>
             )
@@ -474,7 +476,7 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
                                         width: "60%",
                                         marginLeft: "15px"
                                     }} className="input-group-prepend input-group-sm">
-                                        <span className="input-group-text">{this.state.VendorIcon ? <img style={{ width: "25px", height: "25px" }} src={this.state.ClientIcon} /> : <div></div>}</span>
+                                        <span className="input-group-text">{this.state.ClientIcon ? <img style={{ width: "25px", height: "25px" }} src={this.state.ClientIcon} /> : <div></div>}</span>
                                         <div className="custom-file">
                                             <input type="file" className="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01"
                                                 onChange={(e) => { this.addIcon(e.target.files) }}></input>
@@ -633,7 +635,7 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
                                 }
                                 else {
                                     return (
-                                        <div key={index}style={{ marginLeft: "15px" }} className="form-check">
+                                        <div key={index} style={{ marginLeft: "15px" }} className="form-check">
                                             <input defaultChecked style={{ marginTop: "7px" }} className="form-check-input" type="checkbox" id={item} />
                                             <label className="form-check-label">
                                                 {item}
@@ -645,7 +647,7 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
 
                         </div>
                         <div id="div_id_assetnumber" className="form-group required">
-                        <label className="control-label col-md-4  requiredField"> Licensed Services<span className="asteriskField"></span> </label>
+                            <label className="control-label col-md-4  requiredField"> Licensed Services<span className="asteriskField"></span> </label>
                             {this.state.LicensedServices.map(function (item, index) {
                                 if (item.includes('-') == true) {
                                     let temp = item.split('-');
@@ -704,11 +706,12 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
             },
             data: formData,
             success: function (result) {
+                console.log(result)
                 if (this.state.currStage === "1") {
-                    this.setState({ ClientIcon: result });
+                    this.setState({ ClientIcon: result.Src });
                 }
                 else {
-                    this.setState({ VendorIcon: result });
+                    this.setState({ VendorIcon: result.Src });
                 }
 
             }.bind(this),
@@ -850,24 +853,17 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
         }
         else if (this.state.currStage === '1') {
             $.ajax({
-                url: 'https://rpntechserver.appspot.com/updateUser',
+                url: 'https://rpntechserver.appspot.com/updateClient?_id=' + this.state.ClientID,
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem('Token'),
                 },
                 method: 'POST',
                 datatype: "json",
                 data: JSON.stringify({
-                    Username: this.state.Username,
-                    Password: this.state.Password,
-                    Authority: this.state.Authority,
-                    Email: this.state.Email,
-                    Phone: this.state.Phone,
-                    Firstname: this.state.Firstname,
-                    Lastname: this.state.Lastname,
-                    abc_num: this.state.Background,
-                    TaskIds: this.state.TaskIds,
-                    company: this.state.UserCompany,
-                    score: this.state.UserScore,
+                    company: this.state.Client,
+                    address: this.state.ClientAddress,
+                    check_list: this.state.CheckList,
+                    icon: this.state.ClientIcon,
                 }),
                 success: (function (result) {
                     this.props.history.push("/main");
@@ -905,7 +901,7 @@ class PageGhotiGeneralProfile extends React.Component<IProps, IState> {
             }
             // console.log(StateCounty);
             $.ajax({
-                url: 'https://rpntechserver.appspot.com/updateVendor?vendorId='+this.state.VendorID,
+                url: 'https://rpntechserver.appspot.com/updateVendor?vendorId=' + this.state.VendorID,
                 method: 'POST',
                 datatype: "json",
                 headers: {

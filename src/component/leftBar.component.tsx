@@ -78,7 +78,7 @@ class ComponentGhotiLeftBar extends React.Component<IProps, IState> {
                                         </button>
                                     </div>
                                 </div>
-                                <div className="sidebar-body-action">
+                                {/* <div className="sidebar-body-action">
                                     <div style={{ paddingTop: "5%" }}>
                                         <button className="link" style={{
                                             width: "100%",
@@ -90,7 +90,7 @@ class ComponentGhotiLeftBar extends React.Component<IProps, IState> {
                                             <div className="body-text">Order Task</div>
                                         </button>
                                     </div>
-                                </div>
+                                </div> */}
                                 <div style={{
 
                                 }} className="sidebar-body-action">

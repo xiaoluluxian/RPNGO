@@ -76,6 +76,21 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                 }).bind(this),
             });
             $.ajax({
+                url: 'https://rpntechserver.appspot.com/userProfile',
+
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem('Token'),
+                },
+                method: 'GET',
+                datatype: "json",
+                data: JSON.stringify({
+                }),
+                success: (function (result) {
+                    console.log(result);
+                    
+                }).bind(this),
+            });
+            $.ajax({
                 url: 'https://rpntechserver.appspot.com/findAllVendors',
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem('Token'),
@@ -106,8 +121,24 @@ class PageGhotiMain extends React.Component<IProps, IState> {
                     this.setState({ Loading: this.reload })
                 }).bind(this),
             });
+            // $.ajax({
+            //     url: 'https://rpntechserver.appspot.com/findLatestTasksByStage?stage=running',
+            //     headers: {
+            //         Authorization: "Bearer " + localStorage.getItem('Token'),
+            //     },
+            //     method: 'GET',
+            //     datatype: "json",
+            //     data: JSON.stringify({
+            //     }),
+            //     success: (function (result) {
+            //         console.log(result);
+            //         this.setState({ data: result });
+            //         this.reload += 1;
+            //         this.setState({ Loading: this.reload })
+            //     }).bind(this),
+            // });
             $.ajax({
-                url: 'https://rpntechserver.appspot.com/findLatestTasksByStage?stage=running',
+                url: 'https://rpntechserver.appspot.com/findNonAchievedTasks',
                 headers: {
                     Authorization: "Bearer " + localStorage.getItem('Token'),
                 },
