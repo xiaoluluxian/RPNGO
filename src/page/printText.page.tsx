@@ -417,7 +417,7 @@ class PageGhotiPrintText extends React.Component<IProps, IState> {
                                 <tr>
                                     <td>{item.Cate}</td>
                                     <td>{item.Item}</td>
-                                    <td>{item.description}<div>{item.Comments}</div></td>
+                                    <td>{item.description}<div>{item.Comments}</div><div>{item.description_cn}</div></td>
                                     <td>{item.Tax}</td>
                                     <td>{item.Amount}</td>
                                     

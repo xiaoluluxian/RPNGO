@@ -18,6 +18,7 @@ import { MarkerWithLabel } from "react-google-maps/lib/components/addons/MarkerW
 import { ColoradoJson } from "../config/ColoradoJson"
 import Config from '../config/config';
 
+const Pannellum = require("pannellum") ;
 import USA from "@svg-maps/usa";
 import { SVGMap } from "react-svg-map";
 
@@ -103,6 +104,9 @@ class PageGhotiDevelop extends React.Component<IProps, IState> {
                     location={null}
                 />
             </div> */}
+            <button onClick={() => this.runPannellum()}>Run</button>
+            <div id="panorama">
+            </div>
             <input type="file" onChange={e => this.inputFile(e.target.files)}></input>
             {/* <button onClick={this.addTask}>add</button> */}
             <div style={{ width: "50%" }}>
@@ -120,6 +124,13 @@ class PageGhotiDevelop extends React.Component<IProps, IState> {
                 /> */}
             </div>
         </React.Fragment>);
+    }
+
+    protected runPannellum() {
+        Pannellum.viewer('panorama', {
+            "type": "equirectangular",
+            "panorama": "https://www.googleapis.com/download/storage/v1/b/post-images-rpntech/o/1820_NW_118th_St,_suite_220_360_1_04-25-2019_15:12:40_(1)?generation=1556223162932933&alt=media",
+        })
     }
 
     protected addTask() {
