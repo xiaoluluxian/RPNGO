@@ -8,7 +8,7 @@ EXPOSE 8000
 ENV NODE_ENV production
 
 COPY ./package.json .
-# COPY ./yarn.lock .
+COPY ./package-lock.json .
 
 RUN npm install 
 
