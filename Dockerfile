@@ -8,9 +8,9 @@ EXPOSE 8000
 ENV NODE_ENV production
 
 COPY ./package.json .
-COPY ./yarn.lock .
+# COPY ./yarn.lock .
 
-RUN yarn install --production=true
+RUN npm install 
 
 COPY ./dist ./dist
 COPY ./server ./server

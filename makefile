@@ -42,9 +42,13 @@ prod:
 	NODE_ENV=development \
 	$(webpack_dev_server) --config $(webpack_dev) --open
 
+host: stop
+	@echo "[INFO] Hosting docker image"
+	@docker run -it -p 8080:8080 --name $(image_name) $(image_tag)
+
 build: clean-linux
 	@echo "[INFO] Starting build"
-	@NODE_ENV=production $(ts-node) script/clean-app.ts
+	# @NODE_ENV=production $(ts-node) script/clean-app.ts
 	@NODE_ENV=production $(webpack) --config $(webpack_build)
 
 tests:
@@ -70,8 +74,9 @@ clean-linux:
 	@rm -rf .nyc_output
 	@rm -rf coverage
 
-docker: build
+docker:
 	@echo "[INFO] Create docker image"
+	npm run build
 	@docker build -t $(image_name) -f Dockerfile ./
 
 kill:
